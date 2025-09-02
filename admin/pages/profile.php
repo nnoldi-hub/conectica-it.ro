@@ -1,6 +1,17 @@
 <?php
-require_once '../AuthSystem.php';
-require_once '../../config/database.php';
+require_once __DIR__ . '/../AuthSystem.php';
+require_once __DIR__ . '/../../config/database.php';
+
+// Initialize database connection
+try {
+    if (function_exists('getDatabaseConnection')) {
+        $database = getDatabaseConnection();
+        $pdo = $database; // Alias for compatibility
+    }
+} catch (Exception $e) {
+    $database = null;
+    $pdo = null;
+}
 
 $auth = new AuthSystem();
 $auth->requireAuth();
