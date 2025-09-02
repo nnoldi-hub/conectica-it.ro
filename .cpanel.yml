@@ -1,0 +1,23 @@
+---
+deployment:
+  tasks:
+    # Upload all files to public_html
+    - export DEPLOYPATH=/home/username/public_html/
+    - /bin/cp -R * $DEPLOYPATH
+    
+    # Set proper permissions for directories
+    - find $DEPLOYPATH -type d -exec chmod 755 {} \;
+    
+    # Set proper permissions for files  
+    - find $DEPLOYPATH -type f -name "*.php" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -type f -name "*.html" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -type f -name "*.css" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -type f -name "*.js" -exec chmod 644 {} \;
+    
+    # Protect sensitive directories
+    - chmod 700 $DEPLOYPATH/admin/
+    - chmod 700 $DEPLOYPATH/config/
+    
+    # Create logs directory if it doesn't exist
+    - mkdir -p $DEPLOYPATH/logs/
+    - chmod 755 $DEPLOYPATH/logs/
