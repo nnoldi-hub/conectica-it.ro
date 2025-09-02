@@ -442,6 +442,12 @@ $current_page = $_GET['page'] ?? 'dashboard';
                             <span>Analiză</span>
                         </a>
                     </li>
+                    <li class="menu-item">
+                        <a href="?page=seo-manager" class="menu-link <?php echo ($current_page == 'seo-manager') ? 'active' : ''; ?>">
+                            <i class="menu-icon fas fa-search"></i>
+                            <span>SEO Manager</span>
+                        </a>
+                    </li>
                     <li class="menu-item" style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                         <a href="../index.php" class="menu-link" target="_blank">
                             <i class="menu-icon fas fa-external-link-alt"></i>
@@ -481,6 +487,10 @@ $current_page = $_GET['page'] ?? 'dashboard';
                     break;
                 case 'analytics':
                     include 'pages/analytics.php';
+                    break;
+                    
+                case 'seo-manager':
+                    include 'pages/seo-manager.php';
                     break;
                 default:
                     // Dashboard home content

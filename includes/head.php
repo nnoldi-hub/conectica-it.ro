@@ -3,19 +3,42 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Include database and SEO helper
+require_once(__DIR__ . '/../config/database.php');
+require_once(__DIR__ . '/seo.php');
+
 // Simple path detection
 $is_admin = (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false);
 $base_path = $is_admin ? '../' : '';
+
+// Initialize SEO helper only for frontend pages
+if (!$is_admin && isset($database)) {
+    $seo = new SEOHelper($database);
+}
 ?>
 <!doctype html>
 <html lang="ro">
 <head>
     <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width,initial-scale=1'>
-    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME; ?></title>
-    <meta name="description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.'; ?>">
-    <meta name="keywords" content="freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web">
-    <meta name="author" content="Nyikora Noldi">
+    
+    <?php 
+    // Generate SEO meta tags for frontend pages
+    if (!$is_admin && isset($seo)) {
+        echo $seo->generateMetaTags();
+    } else {
+        // Fallback meta tags for admin pages
+        $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
+        $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
+        $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
+        
+        echo "<title>{$title}</title>\n";
+        echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
+        echo "    <meta name=\"description\" content=\"{$description}\">\n";
+        echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
+        echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
+        echo "    <meta name=\"robots\" content=\"noindex, nofollow\">";
+    }
+    ?>
     
     <!-- Bootstrap CSS -->
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'>
@@ -23,6 +46,13 @@ $base_path = $is_admin ? '../' : '';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href='<?php echo $base_path; ?>assets/css/style.css' rel='stylesheet'>
+    
+    <?php 
+    // Add structured data for frontend pages
+    if (!$is_admin && isset($seo)) {
+        echo $seo->generateStructuredData();
+    }
+    ?>
 </head>
 <body>
     <nav class='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>

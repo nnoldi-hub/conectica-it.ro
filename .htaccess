@@ -22,6 +22,10 @@ php_value session.gc_maxlifetime 3600
 # Enable URL Rewriting
 RewriteEngine On
 
+# SEO URL Rewriting - Add before other rules
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^robots\.txt$ robots.php [L]
+
 # Remove .php extension from URLs
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
