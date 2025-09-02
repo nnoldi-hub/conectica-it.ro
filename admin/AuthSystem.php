@@ -13,6 +13,16 @@ class AuthSystem {
     public function __construct($database = null) {
         if ($database) {
             $this->db = $database;
+        } else {
+            // Try to get database connection
+            try {
+                require_once __DIR__ . '/../config/database.php';
+                if (isset($pdo)) {
+                    $this->db = $pdo;
+                }
+            } catch (Exception $e) {
+                // Continue without database connection
+            }
         }
         $this->initSession();
     }
@@ -139,14 +149,31 @@ class AuthSystem {
             // Clear failed attempts
             $this->clearFailedAttempts($username);
             
-            // Create secure session
-            $this->createUserSession($username, [
+            // Get user data from database if available
+            $userData = [
                 'username' => $username,
                 'role' => 'admin',
                 'login_time' => time(),
                 'ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
                 'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
-            ]);
+            ];
+            
+            // Try to get additional user data from database
+            if ($this->db) {
+                try {
+                    $stmt = $this->db->prepare("SELECT name, email, phone, bio, avatar FROM admins WHERE username = ?");
+                    $stmt->execute([$username]);
+                    $dbUser = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($dbUser) {
+                        $userData = array_merge($userData, $dbUser);
+                    }
+                } catch (PDOException $e) {
+                    // Continue with basic user data if database query fails
+                }
+            }
+            
+            // Create secure session
+            $this->createUserSession($username, $userData);
             
             // Set remember me cookie if requested
             if ($remember_me) {

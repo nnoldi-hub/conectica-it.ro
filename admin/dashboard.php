@@ -84,6 +84,26 @@ $current_page = $_GET['page'] ?? 'dashboard';
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             font-size: 0.9rem;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .user-info > i {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            font-size: 16px;
         }
         
         .logout-btn {
@@ -339,8 +359,13 @@ $current_page = $_GET['page'] ?? 'dashboard';
             </div>
             <div class="user-menu">
                 <div class="user-info">
-                    <i class="fas fa-user"></i>
-                    <span>Bună ziua, <strong><?php echo htmlspecialchars($admin_username); ?></strong></span>
+                    <?php if (!empty($user['avatar']) && file_exists('../' . $user['avatar'])): ?>
+                        <img src="../<?php echo htmlspecialchars($user['avatar']); ?>" 
+                             alt="Avatar" class="user-avatar">
+                    <?php else: ?>
+                        <i class="fas fa-user"></i>
+                    <?php endif; ?>
+                    <span>Bună ziua, <strong><?php echo htmlspecialchars($user['name'] ?? $admin_username); ?></strong></span>
                     <?php if ($security_info): ?>
                     <div class="security-status" style="font-size: 11px; opacity: 0.8; margin-top: 2px;">
                         <i class="fas fa-shield-alt"></i>
@@ -406,6 +431,12 @@ $current_page = $_GET['page'] ?? 'dashboard';
                         </a>
                     </li>
                     <li class="menu-item">
+                        <a href="?page=profile" class="menu-link <?php echo ($current_page == 'profile') ? 'active' : ''; ?>">
+                            <i class="menu-icon fas fa-user-cog"></i>
+                            <span>Profilul Meu</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
                         <a href="?page=analytics" class="menu-link <?php echo ($current_page == 'analytics') ? 'active' : ''; ?>">
                             <i class="menu-icon fas fa-chart-line"></i>
                             <span>Analiză</span>
@@ -443,6 +474,10 @@ $current_page = $_GET['page'] ?? 'dashboard';
                     break;
                 case 'settings':
                     include 'pages/settings.php';
+                    break;
+                    
+                case 'profile':
+                    include 'pages/profile.php';
                     break;
                 case 'analytics':
                     include 'pages/analytics.php';
