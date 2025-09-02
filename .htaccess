@@ -1,0 +1,170 @@
+# Conectica IT - Enhanced Security Configuration
+
+# Disable server signature and version info
+ServerSignature Off
+Header unset X-Powered-By
+
+# PHP Configuration for Production Security
+php_flag display_errors Off
+php_flag display_startup_errors Off
+php_value error_reporting 0
+php_flag log_errors On
+php_value log_errors_max_len 0
+php_flag ignore_repeated_errors On
+
+# Session Security
+php_flag session.cookie_httponly On
+php_flag session.cookie_secure On
+php_value session.cookie_samesite "Strict"
+php_flag session.use_only_cookies On
+php_value session.gc_maxlifetime 3600
+
+# Enable URL Rewriting
+RewriteEngine On
+
+# Remove .php extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Redirect www to non-www (optional)
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Force HTTPS (uncomment for production)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Enhanced Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self';"
+    
+    # HSTS (uncomment for production with SSL)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Remove server info
+    Header unset Server
+    Header unset X-Powered-By
+    Header unset X-AspNet-Version
+</IfModule>
+
+# Cache Control for Static Assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Images
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Fonts
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # HTML
+    ExpiresByType text/html "access plus 1 day"
+</IfModule>
+
+# Gzip Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE text/javascript
+</IfModule>
+
+# Enhanced File Protection
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak|sql|env|git|svn|json)$">
+    Require all denied
+</FilesMatch>
+
+# Protect sensitive directories and files
+<Files "config.php">
+    Require all denied
+</Files>
+
+<Files "database.php">
+    Require all denied
+</Files>
+
+<Files "AuthSystem.php">
+    <RequireAll>
+        Require all denied
+        Require local
+    </RequireAll>
+</Files>
+
+# Block access to logs directory
+<DirectoryMatch "^.*/logs/">
+    Require all denied
+</DirectoryMatch>
+
+# Block version control directories
+<DirectoryMatch "^.*/(\.git|\.svn|\.hg|\.bzr|CVS)/">
+    Require all denied
+</DirectoryMatch>
+
+# Custom Error Pages (optional)
+# ErrorDocument 404 /404.php
+# ErrorDocument 403 /403.php
+# ErrorDocument 500 /500.php
+
+# Enhanced Bot and Attack Protection
+SetEnvIfNoCase User-Agent "^libwww-perl*" block_bad_bots
+SetEnvIfNoCase User-Agent "^wget*" block_bad_bots
+SetEnvIfNoCase User-Agent "^nikto*" block_bad_bots
+SetEnvIfNoCase User-Agent "^sqlmap*" block_bad_bots
+SetEnvIfNoCase User-Agent "^nmap*" block_bad_bots
+SetEnvIfNoCase User-Agent "^masscan*" block_bad_bots
+SetEnvIfNoCase User-Agent ".*\b(BOT|CRAWLER|SPIDER|SCRAPER)\b.*" block_bad_bots
+
+# Block malicious requests
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*iframe.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} (\<|%3C).*embed.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [NC,OR]
+RewriteCond %{QUERY_STRING} (\"|%22).*(union|select|insert|delete|drop|create|alter).*(\"|%22) [NC,OR]
+RewriteCond %{QUERY_STRING} etc/passwd [NC,OR]
+RewriteCond %{QUERY_STRING} boot\.ini [NC,OR]
+RewriteCond %{QUERY_STRING} ftp\: [NC,OR]
+RewriteCond %{QUERY_STRING} http\: [NC,OR]
+RewriteCond %{QUERY_STRING} https\: [NC]
+RewriteRule .* - [F,L]
+
+# Rate limiting (basic)
+RewriteMap hosts-deny txt:/tmp/hosts.deny
+RewriteCond ${hosts-deny:%{REMOTE_ADDR}|NOT-FOUND} !=NOT-FOUND [OR]
+RewriteCond ${hosts-deny:%{REMOTE_HOST}|NOT-FOUND} !=NOT-FOUND
+RewriteRule ^.*$ - [F]
+
+Require all granted
+Require not env block_bad_bots
+
+# Limit request size (10MB)
+LimitRequestBody 10485760

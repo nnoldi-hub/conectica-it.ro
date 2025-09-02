@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://conectica-it.ro/sitemap.xml
+
+# Block admin area
+Disallow: /admin/
+
+# Block config files
+Disallow: /config/
+
+# Block includes
+Disallow: /includes/
+
+# Block install files
+Disallow: /install.sql
+
+# Allow important pages
+Allow: /index.php
+Allow: /projects.php
+Allow: /blog.php
+Allow: /contact.php
+Allow: /request-quote.php
+
+# Allow assets
+Allow: /assets/
+
+# Crawl delay (optional - helps with server load)
+Crawl-delay: 1

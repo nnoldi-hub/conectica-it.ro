@@ -1,0 +1,125 @@
+# Conectica IT Portfolio - Git Ignore Configuration
+
+# Sensitive Configuration Files
+config/config.php
+config/database.php
+.env
+.env.local
+.env.production
+
+# Database Files
+*.sql
+*.sqlite
+*.db
+database/
+
+# Log Files
+logs/
+*.log
+error_log
+error.log
+auth_*.log
+
+# Temporary Files
+tmp/
+temp/
+cache/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Node.js (if using npm/yarn)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Composer (PHP Package Manager)
+vendor/
+composer.lock
+
+# System Files
+.htaccess.backup
+.htpasswd
+
+# Upload Directories (with sensitive content)
+uploads/private/
+uploads/temp/
+
+# Session Files
+sessions/
+*.sess
+
+# Error Reports
+error-report-*.txt
+php_errorlog
+error_log
+
+# Archive Files
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# Security Keys and Certificates
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# Local Development Files
+local_settings.php
+dev_config.php
+test_config.php
+
+# Documentation Build Files
+docs/_build/
+site/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# WordPress (if integrating)
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+
+# Custom Ignores
+/admin/logs/
+/admin/sessions/
+/admin/temp/
+/backups/
+
+# Keep important files (negative patterns)
+!.gitkeep
+!README.md
+!LICENSE
+!

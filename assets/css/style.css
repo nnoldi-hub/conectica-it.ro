@@ -1,0 +1,351 @@
+/* Conectica IT - Custom Styles */
+
+/* Color Variables */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #28a745;
+    --accent-color: #17a2b8;
+    --dark-bg: #1a1d23;
+    --card-bg: #2d3748;
+    --text-light: #f7fafc;
+    --text-muted: #a0aec0;
+    --border-color: #4a5568;
+    --hover-bg: #3a4553;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--dark-bg) !important;
+    color: var(--text-light) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar-dark {
+    background: linear-gradient(135deg, #2d3748, #1a202c) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    color: #ffffff !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+    color: #e2e8f0 !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+    color: white !important;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h1 {
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 800 !important;
+}
+
+.hero .lead {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-size: 1.25rem !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+}
+
+/* Tech Stack Badges */
+.tech-stack .badge {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    font-weight: 500;
+    margin: 2px;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-light) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+    background-color: var(--hover-bg) !important;
+}
+
+.card-body {
+    color: var(--text-light) !important;
+}
+
+.card-title {
+    color: var(--text-light) !important;
+    font-weight: 600 !important;
+}
+
+.card-text {
+    color: var(--text-muted) !important;
+    font-size: 1rem !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    font-weight: 500;
+    padding: 12px 25px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0052a3 !important;
+    border-color: #0052a3 !important;
+    transform: translateY(-2px);
+}
+
+.btn-outline-light {
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Services Section */
+.services {
+    padding: 80px 0;
+}
+
+.services .card {
+    height: 100%;
+    border: none !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.services .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 102, 204, 0.2);
+}
+
+/* Contact CTA */
+.contact-cta {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-light) !important;
+    padding: 80px 0;
+    border: 1px solid var(--border-color);
+}
+
+.contact-cta h2 {
+    color: var(--text-light) !important;
+    font-weight: 700 !important;
+}
+
+.contact-cta .lead {
+    color: var(--text-muted) !important;
+    font-size: 1.1rem !important;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #2d3748, #1a202c) !important;
+    color: var(--text-light) !important;
+    padding: 60px 0 20px;
+}
+
+footer h5,
+footer h6 {
+    color: var(--text-light) !important;
+    font-weight: 600 !important;
+}
+
+footer a {
+    color: var(--text-muted) !important;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--primary-color) !important;
+}
+
+.social-links a {
+    color: var(--text-light) !important;
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.social-links a:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    transform: translateY(-3px);
+}
+
+/* Form Styles */
+.form-control,
+.form-select {
+    background-color: var(--card-bg) !important;
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-light) !important;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 1rem !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--hover-bg) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25) !important;
+    color: var(--text-light) !important;
+}
+
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.8;
+}
+
+.form-label {
+    color: var(--text-light) !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+}
+
+/* Text Colors */
+.text-muted {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+}
+
+.text-light {
+    color: var(--text-light) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-light) !important;
+    font-weight: 600 !important;
+}
+
+/* Background Colors */
+.bg-light {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-light) !important;
+}
+
+.bg-dark {
+    background-color: var(--dark-bg) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 0;
+    }
+    
+    .hero h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .services {
+        padding: 60px 0;
+    }
+    
+    .contact-cta {
+        padding: 60px 0;
+    }
+    
+    footer {
+        padding: 40px 0 20px;
+    }
+}
+
+/* Utility Classes */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2) !important;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.25) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Additional contrast improvements */
+.form-text {
+    color: var(--text-muted) !important;
+    font-size: 0.9rem !important;
+}
+
+.alert {
+    border-radius: 8px !important;
+    border: none !important;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.2) !important;
+    color: #68d391 !important;
+    border: 1px solid rgba(40, 167, 69, 0.3) !important;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #fc8181 !important;
+    border: 1px solid rgba(220, 53, 69, 0.3) !important;
+}
+
+/* Better visibility for select options */
+option {
+    background-color: var(--card-bg) !important;
+    color: var(--text-light) !important;
+}
+
+/* Improve button visibility */
+.btn-outline-primary {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
