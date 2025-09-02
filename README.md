@@ -3,7 +3,30 @@
 🌐 **Professional freelancer portfolio pentru Nyikora Noldi**  
 📧 conectica.it.ro@gmail.com | 📱 0740173581
 
-## 📋 Descrierea Proiectului
+## � Deployment pe Hostico
+
+### Pași pentru deployment automat:
+
+1. **Configurare Database**
+   - Creează o bază de date MySQL în cPanel
+   - Rulează `install.sql` pentru a crea tabelele
+   - Actualizează `config/database.php` cu datele tale
+
+2. **Configurare Environment**
+   - Copiază `.env.example` la `.env`
+   - Completează variabilele de mediu
+
+3. **Git Deployment**
+   - Repository conectat: `https://github.com/nnoldi-hub/conectica-it.ro`
+   - Fișierul `.cpanel.yml` este configurat pentru deployment automat
+   - Push-ul pe branch `main` va declanșa deployment-ul
+
+4. **Post-deployment**
+   - Verifică că `/admin/` este protejat
+   - Testează login-ul admin (username: `admin`, password: `demo123`)
+   - Configurează SEO settings în admin panel
+
+## �📋 Descrierea Proiectului
 
 Portofoliu profesional pentru servicii IT și dezvoltare web, cu sistem complet de administrare și gestionare a conținutului.
 
