@@ -21,3 +21,7 @@ deployment:
     # Create logs directory if it doesn't exist
     - mkdir -p $DEPLOYPATH/logs/
     - chmod 755 $DEPLOYPATH/logs/
+    
+    # Make uploads directory writable
+    - mkdir -p $DEPLOYPATH/assets/images/uploads/
+    - chmod 755 $DEPLOYPATH/assets/images/uploads/
