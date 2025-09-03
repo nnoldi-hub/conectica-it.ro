@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ylcghxpa/public_html
-    - /bin/cp -R . $DEPLOYPATH
+    - cp -R . $DEPLOYPATH
