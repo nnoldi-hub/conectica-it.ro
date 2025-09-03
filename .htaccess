@@ -1,5 +1,8 @@
 # Conectica IT - Enhanced Security Configuration
 
+# Force index.php as default instead of index.html
+DirectoryIndex index.php index.html
+
 # Disable server signature and version info
 ServerSignature Off
 Header unset X-Powered-By

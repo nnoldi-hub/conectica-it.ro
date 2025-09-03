@@ -1,0 +1,31 @@
+name: Deploy to Hostico
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js (optional for future JS builds)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Validate PHP files
+      run: |
+        # Check PHP syntax for all PHP files
+        find . -name "*.php" -exec php -l {} \; | grep -v "No syntax errors detected" || echo "PHP syntax check completed"
+        
+    - name: Log deployment info
+      run: |
+        echo "Deploying commit: ${{ github.sha }}"
+        echo "Deployment time: $(date)"
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"

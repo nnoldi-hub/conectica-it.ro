@@ -28,10 +28,37 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['db_password'])) {
             $password = $_POST['db_password'];
             
-            // Actualizează fișierul database.php
-            $config_content = file_get_contents('config/database.php');
-            $config_content = str_replace('SET_YOUR_PASSWORD_HERE', $password, $config_content);
-            file_put_contents('config/database.php', $config_content);
+            // Creează fișierul database.php dacă nu există
+            if (!file_exists('config/database.php')) {
+                $db_content = '<?php
+define("DB_HOST", "localhost");
+define("DB_USERNAME", "ylcqhxpa_nnoldi");
+define("DB_PASSWORD", "' . $password . '");
+define("DB_NAME", "ylcqhxpa_conectica");
+define("DB_CHARSET", "utf8mb4");
+
+function getDatabaseConnection() {
+    try {
+        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+        return new PDO($dsn, DB_USERNAME, DB_PASSWORD, $options);
+    } catch (PDOException $e) {
+        error_log("Database connection error: " . $e->getMessage());
+        die("Database connection error. Please check configuration.");
+    }
+}
+?>';
+                file_put_contents('config/database.php', $db_content);
+            } else {
+                // Actualizează fișierul existent
+                $config_content = file_get_contents('config/database.php');
+                $config_content = preg_replace('/define\("DB_PASSWORD",\s*"[^"]*"\);/', 'define("DB_PASSWORD", "' . $password . '");', $config_content);
+                file_put_contents('config/database.php', $config_content);
+            }
             
             // Testează conexiunea
             require_once 'config/database.php';
@@ -45,20 +72,8 @@
                 
                 if (count($tables) === 0) {
                     echo '<div class="error">❌ Baza de date este goală! Trebuie să imporți install.sql prin phpMyAdmin.</div>';
-                    echo '<div class="info">
-                        <strong>Pași următori:</strong><br>
-                        1. Mergi în cPanel → phpMyAdmin<br>
-                        2. Selectează baza de date: ylcqhxpa_conectica<br>
-                        3. Apasă pe Import<br>
-                        4. Alege fișierul install.sql din proiect<br>
-                        5. Apasă Go pentru import<br>
-                        6. Revin la această pagină
-                    </div>';
                 } else {
-                    echo '<div class="success">✅ Tabelele există în baza de date!</div>';
-                    
-                    // Creează fișierul de blocare
-                    file_put_contents('setup.lock', date('Y-m-d H:i:s') . " - Configurat cu succes!\n");
+                    echo '<div class="success">✅ Tabelele există în baza de date (' . count($tables) . ' tabele)!</div>';
                     
                     echo '<div class="success">
                         <h3>🎉 Configurarea s-a finalizat cu succes!</h3>
@@ -72,34 +87,18 @@
                 
             } catch (Exception $e) {
                 echo '<div class="error">❌ Eroare: ' . htmlspecialchars($e->getMessage()) . '</div>';
-                echo '<div class="info">Verifică parola introdusă și încearcă din nou.</div>';
             }
         } else {
         ?>
         
         <div class="info">
-            <strong>📋 Informații detectate:</strong><br>
+            <strong>📋 Configurație pentru Hostico:</strong><br>
             Database Host: localhost<br>
             Database User: ylcqhxpa_nnoldi<br>
             Database Name: ylcqhxpa_conectica
         </div>
         
         <form method="POST">
-            <div class="form-group">
-                <label>Database Host:</label>
-                <input type="text" value="localhost" readonly class="readonly">
-            </div>
-            
-            <div class="form-group">
-                <label>Database Username:</label>
-                <input type="text" value="ylcqhxpa_nnoldi" readonly class="readonly">
-            </div>
-            
-            <div class="form-group">
-                <label>Database Name:</label>
-                <input type="text" value="ylcqhxpa_conectica" readonly class="readonly">
-            </div>
-            
             <div class="form-group">
                 <label for="db_password">Database Password: *</label>
                 <input type="password" name="db_password" id="db_password" required placeholder="Introdu parola bazei de date...">
