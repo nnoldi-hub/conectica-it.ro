@@ -1,5 +1,8 @@
 ﻿---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/ylcghxpa/public_html
-    - cp -R . $DEPLOYPATH
+    - export DEPLOYPATH=/home/ylcqhxpa/public_html
+    - /bin/cp -R * $DEPLOYPATH/
+    - /bin/cp -R .htaccess $DEPLOYPATH/ 2>/dev/null || true
+    - find $DEPLOYPATH -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    - chmod -R 755 $DEPLOYPATH
