@@ -6,11 +6,11 @@
  * Pentru producție, folosește variabile de mediu pentru securitate
  */
 
-// Database settings - ACTUALIZEAZĂ CU DATELE TALE HOSTICO
+// Database settings - CONFIGURATE PENTRU HOSTICO
 define('DB_HOST', 'localhost'); // Sau server-ul MySQL de la Hostico
-define('DB_USERNAME', 'your_cpanel_username_database_user'); // Username-ul bazei de date
-define('DB_PASSWORD', 'your_database_password');  // Parola bazei de date
-define('DB_NAME', 'your_cpanel_username_database_name'); // Numele bazei de date
+define('DB_USERNAME', 'ylcqhxpa_nnoldi'); // Username-ul bazei de date
+define('DB_PASSWORD', 'PetreIonel205!');  // ACTUALIZEAZĂ CU PAROLA TA
+define('DB_NAME', 'ylcqhxpa_conectica'); // Numele bazei de date
 define('DB_CHARSET', 'utf8mb4');
 
 // Connection function
