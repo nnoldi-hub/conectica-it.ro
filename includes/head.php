@@ -7,7 +7,7 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once(__DIR__ . '/../config/database.php');
 
 // Simple path detection
-$is_admin = (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false);
+$is_admin = isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false);
 $base_path = $is_admin ? '../' : '';
 ?>
 <!doctype html>

@@ -278,4 +278,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php include 'includes/foot.php'; ?>
+<?php require_once 'includes/foot.php'; ?>

@@ -77,4 +77,4 @@ require_once 'includes/head.php';
     </div>
 </section>
 
-<?php include 'includes/foot.php'; ?>
+<?php require_once 'includes/foot.php'; ?>
