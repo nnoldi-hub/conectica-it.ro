@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectica IT - Loading...</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader { 
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Conectica IT - Portfolio</h1>
+    <div class="loader"></div>
+    <p>Loading your professional portfolio...</p>
+    
+    <div style="margin-top: 30px;">
+        <a href="index.php" class="btn">🏠 Enter Website</a>
+        <a href="admin/login.php" class="btn">🛡️ Admin Panel</a>
+        <a href="diagnostic.php" class="btn">🔍 System Check</a>
+    </div>
+    
+    <script>
+        // Auto-redirect după 3 secunde
+        setTimeout(function() {
+            // Încearcă să acceseze index.php
+            fetch('index.php')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = 'index.php';
+                    } else {
+                        // Dacă index.php nu există, redirecționează la diagnostic
+                        window.location.href = 'diagnostic.php';
+                    }
+                })
+                .catch(error => {
+                    // În caz de eroare, redirecționează la diagnostic
+                    window.location.href = 'diagnostic.php';
+                });
+        }, 3000);
+    </script>
+    
+    <footer style="position: absolute; bottom: 20px;">
+        <p><small>© 2025 Conectica IT - Nyikora Noldi | conectica.it.ro@gmail.com</small></p>
+    </footer>
+</body>
+</html>
