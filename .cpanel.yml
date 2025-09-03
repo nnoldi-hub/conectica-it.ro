@@ -1,13 +1,17 @@
 ﻿---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/ylcqhxpa/public_html
-    - echo "Starting forced deployment..."
-    - git reset --hard HEAD
-    - git clean -fd
-    - /bin/cp -rf * $DEPLOYPATH/ 2>/dev/null || true  
-    - /bin/cp -f .htaccess $DEPLOYPATH/ 2>/dev/null || true
-    - /bin/rm -rf $DEPLOYPATH/.git 2>/dev/null || true
-    - /bin/chmod -R 755 $DEPLOYPATH 2>/dev/null || true
-    - /bin/chmod 644 $DEPLOYPATH/.htaccess 2>/dev/null || true
-    - echo "Deployment completed successfully"
+    - export DEPLOYPATH=/home/ylcqhxpa/public_html/
+    - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp -R .htaccess $DEPLOYPATH 2>/dev/null || true
+    - find $DEPLOYPATH -name "*.php" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -name "*.js" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -name "*.css" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -name "*.json" -exec chmod 644 {} \;
+    - find $DEPLOYPATH -name "*.html" -exec chmod 644 {} \;
+    - chmod 755 $DEPLOYPATH/assets/
+    - chmod 755 $DEPLOYPATH/admin/
+    - chmod 755 $DEPLOYPATH/config/
+    - chmod 755 $DEPLOYPATH/includes/
+    - chmod 600 $DEPLOYPATH/config/database.php
+    - echo "Conectica-IT deployed successfully!"
