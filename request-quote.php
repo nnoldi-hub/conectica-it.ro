@@ -2,7 +2,7 @@
 $page_title = "Cere Ofertă";
 $page_description = "Solicită o ofertă personalizată pentru proiectul tău IT. Primești răspuns în 24 de ore cu detalii complete.";
 include 'config/config.php';
-include 'includes/head.php'; 
+require_once 'includes/head.php'; 
 ?>
 
 <div class="py-4">

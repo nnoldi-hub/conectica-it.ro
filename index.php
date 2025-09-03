@@ -1,16 +1,15 @@
 <?php 
-// Auto-deployment test - Last updated: <?= date('Y-m-d H:i:s') ?>
 $page_title = "Acasă";
-$page_description = "Freelancer IT - Nyikora Noldin. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
-include 'config/config.php';
-include 'includes/head.php'; 
+$page_description = "Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
+require_once 'config/config.php';
+require_once 'includes/head.php'; 
 ?>
 
 <section class='hero text-center py-5 mb-5'>
     <div class='container'>
         <div class='row justify-content-center'>
             <div class='col-lg-8'>
-                <h1 class='display-4 fw-bold text-white mb-3'>Nyikora Noldin</h1>
+                <h1 class='display-4 fw-bold text-white mb-3'>Nyikora Noldi</h1>
                 <h2 class='h4 text-white mb-4' style='opacity: 0.9;'>Freelancer & Developer IT</h2>
                 <p class='lead text-white mb-4' style='opacity: 0.8;'>Specializat în dezvoltarea de aplicații web moderne și soluții IT personalizate</p>
                 <div class='tech-stack mb-4'>

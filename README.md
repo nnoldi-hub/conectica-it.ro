@@ -1,6 +1,6 @@
 # Conectica IT - Professional Portfolio
 
-🌐 **Professional freelancer portfolio pentru Nyikora Noldin**  
+🌐 **Professional freelancer portfolio pentru Nyikora Noldi**  
 📧 conectica.it.ro@gmail.com | 📱 0740173581
 
 ## 🚀 Auto-Deployment Setup (LIVE!)
@@ -247,7 +247,7 @@ Proiectul este open pentru îmbunătățiri! Pentru contribuții:
 
 ## 📞 Contact & Support
 
-**Nyikora Noldin**
+**Nyikora Noldi**
 - Email: conectica.it.ro@gmail.com
 - Telefon: 0740173581
 - Website: conectica-it.ro

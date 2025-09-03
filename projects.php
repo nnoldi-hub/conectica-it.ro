@@ -1,8 +1,8 @@
 <?php 
 $page_title = "Proiecte";
 $page_description = "Portofoliul meu de proiecte web - aplicații PHP, soluții personalizate și dezvoltare web modernă.";
-include 'config/config.php';
-include 'includes/head.php'; 
+require_once 'config/config.php';
+require_once 'includes/head.php'; 
 ?>
 
 <div class="py-4">
