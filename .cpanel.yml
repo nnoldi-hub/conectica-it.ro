@@ -2,7 +2,9 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ylcqhxpa/public_html
-    - echo "Starting deployment..."
+    - echo "Starting forced deployment..."
+    - git reset --hard HEAD
+    - git clean -fd
     - /bin/cp -rf * $DEPLOYPATH/ 2>/dev/null || true  
     - /bin/cp -f .htaccess $DEPLOYPATH/ 2>/dev/null || true
     - /bin/rm -rf $DEPLOYPATH/.git 2>/dev/null || true
