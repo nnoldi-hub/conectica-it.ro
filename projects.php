@@ -6,16 +6,18 @@ require_once __DIR__ . '/includes/head.php';
 ?>
 
 <?php
-// Optional: DB-driven list if table `projects` exists and $pdo is available
-// try {
-//     $projects = [];
-//     if ($pdo instanceof PDO) {
-//         $stmt = $pdo->query("SELECT id, title, short_description AS short_desc, image, technologies AS tech, project_url AS url FROM projects WHERE is_published = 1 ORDER BY id DESC");
-//         $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//     }
-// } catch (Throwable $e) {
-//     echo "<div class='container mt-4'><div class='alert alert-warning'>Nu pot citi proiectele: " . htmlspecialchars($e->getMessage()) . "</div></div>";
-// }
+// DB-driven list if `$projects` table exists; show warning in dev on failure
+$projects = [];
+try {
+    if ($pdo instanceof PDO) {
+        $stmt = $pdo->query("SELECT id, title, short_description AS short_desc, image, technologies AS tech, project_url AS url FROM projects WHERE is_published = 1 ORDER BY id DESC");
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} catch (Throwable $e) {
+    if (ini_get('display_errors')) {
+        echo "<div class='container mt-4'><div class='alert alert-warning'>Nu pot citi proiectele: " . htmlspecialchars($e->getMessage()) . "</div></div>";
+    }
+}
 ?>
 
 <div class="py-4">
@@ -36,155 +38,40 @@ require_once __DIR__ . '/includes/head.php';
     </div>
     
     <div class="row g-4" id="projects-container">
-        
-        <!-- Exemplu de proiect 1 - E-commerce -->
-        <div class="col-lg-6 project-item" data-category="web php ecommerce">
-            <div class="card h-100 project-card">
-                <div class="position-relative overflow-hidden">
-                    <img src="https://placehold.co/600x300/1a237e/ffffff?text=E-commerce+Store" class="card-img-top" alt="E-commerce Store">
-                    <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light" title="Vezi Codul">
-                                <i class="fas fa-code"></i>
-                            </a>
+        <?php if (!$projects): ?>
+            <div class="col-12"><div class="alert alert-info">Momentan nu există proiecte publicate.</div></div>
+        <?php else: ?>
+            <?php foreach ($projects as $p): ?>
+                <div class="col-lg-6 project-item" data-category="web php">
+                    <div class="card h-100 project-card">
+                        <div class="position-relative overflow-hidden">
+                            <?php 
+                            $img = !empty($p['image']) ? $p['image'] : 'https://placehold.co/600x300/0d47a1/ffffff?text=Project';
+                            ?>
+                            <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">
+                            <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <?php if (!empty($p['url'])): ?>
+                                        <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-primary me-2" title="Vezi Demo">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?= htmlspecialchars($p['title']) ?></h5>
+                            <p class="card-text"><?= htmlspecialchars($p['short_desc'] ?: '') ?></p>
+                            <?php if (!empty($p['tech'])): ?>
+                                <div class="mb-3">
+                                    <span class="badge bg-secondary"><?= htmlspecialchars(is_string($p['tech']) ? $p['tech'] : json_encode($p['tech'])) ?></span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">Magazin Online Modern</h5>
-                    <p class="card-text">Platformă e-commerce completă cu sistem de plăți, gestionare produse și panou de administrare.</p>
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-1">PHP</span>
-                        <span class="badge bg-success me-1">MySQL</span>
-                        <span class="badge bg-info me-1">Bootstrap</span>
-                        <span class="badge bg-warning">JavaScript</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>Decembrie 2024
-                        </small>
-                        <small class="text-muted">
-                            <i class="fas fa-clock me-1"></i>4 săptămâni
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Exemplu de proiect 2 - Web App -->
-        <div class="col-lg-6 project-item" data-category="web php">
-            <div class="card h-100 project-card">
-                <div class="position-relative overflow-hidden">
-                    <img src="https://placehold.co/600x300/0d47a1/ffffff?text=Task+Manager" class="card-img-top" alt="Task Manager">
-                    <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light" title="Vezi Codul">
-                                <i class="fas fa-code"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Sistem de Management Task-uri</h5>
-                    <p class="card-text">Aplicație web pentru gestionarea task-urilor cu sistem de utilizatori, notificări și rapoarte.</p>
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-1">PHP</span>
-                        <span class="badge bg-success me-1">MySQL</span>
-                        <span class="badge bg-secondary me-1">AJAX</span>
-                        <span class="badge bg-info">API REST</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>Noiembrie 2024
-                        </small>
-                        <small class="text-muted">
-                            <i class="fas fa-clock me-1"></i>3 săptămâni
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Exemplu de proiect 3 - CMS -->
-        <div class="col-lg-6 project-item" data-category="web php database">
-            <div class="card h-100 project-card">
-                <div class="position-relative overflow-hidden">
-                    <img src="https://placehold.co/600x300/01579b/ffffff?text=CMS+Platform" class="card-img-top" alt="CMS Platform">
-                    <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light" title="Vezi Codul">
-                                <i class="fas fa-code"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Platformă CMS Personalizată</h5>
-                    <p class="card-text">Sistem de management conținut cu editor drag & drop, SEO optimizat și multi-limbă.</p>
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-1">PHP</span>
-                        <span class="badge bg-success me-1">MySQL</span>
-                        <span class="badge bg-warning me-1">jQuery</span>
-                        <span class="badge bg-dark">SEO</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>Octombrie 2024
-                        </small>
-                        <small class="text-muted">
-                            <i class="fas fa-clock me-1"></i>6 săptămâni
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Exemplu de proiect 4 - Database -->
-        <div class="col-lg-6 project-item" data-category="database php">
-            <div class="card h-100 project-card">
-                <div class="position-relative overflow-hidden">
-                    <img src="https://placehold.co/600x300/28a745/ffffff?text=Inventory+System" class="card-img-top" alt="Inventory System">
-                    <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                        <div class="text-center">
-                            <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-light" title="Vezi Codul">
-                                <i class="fas fa-code"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Sistem de Inventariere</h5>
-                    <p class="card-text">Aplicație complexă pentru gestionarea stocurilor cu rapoarte avansate și integrări externe.</p>
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-1">PHP</span>
-                        <span class="badge bg-success me-1">MySQL</span>
-                        <span class="badge bg-info me-1">Chart.js</span>
-                        <span class="badge bg-secondary">PDF Export</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar me-1"></i>Septembrie 2024
-                        </small>
-                        <small class="text-muted">
-                            <i class="fas fa-clock me-1"></i>5 săptămâni
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
     
     <!-- Call to Action -->
