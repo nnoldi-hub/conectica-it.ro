@@ -1,8 +1,8 @@
 <?php 
 $page_title = "Acasă";
 $page_description = "Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
-require_once 'config/config.php';
-require_once 'includes/head.php'; 
+require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/head.php'; 
 ?>
 
 <section class='hero text-center py-5 mb-5'>
@@ -77,4 +77,4 @@ require_once 'includes/head.php';
     </div>
 </section>
 
-<?php require_once 'includes/foot.php'; ?>
+<?php require_once __DIR__ . '/includes/foot.php'; ?>

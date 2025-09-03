@@ -3,10 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include database connection
-require_once(__DIR__ . '/../config/database.php');
-
-// Simple path detection
+// Presentation-only: paths and flags
 $is_admin = isset($_SERVER['REQUEST_URI']) && (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false);
 $base_path = $is_admin ? '../' : '';
 ?>

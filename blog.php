@@ -1,8 +1,8 @@
 <?php 
 $page_title = "Blog IT";
 $page_description = "Blog cu articole despre dezvoltare web, PHP, MySQL, tehnologii moderne și tips & tricks pentru programatori.";
-include 'config/config.php';
-include 'includes/head.php'; 
+require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/head.php'; 
 ?>
 
 <div class="py-4">
@@ -22,7 +22,7 @@ include 'includes/head.php';
                             <h2 class="card-title mb-3">Cum să construiești o aplicație web modernă cu PHP și MySQL</h2>
                             <p class="card-text mb-4">Un ghid complet pentru dezvoltarea unei aplicații web robuste, de la planificare până la deployment. Învață cele mai bune practici și tehnici moderne...</p>
                             <div class="d-flex align-items-center mb-3">
-                                <img src="https://via.placeholder.com/40x40/28a745/ffffff?text=N" class="rounded-circle me-2" alt="Author">
+                                <img src="https://placehold.co/40x40/28a745/ffffff?text=N" class="rounded-circle me-2" alt="Author">
                                 <div>
                                     <small class="text-white-50">Nyikora Noldi • 15 Dec 2024 • 8 min citire</small>
                                 </div>
@@ -30,7 +30,7 @@ include 'includes/head.php';
                             <a href="#" class="btn btn-light">Citește articolul</a>
                         </div>
                         <div class="col-lg-4">
-                            <img src="https://via.placeholder.com/400x250/1a237e/ffffff?text=PHP+MySQL+Guide" class="img-fluid rounded" alt="Featured Article">
+                            <img src="https://placehold.co/400x250/1a237e/ffffff?text=PHP+MySQL+Guide" class="img-fluid rounded" alt="Featured Article">
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ include 'includes/head.php';
         <!-- Article 1 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="php tutorials">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/0d47a1/ffffff?text=PHP+Security" class="card-img-top" alt="PHP Security">
+                <img src="https://placehold.co/400x200/0d47a1/ffffff?text=PHP+Security" class="card-img-top" alt="PHP Security">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-primary">PHP</span>
@@ -81,7 +81,7 @@ include 'includes/head.php';
         <!-- Article 2 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="mysql tutorials">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/28a745/ffffff?text=MySQL+Optimization" class="card-img-top" alt="MySQL Optimization">
+                <img src="https://placehold.co/400x200/28a745/ffffff?text=MySQL+Optimization" class="card-img-top" alt="MySQL Optimization">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-success">MySQL</span>
@@ -106,7 +106,7 @@ include 'includes/head.php';
         <!-- Article 3 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="javascript tips">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/ffc107/000000?text=JavaScript+ES6" class="card-img-top" alt="JavaScript ES6">
+                <img src="https://placehold.co/400x200/ffc107/000000?text=JavaScript+ES6" class="card-img-top" alt="JavaScript ES6">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">JavaScript</span>
@@ -131,7 +131,7 @@ include 'includes/head.php';
         <!-- Article 4 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="tips tutorials">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/17a2b8/ffffff?text=Git+Workflow" class="card-img-top" alt="Git Workflow">
+                <img src="https://placehold.co/400x200/17a2b8/ffffff?text=Git+Workflow" class="card-img-top" alt="Git Workflow">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-info">Git</span>
@@ -156,7 +156,7 @@ include 'includes/head.php';
         <!-- Article 5 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="php tips">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/6610f2/ffffff?text=PHP+8+Features" class="card-img-top" alt="PHP 8 Features">
+                <img src="https://placehold.co/400x200/6610f2/ffffff?text=PHP+8+Features" class="card-img-top" alt="PHP 8 Features">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-primary">PHP</span>
@@ -181,7 +181,7 @@ include 'includes/head.php';
         <!-- Article 6 -->
         <div class="col-lg-4 col-md-6 article-item" data-category="tutorials tips">
             <article class="card h-100 border-0 shadow-sm">
-                <img src="https://via.placeholder.com/400x200/dc3545/ffffff?text=API+Development" class="card-img-top" alt="API Development">
+                <img src="https://placehold.co/400x200/dc3545/ffffff?text=API+Development" class="card-img-top" alt="API Development">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-danger">API</span>
@@ -351,4 +351,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'includes/foot.php'; ?>
+<?php require_once __DIR__ . '/includes/foot.php'; ?>

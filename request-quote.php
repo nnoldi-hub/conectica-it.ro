@@ -1,8 +1,8 @@
 <?php 
 $page_title = "Cere Ofertă";
 $page_description = "Solicită o ofertă personalizată pentru proiectul tău IT. Primești răspuns în 24 de ore cu detalii complete.";
-include 'config/config.php';
-require_once 'includes/head.php'; 
+require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/head.php'; 
 ?>
 
 <div class="py-4">
@@ -319,4 +319,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'includes/foot.php'; ?>
+<?php require_once __DIR__ . '/includes/foot.php'; ?>

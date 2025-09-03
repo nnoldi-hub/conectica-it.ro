@@ -1,8 +1,8 @@
 <?php 
 $page_title = "Contact";
 $page_description = "Contactează Nyikora Noldi pentru servicii IT profesionale. Email, telefon și informații complete de contact.";
-require_once 'config/config.php';
-require_once 'includes/head.php'; 
+require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/head.php'; 
 ?>
 
 <div class="py-4">
@@ -134,4 +134,4 @@ require_once 'includes/head.php';
     </div>
 </div>
 
-<?php require_once 'includes/foot.php'; ?>
+<?php require_once __DIR__ . '/includes/foot.php'; ?>

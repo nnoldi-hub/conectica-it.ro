@@ -1,8 +1,21 @@
 <?php 
 $page_title = "Proiecte";
 $page_description = "Portofoliul meu de proiecte web - aplicații PHP, soluții personalizate și dezvoltare web modernă.";
-require_once 'config/config.php';
-require_once 'includes/head.php'; 
+require_once __DIR__ . '/includes/init.php';
+require_once __DIR__ . '/includes/head.php'; 
+?>
+
+<?php
+// Optional: DB-driven list if table `projects` exists and $pdo is available
+// try {
+//     $projects = [];
+//     if ($pdo instanceof PDO) {
+//         $stmt = $pdo->query("SELECT id, title, short_description AS short_desc, image, technologies AS tech, project_url AS url FROM projects WHERE is_published = 1 ORDER BY id DESC");
+//         $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//     }
+// } catch (Throwable $e) {
+//     echo "<div class='container mt-4'><div class='alert alert-warning'>Nu pot citi proiectele: " . htmlspecialchars($e->getMessage()) . "</div></div>";
+// }
 ?>
 
 <div class="py-4">
@@ -28,7 +41,7 @@ require_once 'includes/head.php';
         <div class="col-lg-6 project-item" data-category="web php ecommerce">
             <div class="card h-100 project-card">
                 <div class="position-relative overflow-hidden">
-                    <img src="https://via.placeholder.com/600x300/1a237e/ffffff?text=E-commerce+Store" class="card-img-top" alt="E-commerce Store">
+                    <img src="https://placehold.co/600x300/1a237e/ffffff?text=E-commerce+Store" class="card-img-top" alt="E-commerce Store">
                     <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                         <div class="text-center">
                             <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
@@ -65,7 +78,7 @@ require_once 'includes/head.php';
         <div class="col-lg-6 project-item" data-category="web php">
             <div class="card h-100 project-card">
                 <div class="position-relative overflow-hidden">
-                    <img src="https://via.placeholder.com/600x300/0d47a1/ffffff?text=Task+Manager" class="card-img-top" alt="Task Manager">
+                    <img src="https://placehold.co/600x300/0d47a1/ffffff?text=Task+Manager" class="card-img-top" alt="Task Manager">
                     <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                         <div class="text-center">
                             <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
@@ -102,7 +115,7 @@ require_once 'includes/head.php';
         <div class="col-lg-6 project-item" data-category="web php database">
             <div class="card h-100 project-card">
                 <div class="position-relative overflow-hidden">
-                    <img src="https://via.placeholder.com/600x300/01579b/ffffff?text=CMS+Platform" class="card-img-top" alt="CMS Platform">
+                    <img src="https://placehold.co/600x300/01579b/ffffff?text=CMS+Platform" class="card-img-top" alt="CMS Platform">
                     <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                         <div class="text-center">
                             <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
@@ -139,7 +152,7 @@ require_once 'includes/head.php';
         <div class="col-lg-6 project-item" data-category="database php">
             <div class="card h-100 project-card">
                 <div class="position-relative overflow-hidden">
-                    <img src="https://via.placeholder.com/600x300/28a745/ffffff?text=Inventory+System" class="card-img-top" alt="Inventory System">
+                    <img src="https://placehold.co/600x300/28a745/ffffff?text=Inventory+System" class="card-img-top" alt="Inventory System">
                     <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                         <div class="text-center">
                             <a href="#" class="btn btn-primary me-2" title="Vezi Demo">
@@ -278,4 +291,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once 'includes/foot.php'; ?>
+<?php require_once __DIR__ . '/includes/foot.php'; ?>
