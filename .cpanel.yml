@@ -1,9 +1,5 @@
----
+﻿---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/ylcghxpa/public_html/
+    - export DEPLOYPATH=/home/ylcghxpa/public_html
     - /bin/cp -R . $DEPLOYPATH
-    - find $DEPLOYPATH -type d -exec chmod 755 {} \;
-    - find $DEPLOYPATH -type f -exec chmod 644 {} \;
-    - chmod -R 755 $DEPLOYPATH/admin/
-    - chmod -R 755 $DEPLOYPATH/config/
