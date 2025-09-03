@@ -1,7 +1,7 @@
 <?php 
 // Auto-deployment test - Last updated: <?= date('Y-m-d H:i:s') ?>
 $page_title = "Acasă";
-$page_description = "Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
+$page_description = "Freelancer IT - Nyikora Noldin. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
 include 'config/config.php';
 include 'includes/head.php'; 
 ?>

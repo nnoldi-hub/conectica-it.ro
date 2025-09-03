@@ -28,14 +28,14 @@ $base_path = $is_admin ? '../' : '';
     // } else {
         // Fallback meta tags for all pages
         $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
-        $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
+        $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldin. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
         $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
         
         echo "<title>{$title}</title>\n";
         echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
         echo "    <meta name=\"description\" content=\"{$description}\">\n";
         echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
-        echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
+        echo "    <meta name=\"author\" content=\"Nyikora Noldin\">\n";
         echo "    <meta name=\"robots\" content=\"index, follow\">";
     // }
     ?>

@@ -1,6 +1,6 @@
 <?php 
 $page_title = "Contact";
-$page_description = "Contactează Nyikora Noldi pentru servicii IT profesionale. Email, telefon și informații complete de contact.";
+$page_description = "Contactează Nyikora Noldin pentru servicii IT profesionale. Email, telefon și informații complete de contact.";
 include 'config/config.php';
 include 'includes/head.php'; 
 ?>
@@ -17,7 +17,7 @@ include 'includes/head.php';
                             <div class="bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                 <i class="fas fa-user text-white fa-lg"></i>
                             </div>
-                            <h5 class="card-title">Nyikora Noldi</h5>
+                            <h5 class="card-title">Nyikora Noldin</h5>
                             <p class="card-text text-muted">Freelancer & Developer IT</p>
                         </div>
                     </div>
