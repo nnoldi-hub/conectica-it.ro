@@ -10,7 +10,7 @@ include 'includes/head.php';
     <div class='container'>
         <div class='row justify-content-center'>
             <div class='col-lg-8'>
-                <h1 class='display-4 fw-bold text-white mb-3'>Nyikora Noldi</h1>
+                <h1 class='display-4 fw-bold text-white mb-3'>Nyikora Noldin</h1>
                 <h2 class='h4 text-white mb-4' style='opacity: 0.9;'>Freelancer & Developer IT</h2>
                 <p class='lead text-white mb-4' style='opacity: 0.8;'>Specializat în dezvoltarea de aplicații web moderne și soluții IT personalizate</p>
                 <div class='tech-stack mb-4'>
