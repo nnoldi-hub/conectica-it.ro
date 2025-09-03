@@ -3,18 +3,18 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include database and SEO helper
+// Include database - SEO helper disabled temporarily
 require_once(__DIR__ . '/../config/database.php');
-require_once(__DIR__ . '/seo.php');
+// require_once(__DIR__ . '/seo.php'); // Disabled until seo_settings table is created
 
 // Simple path detection
 $is_admin = (strpos($_SERVER['REQUEST_URI'], '/admin/') !== false);
 $base_path = $is_admin ? '../' : '';
 
-// Initialize SEO helper only for frontend pages
-if (!$is_admin && isset($database)) {
-    $seo = new SEOHelper($database);
-}
+// Initialize SEO helper only for frontend pages - DISABLED for now
+// if (!$is_admin && isset($database)) {
+//     $seo = new SEOHelper($database);
+// }
 ?>
 <!doctype html>
 <html lang="ro">
@@ -22,11 +22,11 @@ if (!$is_admin && isset($database)) {
     <meta charset='utf-8'>
     
     <?php 
-    // Generate SEO meta tags for frontend pages
-    if (!$is_admin && isset($seo)) {
-        echo $seo->generateMetaTags();
-    } else {
-        // Fallback meta tags for admin pages
+    // Generate SEO meta tags - simplified fallback
+    // if (!$is_admin && isset($seo)) {
+    //     echo $seo->generateMetaTags();
+    // } else {
+        // Fallback meta tags for all pages
         $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
         $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
         $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
@@ -36,8 +36,8 @@ if (!$is_admin && isset($database)) {
         echo "    <meta name=\"description\" content=\"{$description}\">\n";
         echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
         echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
-        echo "    <meta name=\"robots\" content=\"noindex, nofollow\">";
-    }
+        echo "    <meta name=\"robots\" content=\"index, follow\">";
+    // }
     ?>
     
     <!-- Bootstrap CSS -->
@@ -51,10 +51,10 @@ if (!$is_admin && isset($database)) {
     <link href='<?php echo $base_path; ?>assets/css/style.css' rel='stylesheet'>
     
     <?php 
-    // Add structured data for frontend pages
-    if (!$is_admin && isset($seo)) {
-        echo $seo->generateStructuredData();
-    }
+    // Add structured data - disabled until seo helper is working
+    // if (!$is_admin && isset($seo)) {
+    //     echo $seo->generateStructuredData();
+    // }
     ?>
 </head>
 <body>
