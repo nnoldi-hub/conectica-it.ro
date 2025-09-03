@@ -2,7 +2,10 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ylcqhxpa/public_html
-    - /bin/cp -R * $DEPLOYPATH/
-    - /bin/cp -R .htaccess $DEPLOYPATH/ 2>/dev/null || true
-    - find $DEPLOYPATH -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
-    - chmod -R 755 $DEPLOYPATH
+    - echo "Starting deployment..."
+    - /bin/cp -rf * $DEPLOYPATH/ 2>/dev/null || true  
+    - /bin/cp -f .htaccess $DEPLOYPATH/ 2>/dev/null || true
+    - /bin/rm -rf $DEPLOYPATH/.git 2>/dev/null || true
+    - /bin/chmod -R 755 $DEPLOYPATH 2>/dev/null || true
+    - /bin/chmod 644 $DEPLOYPATH/.htaccess 2>/dev/null || true
+    - echo "Deployment completed successfully"
