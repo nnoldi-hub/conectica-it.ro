@@ -3,13 +3,24 @@ deployment:
   tasks:
     - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
     - echo "[DEPLOY] Starting deploy to $DEPLOYPATH at $(date)"
-    # Sync files efficiently and avoid copying unwanted items
-    - /bin/rsync -a --delete \
-        --exclude ".git" \
-        --exclude ".cpanel.yml" \
-        --exclude "README.md" \
-        --exclude "**/*.md" \
-        ./ "$DEPLOYPATH"
+    # Prefer rsync if available; fallback to cp -a
+    - |
+      if command -v rsync >/dev/null 2>&1; then \
+        /usr/bin/rsync -a --delete \
+          --exclude ".git" \
+          --exclude ".cpanel.yml" \
+          --exclude "README.md" \
+          --exclude "**/*.md" \
+          --exclude "**/*.sh" \
+          --exclude "**/*.bat" \
+          --exclude "**/diag.php" \
+          --exclude "**/diagnostic.php" \
+          --exclude "**/test.php" \
+          --exclude "**/phptest.php" \
+          ./ "$DEPLOYPATH" ; \
+      else \
+        /bin/cp -a . "$DEPLOYPATH" ; \
+      fi
     # Ensure .htaccess is present if tracked
     - test -f .htaccess && /bin/cp -f .htaccess "$DEPLOYPATH" || true
     # Set safe permissions (directories 755, files 644)
