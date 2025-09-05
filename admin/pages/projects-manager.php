@@ -53,7 +53,7 @@
                             style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white;">
                         <option value="completed">Finalizat</option>
                         <option value="in_progress">În Progres</option>
-                        <option value="draft">Draft</option>
+                        <option value="planned">Planificat</option>
                     </select>
                 </div>
             </div>
@@ -134,111 +134,7 @@
 <!-- Projects List -->
 <div id="projectsList">
     <!-- Grid View -->
-    <div id="gridView" class="dashboard-grid">
-        <!-- Project Card 1 -->
-        <div class="card project-card" data-id="1" data-status="completed">
-            <div style="position: relative;">
-                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
-                    <span class="status-badge status-completed" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">Finalizat</span>
-                </div>
-                <img src="../assets/images/placeholders/wide-purple.svg" alt="Project" 
-                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
-            </div>
-            <div class="card-header">
-                <div class="card-icon" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">E-commerce Modern</h3>
-                    <div style="font-size: 0.9rem; opacity: 0.7;">PHP, MySQL, JavaScript</div>
-                </div>
-            </div>
-            <p class="card-description">Platformă de e-commerce completă cu sistem de plați, management produse și dashboard admin.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="editProject(1)" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-edit"></i> Editează
-                    </button>
-                    <button onclick="deleteProject(1)" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <a href="#" style="color: #667eea; text-decoration: none;"><i class="fas fa-external-link-alt"></i></a>
-                    <a href="#" style="color: #667eea; text-decoration: none;"><i class="fas fa-code"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Project Card 2 -->
-        <div class="card project-card" data-id="2" data-status="completed">
-            <div style="position: relative;">
-                <div style="position: absolute; top: 10px; right: 10px;">
-                    <span class="status-badge status-completed" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">Finalizat</span>
-                </div>
-                <img src="../assets/images/placeholders/wide-green.svg" alt="Project" 
-                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
-            </div>
-            <div class="card-header">
-                <div class="card-icon" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
-                    <i class="fas fa-building"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">Website Corporate</h3>
-                    <div style="font-size: 0.9rem; opacity: 0.7;">HTML, CSS, JavaScript</div>
-                </div>
-            </div>
-            <p class="card-description">Site web corporate modern cu design responsive și animații interactive.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="editProject(2)" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-edit"></i> Editează
-                    </button>
-                    <button onclick="deleteProject(2)" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <a href="#" style="color: #667eea; text-decoration: none;"><i class="fas fa-external-link-alt"></i></a>
-                    <a href="#" style="color: #667eea; text-decoration: none;"><i class="fas fa-code"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Project Card 3 -->
-        <div class="card project-card" data-id="3" data-status="in_progress">
-            <div style="position: relative;">
-                <div style="position: absolute; top: 10px; right: 10px;">
-                    <span class="status-badge status-in-progress" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(251, 191, 36, 0.2); color: #fbbf24;">În Progres</span>
-                </div>
-                <img src="../assets/images/placeholders/wide-orange.svg" alt="Project" 
-                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
-            </div>
-            <div class="card-header">
-                <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">Aplicație Mobile</h3>
-                    <div style="font-size: 0.9rem; opacity: 0.7;">React Native, Node.js</div>
-                </div>
-            </div>
-            <p class="card-description">Aplicație mobilă pentru gestionarea taskurilor cu sincronizare în cloud.</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="editProject(3)" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-edit"></i> Editează
-                    </button>
-                    <button onclick="deleteProject(3)" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <span style="color: rgba(255,255,255,0.5);"><i class="fas fa-clock"></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="gridView" class="dashboard-grid"></div>
 
     <!-- List View (hidden by default) -->
     <div id="listView" style="display: none;">
@@ -253,33 +149,7 @@
                         <th style="padding: 15px; text-align: center; color: white; font-weight: 600;">Acțiuni</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                        <td style="padding: 15px; color: white;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <img src="../assets/images/placeholders/square-purple.svg" style="width: 50px; height: 50px; border-radius: 8px;">
-                                <div>
-                                    <div style="font-weight: 600;">E-commerce Modern</div>
-                                    <div style="font-size: 0.9rem; opacity: 0.7;">Platformă completă de vânzări online</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td style="padding: 15px;">
-                            <span class="status-badge status-completed" style="padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">Finalizat</span>
-                        </td>
-                        <td style="padding: 15px; color: rgba(255,255,255,0.8);">PHP, MySQL, JavaScript</td>
-                        <td style="padding: 15px; color: rgba(255,255,255,0.8);">Fashion Store</td>
-                        <td style="padding: 15px; text-align: center;">
-                            <button onclick="editProject(1)" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer; margin-right: 5px;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteProject(1)" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
+                <tbody id="listBody"></tbody>
             </table>
         </div>
     </div>
@@ -287,11 +157,105 @@
 
 <script>
 let isGridView = true;
-let projects = [
-    {id: 1, title: 'E-commerce Modern', status: 'completed', technologies: 'PHP, MySQL, JavaScript', client: 'Fashion Store'},
-    {id: 2, title: 'Website Corporate', status: 'completed', technologies: 'HTML, CSS, JavaScript', client: 'Business Corp'},
-    {id: 3, title: 'Aplicație Mobile', status: 'in_progress', technologies: 'React Native, Node.js', client: 'StartupTech'}
-];
+let projects = [];
+let csrf = '';
+
+async function loadProjects() {
+    try {
+        const resp = await fetch('api/projects-list.php', { credentials: 'same-origin' });
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.error || 'Eroare');
+        projects = data.items || [];
+        csrf = data.csrf || '';
+        renderProjects();
+    } catch (e) {
+        document.getElementById('gridView').innerHTML = '<div class="card">Nu pot încărca proiectele.</div>';
+    }
+}
+
+function techToText(tech) {
+    if (!tech) return '';
+    if (Array.isArray(tech)) return tech.join(', ');
+    try { const t = JSON.parse(tech); if (Array.isArray(t)) return t.join(', ');} catch(_){}
+    return String(tech);
+}
+
+function renderProjects() {
+    const grid = document.getElementById('gridView');
+    grid.innerHTML = '';
+    if (!projects.length) {
+        grid.innerHTML = '<div class="card">Nu există proiecte încă. Click "Proiect Nou".</div>';
+        return;
+    }
+    for (const p of projects) {
+        const statusClass = p.status === 'completed' ? 'status-completed' : (p.status === 'in_progress' ? 'status-in-progress' : 'status-draft');
+        const statusLabel = p.status === 'completed' ? 'Finalizat' : (p.status === 'in_progress' ? 'În Progres' : 'Planificat');
+        const img = p.image || '../assets/images/placeholders/wide-purple.svg';
+        const card = document.createElement('div');
+        card.className = 'card project-card';
+        card.setAttribute('data-id', p.id);
+        card.setAttribute('data-status', p.status || 'completed');
+        card.innerHTML = `
+            <div style="position: relative;">
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
+                    <span class="status-badge ${statusClass}" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">${statusLabel}</span>
+                </div>
+                <img src="${img}" alt="Project" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
+            </div>
+            <div class="card-header">
+                <div class="card-icon" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div>
+                    <h3 class="card-title">${p.title}</h3>
+                    <div style="font-size: 0.9rem; opacity: 0.7;">${techToText(p.technologies)}</div>
+                </div>
+            </div>
+            <p class="card-description">${p.short_description || ''}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="editProject(${p.id})" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
+                        <i class="fas fa-edit"></i> Editează
+                    </button>
+                    <button onclick="deleteProject(${p.id})" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    ${p.project_url ? `<a href="${p.project_url}" target="_blank" style="color: #667eea; text-decoration: none;"><i class=\"fas fa-external-link-alt\"></i></a>` : ''}
+                    ${p.github_url ? `<a href="${p.github_url}" target="_blank" style="color: #667eea; text-decoration: none;"><i class=\"fas fa-code\"></i></a>` : ''}
+                </div>
+            </div>`;
+        grid.appendChild(card);
+    }
+    // List view
+    const listBody = document.getElementById('listBody');
+    if (listBody) {
+        listBody.innerHTML = projects.map(p => `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <td style="padding: 15px; color: white;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${p.image || '../assets/images/placeholders/square-purple.svg'}" style="width: 50px; height: 50px; border-radius: 8px;">
+                        <div>
+                            <div style="font-weight: 600;">${p.title}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.7;">${p.short_description || ''}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 15px;">${p.status || 'completed'}</td>
+                <td style="padding: 15px; color: rgba(255,255,255,0.8);">${techToText(p.technologies)}</td>
+                <td style="padding: 15px; color: rgba(255,255,255,0.8);">${p.client_name || ''}</td>
+                <td style="padding: 15px; text-align: center;">
+                    <button onclick="editProject(${p.id})" style="padding: 6px 12px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer; margin-right: 5px;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteProject(${p.id})" style="padding: 6px 12px; background: rgba(255,69,69,0.3); border: 1px solid rgba(255,69,69,0.5); border-radius: 6px; color: white; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`).join('');
+    }
+}
 
 function showAddProject() {
     document.getElementById('modalTitle').textContent = 'Adaugă Proiect Nou';
@@ -301,26 +265,37 @@ function showAddProject() {
 }
 
 function editProject(id) {
-    // Find project data (in real app, fetch from database)
-    const project = projects.find(p => p.id === id);
+    const project = projects.find(p => p.id == id);
     if (project) {
         document.getElementById('modalTitle').textContent = 'Editează Proiect';
         document.getElementById('projectId').value = id;
         document.getElementById('projectTitle').value = project.title;
-        document.getElementById('projectStatus').value = project.status;
-        // Fill other fields...
+        document.getElementById('projectStatus').value = project.status || 'completed';
+        document.getElementById('projectDescription').value = project.short_description || '';
+        document.getElementById('projectDetailedDescription').value = project.description || '';
+        document.getElementById('projectTechnologies').value = techToText(project.technologies);
+        document.getElementById('projectDuration').value = project.duration_weeks || '';
+        document.getElementById('projectClient').value = project.client_name || '';
+        document.getElementById('projectDemo').value = project.project_url || '';
+        document.getElementById('projectGithub').value = project.github_url || '';
         document.getElementById('projectModal').style.display = 'block';
     }
 }
 
 function deleteProject(id) {
     if (confirm('Sigur vrei să ștergi acest proiect? Acțiunea nu poate fi anulată.')) {
-        // Remove project (in real app, send delete request to server)
-        const card = document.querySelector(`[data-id="${id}"]`);
-        if (card) {
-            card.remove();
-            alert('Proiectul a fost șters cu succes!');
-        }
+        fetch('api/projects-delete.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ id: id, csrf_token: csrf })
+        }).then(r => r.json()).then(res => {
+            if (res && res.success) {
+                projects = projects.filter(p => p.id != id);
+                renderProjects();
+            } else {
+                alert('Nu am putut șterge proiectul.');
+            }
+        }).catch(() => alert('Eroare la server.'));
     }
 }
 
@@ -351,6 +326,10 @@ document.getElementById('projectForm').addEventListener('submit', function(e) {
     
     const formData = new FormData(this);
     const isEdit = document.getElementById('projectId').value !== '';
+    formData.append('csrf_token', csrf);
+    formData.append('short_description', document.getElementById('projectDescription').value);
+    formData.append('description', document.getElementById('projectDetailedDescription').value);
+    formData.append('image', (document.getElementById('projectImages').value || '').split(',')[0] || '');
     
     // Show loading state
     const submitBtn = this.querySelector('button[type="submit"]');
@@ -358,16 +337,22 @@ document.getElementById('projectForm').addEventListener('submit', function(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se salvează...';
     submitBtn.disabled = true;
     
-    // Simulate API call
-    setTimeout(() => {
-        alert(isEdit ? 'Proiectul a fost actualizat cu succes!' : 'Proiectul a fost adăugat cu succes!');
-        closeModal();
-        
-        // In real app, refresh the projects list here
-        
+    fetch('api/projects-save.php', {
+        method: 'POST',
+        body: new URLSearchParams([...formData.entries()])
+    }).then(r => r.json()).then(res => {
+        if (res && res.success) {
+            closeModal();
+            loadProjects();
+        } else if (res && res.error === 'CSRF_INVALID') {
+            alert('Sesiune expirată. Reîncarcă pagina.');
+        } else {
+            alert('Nu s-a putut salva proiectul.');
+        }
+    }).catch(() => alert('Eroare la server.')).finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-    }, 2000);
+    });
 });
 
 // Search and filter functionality
@@ -394,7 +379,7 @@ document.getElementById('filterStatus').addEventListener('change', function(e) {
     cards.forEach(card => {
         const cardStatus = card.getAttribute('data-status');
         
-        if (filterStatus === 'all' || cardStatus === filterStatus) {
+    if (filterStatus === 'all' || cardStatus === filterStatus) {
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
@@ -408,4 +393,7 @@ document.getElementById('projectModal').addEventListener('click', function(e) {
         closeModal();
     }
 });
+
+// Initial load
+loadProjects();
 </script>
