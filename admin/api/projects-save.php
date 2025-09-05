@@ -34,6 +34,18 @@ if ($title === '') {
     exit;
 }
 
+// normalize lengths to avoid strict mode errors
+$title = mb_substr($title, 0, 200);
+$short = mb_substr($short, 0, 500);
+$image = mb_substr($image, 0, 255);
+$project_url = mb_substr($project_url, 0, 255);
+$github_url = mb_substr($github_url, 0, 255);
+
+// validate status
+if (!in_array($status, ['completed','in_progress','planned'], true)) {
+    $status = 'completed';
+}
+
 // slug
 $slug = strtolower(trim(preg_replace('/[^a-z0-9-]+/i', '-', $title), '-'));
 
@@ -68,11 +80,22 @@ try {
     } else {
         $sql = "INSERT INTO projects (title, slug, description, short_description, image, technologies, status, project_url, github_url, is_published) VALUES (?,?,?,?,?,?,?,?,?,?)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published]);
+        try {
+            $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published]);
+        } catch (PDOException $ex) {
+            // Handle duplicate slug by appending a suffix once
+            if ($ex->getCode() === '23000') {
+                $slug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
+                $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published]);
+            } else {
+                throw $ex;
+            }
+        }
         $id = (int)$pdo->lastInsertId();
     }
 
     echo json_encode(['success' => true, 'id' => $id, 'slug' => $slug]);
 } catch (Throwable $e) {
-    echo json_encode(['success' => false, 'error' => 'DB_ERROR']);
+    $msg = $e instanceof PDOException ? $e->getMessage() : 'Unexpected';
+    echo json_encode(['success' => false, 'error' => 'DB_ERROR', 'message' => $msg]);
 }

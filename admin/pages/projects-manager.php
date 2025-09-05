@@ -330,7 +330,10 @@ document.getElementById('projectForm').addEventListener('submit', function(e) {
     formData.append('csrf_token', csrf);
     formData.append('short_description', document.getElementById('projectDescription').value);
     formData.append('description', document.getElementById('projectDetailedDescription').value);
-    formData.append('image', (document.getElementById('projectImages').value || '').split(',')[0] || '');
+    // image is the first URL from the list (or the uploaded preview)
+    const imagesField = (document.getElementById('projectImages').value || '').trim();
+    const firstImage = imagesField ? imagesField.split(',')[0].trim() : '';
+    formData.append('image', firstImage);
     
     // Show loading state
     const submitBtn = this.querySelector('button[type="submit"]');
