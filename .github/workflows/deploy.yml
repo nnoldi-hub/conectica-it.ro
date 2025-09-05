@@ -29,27 +29,32 @@ jobs:
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref_name }}"
 
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /public_html/
-          exclude: |
-            **/.git*
-            **/.github/**
-            **/.cpanel.yml
-            **/.gitattributes
-            **/.ftpignore
-            **/*.md
-            **/*.sh
-            **/*.bat
-            **/diag.php
-            **/diagnostic.php
-            **/test.php
-            **/phptest.php
-            **/manual-deploy.*
-            **/deploy-production.*
-          log-level: minimal
+      # FTP Deploy - dezactivat temporar
+      # Uncomment și configurează secretele: FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+      # - name: FTP Deploy
+      #   uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      #   with:
+      #     server: ${{ secrets.FTP_SERVER }}
+      #     username: ${{ secrets.FTP_USERNAME }}
+      #     password: ${{ secrets.FTP_PASSWORD }}
+      #     local-dir: ./
+      #     server-dir: /public_html/
+      #     exclude: |
+      #       **/.git*
+      #       **/.github/**
+      #       **/.cpanel.yml
+      #       **/.gitattributes
+      #       **/.ftpignore
+      #       **/*.md
+      #       **/*.sh
+      #       **/*.bat
+      #       **/diag.php
+      #       **/diagnostic.php
+      #       **/test.php
+      #       **/phptest.php
+      #       **/manual-deploy.*
+      #       **/deploy-production.*
+      #     log-level: minimal
+      
+      - name: Build complete
+        run: echo "✅ Build completed successfully! Configure FTP secrets to enable auto-deploy."
