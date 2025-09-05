@@ -1,7 +1,7 @@
 ﻿---
 deployment:
   tasks:
-    - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
+  - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
     - echo "[DEPLOY] Starting deploy to $DEPLOYPATH at $(date)"
     # Prefer rsync if available; fallback to cp -a
     - |
