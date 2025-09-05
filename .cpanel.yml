@@ -1,17 +1,20 @@
 ﻿---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/ylcqhxpa/public_html/
-    - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp -R .htaccess $DEPLOYPATH 2>/dev/null || true
-    - find $DEPLOYPATH -name "*.php" -exec chmod 644 {} \;
-    - find $DEPLOYPATH -name "*.js" -exec chmod 644 {} \;
-    - find $DEPLOYPATH -name "*.css" -exec chmod 644 {} \;
-    - find $DEPLOYPATH -name "*.json" -exec chmod 644 {} \;
-    - find $DEPLOYPATH -name "*.html" -exec chmod 644 {} \;
-    - chmod 755 $DEPLOYPATH/assets/
-    - chmod 755 $DEPLOYPATH/admin/
-    - chmod 755 $DEPLOYPATH/config/
-    - chmod 755 $DEPLOYPATH/includes/
-    - chmod 600 $DEPLOYPATH/config/database.php
-    - echo "Conectica-IT deployed successfully!"
+    - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
+    - echo "[DEPLOY] Starting deploy to $DEPLOYPATH at $(date)"
+    # Sync files efficiently and avoid copying unwanted items
+    - /bin/rsync -a --delete \
+        --exclude ".git" \
+        --exclude ".cpanel.yml" \
+        --exclude "README.md" \
+        --exclude "**/*.md" \
+        ./ "$DEPLOYPATH"
+    # Ensure .htaccess is present if tracked
+    - test -f .htaccess && /bin/cp -f .htaccess "$DEPLOYPATH" || true
+    # Set safe permissions (directories 755, files 644)
+    - /usr/bin/find "$DEPLOYPATH" -type d -exec chmod 755 {} \;
+    - /usr/bin/find "$DEPLOYPATH" -type f -exec chmod 644 {} \;
+    # Harden database config if it exists under public_html
+    - test -f "$DEPLOYPATH/config/database.php" && chmod 600 "$DEPLOYPATH/config/database.php" || true
+    - echo "[DEPLOY] Completed at $(date)"
