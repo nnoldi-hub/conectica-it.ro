@@ -1,0 +1,14 @@
+# Exclude dev and repo files from FTP deploy
+.git/
+.github/
+.cpanel.yml
+README.md
+**/*.md
+**/*.sh
+**/*.bat
+**/diag.php
+**/diagnostic.php
+**/test.php
+**/phptest.php
+manual-deploy.*
+deploy-production.*
