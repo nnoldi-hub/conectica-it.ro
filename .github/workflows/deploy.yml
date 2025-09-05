@@ -8,15 +8,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
       - name: Validate PHP files
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y php-cli
           find . -type f -name "*.php" -print0 | xargs -0 -I {} php -l "{}" | grep -v "No syntax errors detected" || echo "PHP syntax check completed"
 
       - name: Log deployment info
@@ -27,12 +30,11 @@ jobs:
           echo "Branch: ${{ github.ref_name }}"
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          # protocol: ftp # uncomment if your host only supports plain FTP
           local-dir: ./
           server-dir: /public_html/
           exclude: |
