@@ -14,14 +14,31 @@ class AuthSystem {
         if ($database) {
             $this->db = $database;
         } else {
-            // Try to get database connection
+            // Try to get database connection in a robust way without fatal errors
             try {
-                require_once __DIR__ . '/../config/database.php';
-                if (isset($pdo)) {
-                    $this->db = $pdo;
+                $paths = [];
+                if (defined('CONFIG_PATH')) {
+                    $paths[] = rtrim(CONFIG_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'database.php';
                 }
-            } catch (Exception $e) {
-                // Continue without database connection
+                // Fallbacks relative to this file (admin/)
+                $paths[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php';
+                $paths[] = __DIR__ . '/../config/database.php';
+
+                foreach ($paths as $path) {
+                    if (is_file($path)) {
+                        require_once $path;
+                        // Prefer factory function if available
+                        if (function_exists('getDatabaseConnection')) {
+                            $this->db = getDatabaseConnection();
+                        } elseif (isset($pdo)) {
+                            // Or pick up a pre-created $pdo if provided by the file
+                            $this->db = $pdo;
+                        }
+                        break;
+                    }
+                }
+            } catch (Throwable $e) {
+                // Continue without database connection; authentication will still work for demo user
             }
         }
         $this->initSession();

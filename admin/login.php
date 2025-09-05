@@ -5,7 +5,8 @@ require_once __DIR__ . '/../includes/init.php';
 // Then load the AuthSystem
 require_once __DIR__ . '/AuthSystem.php';
 
-$auth = new AuthSystem();
+// If bootstrap created a $pdo, pass it in; else AuthSystem will try to resolve on its own
+$auth = new AuthSystem(isset($pdo) ? $pdo : null);
 
 // Check if already logged in
 if ($auth->isAuthenticated()) {
