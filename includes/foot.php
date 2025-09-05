@@ -70,18 +70,20 @@
         <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
         (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
         })();
         </script>
     <?php elseif (defined('CHAT_CRISP_WEBSITE_ID') && CHAT_CRISP_WEBSITE_ID): ?>
         <!-- Crisp Chat -->
         <script type="text/javascript">
-        window.$crisp=[];window.CRISP_WEBSITE_ID="<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
+        // Declare via bracket notation to avoid editor warnings
+        window['$crisp'] = window['$crisp'] || [];
+        window['CRISP_WEBSITE_ID'] = window['CRISP_WEBSITE_ID'] || "<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
         (function(){
             var d=document;var s=d.createElement("script");
             s.src="https://client.crisp.chat/l.js";s.async=1;
@@ -89,7 +91,80 @@
         })();
         </script>
     <?php endif; ?>
+
+    <?php if (!defined('CHAT_FLOAT_BUTTON') || CHAT_FLOAT_BUTTON): ?>
+    <!-- Floating Chat Button (bottom-right) -->
+    <button id="chat-fab" type="button" aria-label="Deschide chat" class="btn btn-primary chat-fab">
+        <i class="fas fa-comments"></i>
+        <span class="chat-fab-label d-none d-sm-inline ms-2">Chat</span>
+    </button>
+    <style>
+        .chat-fab {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 2147483000; /* above most widgets */
+            border-radius: 999px;
+            padding: 12px 16px;
+            box-shadow: 0 12px 24px rgba(0,0,0,.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chat-fab:hover { transform: translateY(-1px); }
+        @media (max-width: 576px) { .chat-fab { right: 14px; bottom: 14px; padding: 12px; } .chat-fab-label { display:none !important; } }
+    </style>
+    <script>
+        (function(){
+            function openChat(){
+                try {
+                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                        if (typeof window.Tawk_API.showWidget === 'function') window.Tawk_API.showWidget();
+                        window.Tawk_API.maximize();
+                        return;
+                    }
+                    if (window.$crisp && Array.isArray(window.$crisp)) {
+                        window.$crisp.push(["do","chat:show"]);
+                        window.$crisp.push(["do","chat:open"]);
+                        return;
+                    }
+                    // Fallback
+                    window.location.href = 'contact.php#contact';
+                } catch (e) { /* no-op */ }
+            }
+            var fab = document.getElementById('chat-fab');
+            if (fab) fab.addEventListener('click', openChat);
+        })();
+    </script>
+    
+    <?php if (defined('CHAT_HIDE_PROVIDER_BADGE') && CHAT_HIDE_PROVIDER_BADGE): ?>
+    <!-- Optionally hide provider's default bubble to avoid duplicates -->
+    <script>
+        (function(){
+            function hideProviders(){
+                try {
+                    if (window.Tawk_API && typeof window.Tawk_API.hideWidget === 'function') {
+                        window.Tawk_API.hideWidget();
+                    }
+                    if (window.$crisp && Array.isArray(window.$crisp)) {
+                        window.$crisp.push(["do","chat:hide"]);
+                    }
+                } catch (e) {}
+            }
+            // Attempt after load and with a short retry, as these APIs attach async
+            window.addEventListener('load', function(){
+                hideProviders();
+                var tries = 0; var iv = setInterval(function(){
+                    tries++; hideProviders();
+                    if (tries > 10) clearInterval(iv);
+                }, 500);
+            });
+        })();
+    </script>
     <?php endif; ?>
+    <?php endif; ?>
+    <?php endif; ?>
+
 
     <!-- Custom JS -->
     <script>
