@@ -63,6 +63,34 @@
     <!-- Bootstrap JS -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
     
+    <?php if (defined('CHAT_ENABLED') && CHAT_ENABLED): ?>
+    <!-- Live Chat Widget -->
+    <?php if (defined('CHAT_PROVIDER') && CHAT_PROVIDER === 'tawk' && defined('CHAT_TAWK_PROPERTY_ID') && CHAT_TAWK_PROPERTY_ID && defined('CHAT_TAWK_WIDGET_ID') && CHAT_TAWK_WIDGET_ID): ?>
+        <!-- Tawk.to -->
+        <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+        </script>
+    <?php elseif (defined('CHAT_CRISP_WEBSITE_ID') && CHAT_CRISP_WEBSITE_ID): ?>
+        <!-- Crisp Chat -->
+        <script type="text/javascript">
+        window.$crisp=[];window.CRISP_WEBSITE_ID="<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
+        (function(){
+            var d=document;var s=d.createElement("script");
+            s.src="https://client.crisp.chat/l.js";s.async=1;
+            d.getElementsByTagName("head")[0].appendChild(s);
+        })();
+        </script>
+    <?php endif; ?>
+    <?php endif; ?>
+
     <!-- Custom JS -->
     <script>
         // Smooth scrolling pentru link-urile interne
