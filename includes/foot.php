@@ -70,6 +70,8 @@
         <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
         (function(){
+            // Guard: do not inject twice
+            if (document.querySelector('script[src^="https://embed.tawk.to/"]')) return;
             var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
             s1.async=true;
             s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
@@ -85,6 +87,8 @@
         window['$crisp'] = window['$crisp'] || [];
         window['CRISP_WEBSITE_ID'] = window['CRISP_WEBSITE_ID'] || "<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
         (function(){
+            // Guard: do not inject twice
+            if (document.querySelector('script[src^="https://client.crisp.chat/"]')) return;
             var d=document;var s=d.createElement("script");
             s.src="https://client.crisp.chat/l.js";s.async=1;
             d.getElementsByTagName("head")[0].appendChild(s);
@@ -168,16 +172,22 @@
 
     <!-- Custom JS -->
     <script>
-        // Smooth scrolling pentru link-urile interne
+        // Smooth scrolling pentru link-urile interne (cu gardă pentru href="#" sau ținte lipsă)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                try {
+                    const target = this.getAttribute('href');
+                    if (target && target.length > 1) {
+                        const el = document.querySelector(target);
+                        if (el) {
+                            e.preventDefault();
+                            el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                } catch (_) { /* no-op */ }
             });
         });
-        
+
         // Active nav link highlighting
         const currentLocation = location.pathname;
         const menuItems = document.querySelectorAll('.navbar-nav .nav-link');

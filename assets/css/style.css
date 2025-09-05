@@ -349,3 +349,10 @@ option {
 .card {
     animation: fadeInUp 0.6s ease-out;
 }
+
+/* Navbar brand logo sizing */
+.navbar-brand img {
+    height: 28px;
+    width: auto;
+    display: inline-block;
+}
