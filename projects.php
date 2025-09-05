@@ -10,7 +10,7 @@ require_once __DIR__ . '/includes/head.php';
 $projects = [];
 try {
     if ($pdo instanceof PDO) {
-        $stmt = $pdo->query("SELECT id, title, short_description AS short_desc, image, technologies AS tech, project_url AS url FROM projects WHERE is_published = 1 ORDER BY id DESC");
+        $stmt = $pdo->query("SELECT id, slug, title, short_description AS short_desc, image, technologies AS tech, project_url AS url FROM projects WHERE is_published = 1 ORDER BY id DESC");
         $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Throwable $e) {
@@ -48,9 +48,14 @@ try {
                             <?php 
                             $img = !empty($p['image']) ? $p['image'] : 'https://placehold.co/600x300/0d47a1/ffffff?text=Project';
                             ?>
-                            <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">
+                            <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="stretched-link text-decoration-none">
+                                <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">
+                            </a>
                             <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
+                                    <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="btn btn-light me-2" title="Detalii proiect">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
                                     <?php if (!empty($p['url'])): ?>
                                         <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-primary me-2" title="Vezi Demo">
                                             <i class="fas fa-eye"></i>
@@ -60,11 +65,29 @@ try {
                             </div>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($p['title']) ?></h5>
+                            <h5 class="card-title"><a class="text-decoration-none" href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>"><?= htmlspecialchars($p['title']) ?></a></h5>
                             <p class="card-text"><?= htmlspecialchars($p['short_desc'] ?: '') ?></p>
-                            <?php if (!empty($p['tech'])): ?>
-                                <div class="mb-3">
-                                    <span class="badge bg-secondary"><?= htmlspecialchars(is_string($p['tech']) ? $p['tech'] : json_encode($p['tech'])) ?></span>
+                            <?php 
+                            // Render technologies as individual badges
+                            $techBadges = [];
+                            if (!empty($p['tech'])) {
+                                if (is_string($p['tech'])) {
+                                    $decoded = json_decode($p['tech'], true);
+                                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                        $techBadges = $decoded;
+                                    } else {
+                                        $techBadges = array_map('trim', explode(',', $p['tech']));
+                                    }
+                                } elseif (is_array($p['tech'])) {
+                                    $techBadges = $p['tech'];
+                                }
+                            }
+                            if (!empty($techBadges)):
+                            ?>
+                                <div class="mb-3 d-flex flex-wrap gap-2">
+                                    <?php foreach ($techBadges as $tb): ?>
+                                        <span class="badge bg-secondary"><?= htmlspecialchars($tb) ?></span>
+                                    <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
                         </div>
