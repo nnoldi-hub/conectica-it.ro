@@ -25,6 +25,7 @@ $description = trim($_POST['description'] ?? '');
 $status = $_POST['status'] ?? 'completed';
 $technologies = $_POST['technologies'] ?? '';
 $image = trim($_POST['image'] ?? '');
+$gallery = $_POST['gallery'] ?? '';
 $project_url = trim($_POST['demo_url'] ?? ($_POST['project_url'] ?? ''));
 $github_url = trim($_POST['github_url'] ?? '');
 $is_published = isset($_POST['is_published']) ? (int)$_POST['is_published'] : 1;
@@ -63,6 +64,14 @@ try {
 
     // Normalize tech as JSON
     $techJson = null;
+    // Normalize gallery as JSON (array of strings)
+    $galleryJson = null;
+    if (!empty($gallery)) {
+        $gj = json_decode($gallery, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($gj)) {
+            $galleryJson = json_encode(array_values(array_map(function($u){ return mb_substr(trim((string)$u),0,255); }, $gj)));
+        }
+    }
     if ($technologies !== '') {
         $tryJson = json_decode($technologies, true);
         if (json_last_error() === JSON_ERROR_NONE) {
@@ -74,19 +83,19 @@ try {
     }
 
     if ($id > 0) {
-        $sql = "UPDATE projects SET title=?, slug=?, description=?, short_description=?, image=?, technologies=?, status=?, project_url=?, github_url=?, is_published=? WHERE id=?";
+        $sql = "UPDATE projects SET title=?, slug=?, description=?, short_description=?, image=?, gallery=?, technologies=?, status=?, project_url=?, github_url=?, is_published=? WHERE id=?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published, $id]);
+        $stmt->execute([$title, $slug, $description, $short, $image, $galleryJson, $techJson, $status, $project_url, $github_url, $is_published, $id]);
     } else {
-        $sql = "INSERT INTO projects (title, slug, description, short_description, image, technologies, status, project_url, github_url, is_published) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO projects (title, slug, description, short_description, image, gallery, technologies, status, project_url, github_url, is_published) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $pdo->prepare($sql);
         try {
-            $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published]);
+            $stmt->execute([$title, $slug, $description, $short, $image, $galleryJson, $techJson, $status, $project_url, $github_url, $is_published]);
         } catch (PDOException $ex) {
             // Handle duplicate slug by appending a suffix once
             if ($ex->getCode() === '23000') {
                 $slug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
-                $stmt->execute([$title, $slug, $description, $short, $image, $techJson, $status, $project_url, $github_url, $is_published]);
+                $stmt->execute([$title, $slug, $description, $short, $image, $galleryJson, $techJson, $status, $project_url, $github_url, $is_published]);
             } else {
                 throw $ex;
             }

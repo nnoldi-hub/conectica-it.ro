@@ -109,13 +109,13 @@
             </div>
             
             <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Imagini Proiect (URL-uri separate prin virgulă)</label>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: white;">Imagini Proiect (max 10) – trage pentru ordine sau selectează principală</label>
                 <textarea id="projectImages" name="images" rows="2"
                           style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; resize: vertical;"
                           placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg..."></textarea>
-                <small style="color: rgba(255,255,255,0.7);">Sau folosește butonul pentru a încărca imagini</small>
-                <input type="file" id="imageUpload" accept="image/*" style="margin-top: 10px; color: white;">
-                <div id="imagePreview" style="margin-top:10px;"></div>
+                <small style="color: rgba(255,255,255,0.7);">Poți încărca imagini sau lipi URL-uri manual. Max 10.</small>
+                <input type="file" id="imageUpload" accept="image/*" multiple style="margin-top: 10px; color: white;">
+                <div id="galleryPreview" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;"></div>
             </div>
             
             <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
@@ -160,6 +160,8 @@
 let isGridView = true;
 let projects = [];
 let csrf = '';
+let galleryUrls = [];
+let primaryUrl = '';
 
 async function loadProjects() {
     try {
@@ -279,6 +281,13 @@ function editProject(id) {
         document.getElementById('projectClient').value = project.client_name || '';
         document.getElementById('projectDemo').value = project.project_url || '';
         document.getElementById('projectGithub').value = project.github_url || '';
+        // Load gallery
+        try {
+            galleryUrls = Array.isArray(project.gallery) ? project.gallery : (project.gallery ? JSON.parse(project.gallery) : []);
+            if (!Array.isArray(galleryUrls)) galleryUrls = [];
+        } catch(_) { galleryUrls = []; }
+        primaryUrl = project.image || (galleryUrls[0] || '');
+        renderGallery();
         document.getElementById('projectModal').style.display = 'block';
     }
 }
@@ -341,9 +350,16 @@ document.getElementById('projectForm').addEventListener('submit', function(e) {
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Se salvează...';
     submitBtn.disabled = true;
     
+    // keep textarea in sync from gallery state
+    document.getElementById('projectImages').value = galleryUrls.join(', ');
+
     fetch('api/projects-save.php', {
         method: 'POST',
-        body: new URLSearchParams([...formData.entries()])
+        body: new URLSearchParams([
+            ...formData.entries(),
+            ['image', primaryUrl || (galleryUrls[0] || '')],
+            ['gallery', JSON.stringify(galleryUrls.slice(0,10))]
+        ])
     }).then(r => r.json()).then(res => {
         if (res && res.success) {
             closeModal();
@@ -351,7 +367,7 @@ document.getElementById('projectForm').addEventListener('submit', function(e) {
         } else if (res && res.error === 'CSRF_INVALID') {
             alert('Sesiune expirată. Reîncarcă pagina.');
         } else {
-            alert('Nu s-a putut salva proiectul.');
+            alert('Nu s-a putut salva proiectul.' + (res && res.message ? ('\n' + res.message) : ''));
         }
     }).catch(() => alert('Eroare la server.')).finally(() => {
         submitBtn.innerHTML = originalText;
@@ -401,31 +417,56 @@ document.getElementById('projectModal').addEventListener('click', function(e) {
 // Initial load
 loadProjects();
 
-// Upload image handler
-document.getElementById('imageUpload').addEventListener('change', async function(e) {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('csrf_token', csrf);
-    const prev = document.getElementById('imagePreview');
-    prev.innerHTML = '<span style="opacity:.8">Încarc imaginea…</span>';
-    try {
-        const r = await fetch('api/upload-image.php', { method: 'POST', body: fd });
-        const j = await r.json();
-        if (j && j.success && j.url) {
-            // Put URL as first image in field
-            const field = document.getElementById('projectImages');
-            const current = field.value.trim();
-            field.value = j.url + (current ? ', ' + current : '');
-            prev.innerHTML = `<img src="${j.url}" style="max-width:100%;max-height:160px;border-radius:8px;">`;
-        } else if (j && j.error === 'CSRF_INVALID') {
-            prev.innerHTML = '<span style="color:#f99">Sesiune expirată. Reîncarcă pagina.</span>';
-        } else {
-            prev.innerHTML = '<span style="color:#f99">Eroare la încărcare.</span>';
-        }
-    } catch (err) {
-        prev.innerHTML = '<span style="color:#f99">Eroare la server.</span>';
+// Gallery rendering and actions
+function renderGallery() {
+    // clamp to 10
+    galleryUrls = galleryUrls.slice(0, 10);
+    const wrap = document.getElementById('galleryPreview');
+    wrap.innerHTML = '';
+    document.getElementById('projectImages').value = galleryUrls.join(', ');
+    for (const url of galleryUrls) {
+        const item = document.createElement('div');
+        item.style.position = 'relative';
+        item.style.width = '120px';
+        item.style.height = '80px';
+        item.style.borderRadius = '8px';
+        item.style.overflow = 'hidden';
+        item.style.border = url === primaryUrl ? '2px solid #22c55e' : '1px solid rgba(255,255,255,0.2)';
+        item.innerHTML = `
+            <img src="${url}" style="width:100%;height:100%;object-fit:cover;">
+            <button type="button" title="Setează principală" style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.5);border:none;color:#fff;border-radius:6px;padding:4px 6px;cursor:pointer;">
+                <i class="fas fa-star"></i>
+            </button>
+            <button type="button" title="Șterge" style="position:absolute;top:6px;right:6px;background:rgba(255,69,69,0.6);border:none;color:#fff;border-radius:6px;padding:4px 6px;cursor:pointer;">
+                <i class="fas fa-times"></i>
+            </button>`;
+        const [btnPrimary, btnDelete] = item.querySelectorAll('button');
+        btnPrimary.addEventListener('click', () => { primaryUrl = url; renderGallery(); });
+        btnDelete.addEventListener('click', () => { galleryUrls = galleryUrls.filter(u => u !== url); if (primaryUrl === url) primaryUrl = galleryUrls[0] || ''; renderGallery(); });
+        wrap.appendChild(item);
     }
+}
+
+// Upload multiple images
+document.getElementById('imageUpload').addEventListener('change', async function(e) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const remaining = 10 - galleryUrls.length;
+    const toUpload = files.slice(0, remaining);
+    for (const file of toUpload) {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('csrf_token', csrf);
+        try {
+            const r = await fetch('api/upload-image.php', { method: 'POST', body: fd });
+            const j = await r.json();
+            if (j && j.success && j.url) {
+                galleryUrls.push(j.url);
+                if (!primaryUrl) primaryUrl = j.url;
+            }
+        } catch(_) {}
+    }
+    renderGallery();
+    this.value = '';
 });
 </script>

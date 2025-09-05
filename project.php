@@ -26,9 +26,38 @@ if ($slug && $pdo instanceof PDO) {
         <div class="row g-4">
             <div class="col-lg-8">
                 <?php 
-                $img = !empty($project['image']) ? $project['image'] : 'https://placehold.co/900x450/0d47a1/ffffff?text=Project';
+                $primary = !empty($project['image']) ? $project['image'] : 'assets/images/placeholders/wide-purple.svg';
+                $gallery = [];
+                if (!empty($project['gallery'])) {
+                    $jg = json_decode($project['gallery'], true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($jg)) {
+                        $gallery = $jg;
+                    }
+                }
+                // Build slides with primary first, unique
+                $slides = array_values(array_unique(array_filter(array_merge([$primary], $gallery))));
                 ?>
-                <img src="<?= htmlspecialchars($img) ?>" class="img-fluid rounded shadow-sm mb-3" alt="<?= htmlspecialchars($project['title']) ?>">
+                <?php if (count($slides) > 1): ?>
+                <div id="carouselProj" class="carousel slide mb-3" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded shadow-sm">
+                        <?php foreach ($slides as $i => $url): ?>
+                        <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                            <img src="<?= htmlspecialchars($url) ?>" class="d-block w-100" style="max-height:460px;object-fit:cover;" alt="<?= htmlspecialchars($project['title']) ?>">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProj" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProj" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <?php else: ?>
+                <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" alt="<?= htmlspecialchars($project['title']) ?>">
+                <?php endif; ?>
                 <h1 class="h3 mb-3"><?= htmlspecialchars($project['title']) ?></h1>
                 <p class="lead text-muted"><?= htmlspecialchars($project['short_description'] ?? '') ?></p>
                 <div class="content">
