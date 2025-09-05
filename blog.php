@@ -27,7 +27,7 @@ require_once __DIR__ . '/includes/head.php';
                                     <small class="text-white-50">Nyikora Noldi • 15 Dec 2024 • 8 min citire</small>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-light">Citește articolul</a>
+                            <a href="article.php?slug=php-mysql-modern-app" class="btn btn-light">Citește articolul</a>
                         </div>
                         <div class="col-lg-4">
                             <img src="https://placehold.co/400x250/1a237e/ffffff?text=PHP+MySQL+Guide" class="img-fluid rounded" alt="Featured Article">
@@ -63,7 +63,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">10 Dec 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">Securitatea în PHP: Cele mai importante vulnerabilități</a>
+                        <a href="article.php?slug=php-security" class="text-decoration-none">Securitatea în PHP: Cele mai importante vulnerabilități</a>
                     </h5>
                     <p class="card-text">Cum să protejezi aplicațiile PHP împotriva atacurilor comune: SQL injection, XSS, CSRF și multe altele...</p>
                     <div class="d-flex justify-content-between align-items-center">
@@ -88,7 +88,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">5 Dec 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">Optimizarea performanțelor în MySQL</a>
+                        <a href="article.php?slug=mysql-optimization" class="text-decoration-none">Optimizarea performanțelor în MySQL</a>
                     </h5>
                     <p class="card-text">Tehnici avansate pentru optimizarea query-urilor, indexare eficientă și configurarea serverului MySQL...</p>
                     <div class="d-flex justify-content-between align-items-center">
@@ -113,7 +113,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">1 Dec 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">JavaScript ES6+: Funcționalități esențiale</a>
+                        <a href="article.php?slug=javascript-es6-plus" class="text-decoration-none">JavaScript ES6+: Funcționalități esențiale</a>
                     </h5>
                     <p class="card-text">Explorează funcționalitățile moderne ale JavaScript: arrow functions, destructuring, async/await și mult mai mult...</p>
                     <div class="d-flex justify-content-between align-items-center">
@@ -138,7 +138,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">25 Nov 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">Workflow Git pentru dezvoltatori</a>
+                        <a href="article.php?slug=git-workflow" class="text-decoration-none">Workflow Git pentru dezvoltatori</a>
                     </h5>
                     <p class="card-text">Un ghid practic pentru utilizarea Git în proiecte reale: branching strategies, merge vs rebase, și best practices...</p>
                     <div class="d-flex justify-content-between align-items-center">
@@ -163,7 +163,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">20 Nov 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">Noutățile din PHP 8: Ce trebuie să știi</a>
+                        <a href="article.php?slug=php-8-features" class="text-decoration-none">Noutățile din PHP 8: Ce trebuie să știi</a>
                     </h5>
                     <p class="card-text">Descoperă funcționalitățile noi din PHP 8: Union types, Match expressions, Constructor property promotion și multe altele...</p>
                     <div class="d-flex justify-content-between align-items-center">
@@ -188,7 +188,7 @@ require_once __DIR__ . '/includes/head.php';
                         <small class="text-muted">15 Nov 2024</small>
                     </div>
                     <h5 class="card-title">
-                        <a href="#" class="text-decoration-none">Cum să construiești un API REST în PHP</a>
+                        <a href="article.php?slug=api-development" class="text-decoration-none">Cum să construiești un API REST în PHP</a>
                     </h5>
                     <p class="card-text">Ghid pas cu pas pentru crearea unui API REST robust: autentificare, validare, documentare și testare...</p>
                     <div class="d-flex justify-content-between align-items-center">

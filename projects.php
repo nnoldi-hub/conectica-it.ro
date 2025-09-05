@@ -90,6 +90,16 @@ try {
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
+                            <div class="mt-3">
+                                <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="btn btn-primary">
+                                    <i class="fas fa-book-open me-1"></i> Detalii proiect
+                                </a>
+                                <?php if (!empty($p['url'])): ?>
+                                    <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-outline-secondary ms-2">
+                                        <i class="fas fa-external-link-alt me-1"></i> Demo
+                                    </a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>
