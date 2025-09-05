@@ -39,8 +39,9 @@ $base_path = $is_admin ? '../' : '';
 <body>
     <nav class='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>
         <div class='container'>
-            <a class='navbar-brand fw-bold' href='<?php echo $base_path; ?>index.php'>
-                <i class="fas fa-code me-2"></i>Conectica‑IT
+            <a class='navbar-brand d-flex align-items-center' href='<?php echo $base_path; ?>index.php'>
+                <img src='<?php echo $base_path; ?>assets/images/logo.png' alt='Conectica‑IT' height='60' class='me-2' onerror="this.style.display='none'">
+                <span class='fw-bold d-none d-sm-inline'>Conectica‑IT</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

@@ -352,7 +352,12 @@ option {
 
 /* Navbar brand logo sizing */
 .navbar-brand img {
-    height: 28px;
-    width: auto;
-    display: inline-block;
+        height: 60px;
+        width: auto;
+        display: inline-block;
+}
+
+/* Optionally scale down a bit on very small screens */
+@media (max-width: 576px) {
+    .navbar-brand img { height: 48px; }
 }
