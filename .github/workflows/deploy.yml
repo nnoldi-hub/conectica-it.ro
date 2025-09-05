@@ -1,15 +1,30 @@
-name: Deploy to cPanel via FTP
+name: Deploy to Hostico via FTP
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Validate PHP files
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y php-cli
+          find . -type f -name "*.php" -print0 | xargs -0 -I {} php -l "{}" | grep -v "No syntax errors detected" || echo "PHP syntax check completed"
+
+      - name: Log deployment info
+        run: |
+          echo "Deploying commit: ${{ github.sha }}"
+          echo "Deployment time: $(date)"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -17,12 +32,15 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          # protocol: ftp # uncomment if your host only supports plain FTP
           local-dir: ./
           server-dir: /public_html/
           exclude: |
             **/.git*
             **/.github/**
             **/.cpanel.yml
+            **/.gitattributes
+            **/.ftpignore
             **/*.md
             **/*.sh
             **/*.bat
@@ -32,36 +50,4 @@ jobs:
             **/phptest.php
             **/manual-deploy.*
             **/deploy-production.*
-          dangerously-ignore-last-modified: true
           log-level: minimal
-name: Deploy to Hostico
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js (optional for future JS builds)
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Validate PHP files
-      run: |
-        # Check PHP syntax for all PHP files
-        find . -name "*.php" -exec php -l {} \; | grep -v "No syntax errors detected" || echo "PHP syntax check completed"
-        
-    - name: Log deployment info
-      run: |
-        echo "Deploying commit: ${{ github.sha }}"
-        echo "Deployment time: $(date)"
-        echo "Repository: ${{ github.repository }}"
-        echo "Branch: ${{ github.ref_name }}"
