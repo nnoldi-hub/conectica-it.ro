@@ -1,31 +1,21 @@
 ﻿---
 deployment:
   tasks:
-  - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
-    - echo "[DEPLOY] Starting deploy to $DEPLOYPATH at $(date)"
-    # Prefer rsync if available; fallback to cp -a
+    - export DEPLOYPATH="/home/ylcqhxpa/public_html/"
+    - /bin/mkdir -p "$DEPLOYPATH"
+    - echo "[DEPLOY] TAR sync start $(date)" > "$DEPLOYPATH/deploy.log"
     - |
-      if command -v rsync >/dev/null 2>&1; then \
-        /usr/bin/rsync -a --delete \
-          --exclude ".git" \
-          --exclude ".cpanel.yml" \
-          --exclude "README.md" \
-          --exclude "**/*.md" \
-          --exclude "**/*.sh" \
-          --exclude "**/*.bat" \
-          --exclude "**/diag.php" \
-          --exclude "**/diagnostic.php" \
-          --exclude "**/test.php" \
-          --exclude "**/phptest.php" \
-          ./ "$DEPLOYPATH" ; \
-      else \
-        /bin/cp -a . "$DEPLOYPATH" ; \
-      fi
-    # Ensure .htaccess is present if tracked
+      /bin/tar -C . \
+        --exclude ".git" \
+        --exclude ".cpanel.yml" \
+        --exclude "README.md" \
+        --exclude "**/*.md" \
+        --exclude "**/*.sh" \
+        --exclude "**/*.bat" \
+        --exclude "**/diag.php" \
+        --exclude "**/diagnostic.php" \
+        --exclude "**/test.php" \
+        --exclude "**/phptest.php" \
+        -cf - . | /bin/tar -C "$DEPLOYPATH" -xf -
     - test -f .htaccess && /bin/cp -f .htaccess "$DEPLOYPATH" || true
-    # Set safe permissions (directories 755, files 644)
-    - /usr/bin/find "$DEPLOYPATH" -type d -exec chmod 755 {} \;
-    - /usr/bin/find "$DEPLOYPATH" -type f -exec chmod 644 {} \;
-    # Harden database config if it exists under public_html
-    - test -f "$DEPLOYPATH/config/database.php" && chmod 600 "$DEPLOYPATH/config/database.php" || true
-    - echo "[DEPLOY] Completed at $(date)"
+    - echo "[DEPLOY] Done $(date)" >> "$DEPLOYPATH/deploy.log"
