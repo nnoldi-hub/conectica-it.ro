@@ -9,9 +9,9 @@
 
 <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; gap: 15px;">
-        <button onclick="showAddArticle()" style="padding: 12px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+        <a href="?page=blog-editor" style="display:inline-block; padding: 12px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; text-decoration:none;">
             <i class="fas fa-plus"></i> Articol Nou
-        </button>
+        </a>
         <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white;">
             <option value="all">Toate Articolele</option>
             <option value="published">Publicate</option>
@@ -35,12 +35,12 @@
         </div>
         <p class="card-description">Explorează cele mai noi tendințe în dezvoltarea web și tehnologiile care vor domina anul 2025...</p>
         <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button style="padding: 8px 15px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
+            <a href="?page=blog-editor" style="padding: 8px 15px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer; text-decoration:none; display:inline-block;">
                 <i class="fas fa-edit"></i> Editează
-            </button>
-            <button style="padding: 8px 15px; background: rgba(34,197,94,0.3); border: 1px solid rgba(34,197,94,0.5); border-radius: 6px; color: white; cursor: pointer;">
+            </a>
+            <a href="?page=blog-preview" style="padding: 8px 15px; background: rgba(34,197,94,0.3); border: 1px solid rgba(34,197,94,0.5); border-radius: 6px; color: white; cursor: pointer; text-decoration:none; display:inline-block;">
                 <i class="fas fa-eye"></i> Vezi
-            </button>
+            </a>
         </div>
     </div>
 
@@ -58,10 +58,10 @@
         </div>
         <p class="card-description">Ghid complet cu cele mai bune practici PHP pentru dezvoltatori moderni...</p>
         <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button style="padding: 8px 15px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer;">
+            <a href="?page=blog-editor" style="padding: 8px 15px; background: rgba(102,126,234,0.3); border: 1px solid rgba(102,126,234,0.5); border-radius: 6px; color: white; cursor: pointer; text-decoration:none; display:inline-block;">
                 <i class="fas fa-edit"></i> Continuă editarea
-            </button>
-            <button style="padding: 8px 15px; background: rgba(251,191,36,0.3); border: 1px solid rgba(251,191,36,0.5); border-radius: 6px; color: white; cursor: pointer;">
+            </a>
+            <button disabled style="padding: 8px 15px; background: rgba(251,191,36,0.2); border: 1px solid rgba(251,191,36,0.3); border-radius: 6px; color: rgba(255,255,255,0.7); cursor: not-allowed;">
                 <i class="fas fa-upload"></i> Publică
             </button>
         </div>
@@ -69,7 +69,5 @@
 </div>
 
 <script>
-function showAddArticle() {
-    alert('Editor de articole va fi implementat cu rich text editor și preview live.');
-}
+// Optional: future enhancements for filtering/pagination can go here
 </script>
