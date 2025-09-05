@@ -42,7 +42,7 @@ if ($slug && $pdo instanceof PDO) {
                     <div class="carousel-inner rounded shadow-sm">
                         <?php foreach ($slides as $i => $url): ?>
                         <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-                            <img src="<?= htmlspecialchars($url) ?>" class="d-block w-100" style="max-height:460px;object-fit:cover;" alt="<?= htmlspecialchars($project['title']) ?>">
+                            <img src="<?= htmlspecialchars($url) ?>" class="d-block w-100" style="max-height:460px;object-fit:cover;cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>">
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -56,7 +56,7 @@ if ($slug && $pdo instanceof PDO) {
                     </button>
                 </div>
                 <?php else: ?>
-                <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" alt="<?= htmlspecialchars($project['title']) ?>">
+                <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" style="cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>">
                 <?php endif; ?>
                 <h1 class="h3 mb-3"><?= htmlspecialchars($project['title']) ?></h1>
                 <p class="lead text-muted"><?= htmlspecialchars($project['short_description'] ?? '') ?></p>
@@ -103,3 +103,43 @@ if ($slug && $pdo instanceof PDO) {
 </div>
 
 <?php require_once __DIR__ . '/includes/foot.php'; ?>
+<style>
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:2000}
+.lightbox-overlay.show{display:flex}
+.lightbox-img{max-width:95vw;max-height:95vh;object-fit:contain;box-shadow:0 0 30px rgba(0,0,0,.6);border-radius:6px}
+.lightbox-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer}
+.lightbox-prev{left:20px}
+.lightbox-next{right:20px}
+.lightbox-close{top:20px;right:20px;transform:none}
+</style>
+<div id="lightbox" class="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Galerie proiect">
+    <button class="lightbox-btn lightbox-prev" aria-label="Imagine anterioară">&#10094;</button>
+    <img id="lightboxImg" class="lightbox-img" alt="Imagine proiect">
+    <button class="lightbox-btn lightbox-next" aria-label="Imagine următoare">&#10095;</button>
+    <button class="lightbox-btn lightbox-close" aria-label="Închide">&#10006;</button>
+</div>
+<script>
+(function(){
+    const slides = <?= json_encode($slides ?? []) ?>;
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    const btnPrev = lb.querySelector('.lightbox-prev');
+    const btnNext = lb.querySelector('.lightbox-next');
+    const btnClose = lb.querySelector('.lightbox-close');
+    let idx = 0;
+    function show(i){ if(!slides.length) return; idx = (i+slides.length)%slides.length; img.src = slides[idx]; lb.classList.add('show'); }
+    function hide(){ lb.classList.remove('show'); img.src=''; }
+    btnPrev.addEventListener('click',()=>show(idx-1));
+    btnNext.addEventListener('click',()=>show(idx+1));
+    btnClose.addEventListener('click', hide);
+    lb.addEventListener('click', e=>{ if(e.target===lb) hide(); });
+    document.addEventListener('keydown', e=>{ if(!lb.classList.contains('show')) return; if(e.key==='Escape') hide(); if(e.key==='ArrowLeft') show(idx-1); if(e.key==='ArrowRight') show(idx+1); });
+
+    // open on click images
+    document.querySelectorAll('#carouselProj .carousel-item img').forEach((el,i)=>{
+        el.addEventListener('click', ()=>show(i));
+    });
+    const single = document.querySelector('img[alt="<?= htmlspecialchars($project['title']) ?>"].img-fluid');
+    if(single){ single.addEventListener('click', ()=>show(0)); }
+})();
+</script>

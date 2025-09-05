@@ -475,12 +475,6 @@ $current_page = $_GET['page'] ?? 'dashboard';
                 case 'blog':
                     include 'pages/blog-manager.php';
                     break;
-                case 'blog-editor':
-                    include 'pages/blog-editor.php';
-                    break;
-                case 'blog-preview':
-                    include 'pages/blog-preview.php';
-                    break;
                 case 'messages':
                     include 'pages/messages.php';
                     break;

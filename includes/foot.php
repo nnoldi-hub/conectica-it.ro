@@ -84,7 +84,8 @@
     <?php elseif (defined('CHAT_CRISP_WEBSITE_ID') && CHAT_CRISP_WEBSITE_ID): ?>
         <!-- Crisp Chat -->
         <script type="text/javascript">
-        // Declare via bracket notation to avoid editor warnings
+        // eslint-disable-next-line dot-notation
+        // Declare via bracket notation to avoid editor warnings with special chars
         window['$crisp'] = window['$crisp'] || [];
         window['CRISP_WEBSITE_ID'] = window['CRISP_WEBSITE_ID'] || "<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
         (function(){
