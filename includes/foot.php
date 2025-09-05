@@ -71,13 +71,14 @@
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
         (function(){
             // Guard: do not inject twice
-            if (document.querySelector('script[src^="https://embed.tawk.to/"]')) return;
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
+            if (!document.querySelector('script[src^="https://embed.tawk.to/"]')) {
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            }
         })();
         </script>
     <?php elseif (defined('CHAT_CRISP_WEBSITE_ID') && CHAT_CRISP_WEBSITE_ID): ?>
@@ -88,10 +89,11 @@
         window['CRISP_WEBSITE_ID'] = window['CRISP_WEBSITE_ID'] || "<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
         (function(){
             // Guard: do not inject twice
-            if (document.querySelector('script[src^="https://client.crisp.chat/"]')) return;
-            var d=document;var s=d.createElement("script");
-            s.src="https://client.crisp.chat/l.js";s.async=1;
-            d.getElementsByTagName("head")[0].appendChild(s);
+            if (!document.querySelector('script[src^="https://client.crisp.chat/"]')) {
+                var d=document;var s=d.createElement("script");
+                s.src="https://client.crisp.chat/l.js";s.async=1;
+                d.getElementsByTagName("head")[0].appendChild(s);
+            }
         })();
         </script>
     <?php endif; ?>
@@ -122,19 +124,26 @@
         (function(){
             function openChat(){
                 try {
+                    // Check Tawk.to first
                     if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                        if (typeof window.Tawk_API.showWidget === 'function') window.Tawk_API.showWidget();
+                        if (typeof window.Tawk_API.showWidget === 'function') {
+                            window.Tawk_API.showWidget();
+                        }
                         window.Tawk_API.maximize();
-                        return;
                     }
-                    if (window.$crisp && Array.isArray(window.$crisp)) {
+                    // Check Crisp second
+                    else if (window.$crisp && Array.isArray(window.$crisp)) {
                         window.$crisp.push(["do","chat:show"]);
                         window.$crisp.push(["do","chat:open"]);
-                        return;
                     }
-                    // Fallback
+                    // Fallback to contact page
+                    else {
+                        window.location.href = 'contact.php#contact';
+                    }
+                } catch (e) { 
+                    // Fallback on any error
                     window.location.href = 'contact.php#contact';
-                } catch (e) { /* no-op */ }
+                }
             }
             var fab = document.getElementById('chat-fab');
             if (fab) fab.addEventListener('click', openChat);
@@ -147,20 +156,28 @@
         (function(){
             function hideProviders(){
                 try {
+                    // Hide Tawk widget if available
                     if (window.Tawk_API && typeof window.Tawk_API.hideWidget === 'function') {
                         window.Tawk_API.hideWidget();
                     }
+                    // Hide Crisp widget if available
                     if (window.$crisp && Array.isArray(window.$crisp)) {
                         window.$crisp.push(["do","chat:hide"]);
                     }
-                } catch (e) {}
+                } catch (e) {
+                    // Silent fail - widgets may not be loaded yet
+                }
             }
             // Attempt after load and with a short retry, as these APIs attach async
             window.addEventListener('load', function(){
                 hideProviders();
-                var tries = 0; var iv = setInterval(function(){
-                    tries++; hideProviders();
-                    if (tries > 10) clearInterval(iv);
+                var tries = 0; 
+                var iv = setInterval(function(){
+                    tries++; 
+                    hideProviders();
+                    if (tries > 10) {
+                        clearInterval(iv);
+                    }
                 }, 500);
             });
         })();
