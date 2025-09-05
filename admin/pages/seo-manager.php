@@ -127,24 +127,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get current SEO settings
+// Get current SEO settings (auto-create table if missing)
 try {
     $stmt = $database->prepare("SELECT * FROM seo_settings WHERE setting_type = 'global' LIMIT 1");
     $stmt->execute();
     $global_seo = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-    
+
     $stmt = $database->prepare("SELECT * FROM seo_settings WHERE setting_type = 'page'");
     $stmt->execute();
     $page_seo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Convert to associative array by page_name
     $page_settings = [];
     foreach ($page_seo as $setting) {
         $page_settings[$setting['page_name']] = $setting;
     }
-    
+
 } catch (PDOException $e) {
-    $error_message = 'Eroare la încărcarea setărilor SEO: ' . $e->getMessage();
+    // If table doesn't exist, create it and continue with defaults
+    if (strpos($e->getMessage(), 'seo_settings') !== false) {
+        try {
+            $database->exec("CREATE TABLE IF NOT EXISTS seo_settings (
+                id INT(11) NOT NULL AUTO_INCREMENT,
+                setting_type ENUM('global','page') NOT NULL,
+                page_name VARCHAR(100) DEFAULT NULL,
+                site_title VARCHAR(200) DEFAULT NULL,
+                site_description VARCHAR(300) DEFAULT NULL,
+                site_keywords VARCHAR(500) DEFAULT NULL,
+                canonical_url VARCHAR(255) DEFAULT NULL,
+                og_title VARCHAR(200) DEFAULT NULL,
+                og_description VARCHAR(300) DEFAULT NULL,
+                og_image VARCHAR(255) DEFAULT NULL,
+                google_analytics VARCHAR(100) DEFAULT NULL,
+                google_search_console VARCHAR(255) DEFAULT NULL,
+                robots_txt TEXT DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY setting_type (setting_type),
+                KEY page_name (page_name)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        } catch (PDOException $ce) {
+            $error_message = 'Eroare la crearea tabelei seo_settings: ' . $ce->getMessage();
+        }
+    } else {
+        $error_message = 'Eroare la încărcarea setărilor SEO: ' . $e->getMessage();
+    }
     $global_seo = [];
     $page_settings = [];
 }

@@ -22,7 +22,7 @@
 
 <div class="dashboard-grid">
     <div class="card">
-        <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=Web+Development+Trends" alt="Article" 
+    <img src="../assets/images/placeholders/wide-purple.svg" alt="Article" 
              style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
         <div class="card-header">
             <div class="card-icon">
@@ -45,7 +45,7 @@
     </div>
 
     <div class="card">
-        <img src="https://via.placeholder.com/400x200/22c55e/ffffff?text=PHP+Best+Practices" alt="Article" 
+    <img src="../assets/images/placeholders/wide-green.svg" alt="Article" 
              style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
         <div class="card-header">
             <div class="card-icon">

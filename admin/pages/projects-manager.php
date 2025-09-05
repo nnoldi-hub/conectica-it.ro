@@ -141,7 +141,7 @@
                 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 5px;">
                     <span class="status-badge status-completed" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">Finalizat</span>
                 </div>
-                <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=E-commerce+Modern" alt="Project" 
+                <img src="../assets/images/placeholders/wide-purple.svg" alt="Project" 
                      style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
             </div>
             <div class="card-header">
@@ -176,7 +176,7 @@
                 <div style="position: absolute; top: 10px; right: 10px;">
                     <span class="status-badge status-completed" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(34, 197, 94, 0.2); color: #22c55e;">Finalizat</span>
                 </div>
-                <img src="https://via.placeholder.com/400x200/764ba2/ffffff?text=Website+Corporate" alt="Project" 
+                <img src="../assets/images/placeholders/wide-green.svg" alt="Project" 
                      style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
             </div>
             <div class="card-header">
@@ -211,7 +211,7 @@
                 <div style="position: absolute; top: 10px; right: 10px;">
                     <span class="status-badge status-in-progress" style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; background: rgba(251, 191, 36, 0.2); color: #fbbf24;">În Progres</span>
                 </div>
-                <img src="https://via.placeholder.com/400x200/f59e0b/ffffff?text=App+Mobile" alt="Project" 
+                <img src="../assets/images/placeholders/wide-orange.svg" alt="Project" 
                      style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">
             </div>
             <div class="card-header">
@@ -257,7 +257,7 @@
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                         <td style="padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <img src="https://via.placeholder.com/50x50/667eea/ffffff" style="width: 50px; height: 50px; border-radius: 8px;">
+                                <img src="../assets/images/placeholders/square-purple.svg" style="width: 50px; height: 50px; border-radius: 8px;">
                                 <div>
                                     <div style="font-weight: 600;">E-commerce Modern</div>
                                     <div style="font-size: 0.9rem; opacity: 0.7;">Platformă completă de vânzări online</div>
