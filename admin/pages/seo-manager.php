@@ -1,28 +1,15 @@
 <?php
-require_once(__DIR__ . '/../AuthSystem.php');
+require_once __DIR__ . '/../../includes/init.php';
+require_once __DIR__ . '/../AuthSystem.php';
 
-// Defensive DB initialization (ensure $database and $pdo exist)
-if (!function_exists('getDatabaseConnection')) {
-    // try to include config if not present
-    @require_once(__DIR__ . '/../../config/database.php');
+// Ensure we have a PDO in $pdo from bootstrap
+if (!isset($pdo) && function_exists('getDatabaseConnection')) {
+    try { $pdo = getDatabaseConnection(); } catch (Throwable $e) { $pdo = null; $error_message = 'Eroare la conexiunea bazei de date: ' . $e->getMessage(); }
 }
 
-if (!isset($database) || !($database instanceof PDO)) {
-    try {
-        if (function_exists('getDatabaseConnection')) {
-            $database = getDatabaseConnection();
-        }
-    } catch (Exception $e) {
-        $database = null;
-        $error_message = 'Eroare la conexiunea bazei de date: ' . $e->getMessage();
-    }
-}
+$database = isset($pdo) && $pdo instanceof PDO ? $pdo : null;
 
-if (!isset($pdo) && isset($database) && $database instanceof PDO) {
-    $pdo = $database; // alias for legacy code
-}
-
-$auth = new AuthSystem();
+$auth = new AuthSystem($database);
 $auth->requireAuth();
 
 $success_message = '';

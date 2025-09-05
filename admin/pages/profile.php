@@ -1,19 +1,9 @@
 <?php
+require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../AuthSystem.php';
-require_once __DIR__ . '/../../config/database.php';
 
-// Initialize database connection
-try {
-    if (function_exists('getDatabaseConnection')) {
-        $database = getDatabaseConnection();
-        $pdo = $database; // Alias for compatibility
-    }
-} catch (Exception $e) {
-    $database = null;
-    $pdo = null;
-}
-
-$auth = new AuthSystem();
+// Auth with bootstrap-provided PDO
+$auth = new AuthSystem(isset($pdo) ? $pdo : null);
 $auth->requireAuth();
 
 $user = $auth->getCurrentUser();

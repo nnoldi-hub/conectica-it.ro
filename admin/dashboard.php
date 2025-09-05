@@ -1,25 +1,10 @@
 <?php
+// Common bootstrap and Auth system
+require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/AuthSystem.php';
 
-require_once 'AuthSystem.php';
-
-// Ensure database connection is available to all admin pages
-// This prevents "call to a member function prepare() on null" when included pages
-try {
-    require_once __DIR__ . '/../config/database.php';
-    if (function_exists('getDatabaseConnection')) {
-        $database = getDatabaseConnection();
-    }
-} catch (Exception $e) {
-    // Leave $database as null; pages will show a friendly error if DB is missing
-    $database = null;
-}
-
-// Alias for legacy code expecting $pdo
-if (!isset($pdo) && isset($database) && $database instanceof PDO) {
-    $pdo = $database;
-}
-
-$auth = new AuthSystem();
+// Create Auth with existing PDO if available
+$auth = new AuthSystem(isset($pdo) ? $pdo : null);
 $auth->requireAuth(); // Require authentication
 
 $user = $auth->getCurrentUser();
