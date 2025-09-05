@@ -46,7 +46,7 @@ try {
                     <div class="card h-100 project-card">
                         <div class="position-relative overflow-hidden">
                             <?php 
-                            $img = !empty($p['image']) ? $p['image'] : 'https://placehold.co/600x300/0d47a1/ffffff?text=Project';
+                            $img = !empty($p['image']) ? $p['image'] : 'assets/images/placeholders/wide-purple.svg';
                             ?>
                             <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="stretched-link text-decoration-none">
                                 <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">

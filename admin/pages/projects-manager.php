@@ -114,7 +114,8 @@
                           style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; resize: vertical;"
                           placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg..."></textarea>
                 <small style="color: rgba(255,255,255,0.7);">Sau folosește butonul pentru a încărca imagini</small>
-                <input type="file" id="imageUpload" multiple accept="image/*" style="margin-top: 10px; color: white;">
+                <input type="file" id="imageUpload" accept="image/*" style="margin-top: 10px; color: white;">
+                <div id="imagePreview" style="margin-top:10px;"></div>
             </div>
             
             <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 20px;">
@@ -396,4 +397,32 @@ document.getElementById('projectModal').addEventListener('click', function(e) {
 
 // Initial load
 loadProjects();
+
+// Upload image handler
+document.getElementById('imageUpload').addEventListener('change', async function(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('csrf_token', csrf);
+    const prev = document.getElementById('imagePreview');
+    prev.innerHTML = '<span style="opacity:.8">Încarc imaginea…</span>';
+    try {
+        const r = await fetch('api/upload-image.php', { method: 'POST', body: fd });
+        const j = await r.json();
+        if (j && j.success && j.url) {
+            // Put URL as first image in field
+            const field = document.getElementById('projectImages');
+            const current = field.value.trim();
+            field.value = j.url + (current ? ', ' + current : '');
+            prev.innerHTML = `<img src="${j.url}" style="max-width:100%;max-height:160px;border-radius:8px;">`;
+        } else if (j && j.error === 'CSRF_INVALID') {
+            prev.innerHTML = '<span style="color:#f99">Sesiune expirată. Reîncarcă pagina.</span>';
+        } else {
+            prev.innerHTML = '<span style="color:#f99">Eroare la încărcare.</span>';
+        }
+    } catch (err) {
+        prev.innerHTML = '<span style="color:#f99">Eroare la server.</span>';
+    }
+});
 </script>
