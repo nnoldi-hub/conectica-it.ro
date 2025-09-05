@@ -1,5 +1,9 @@
 <?php
-require_once 'AuthSystem.php';
+// Initialize the common bootstrap first
+require_once __DIR__ . '/../includes/init.php';
+
+// Then load the AuthSystem
+require_once __DIR__ . '/AuthSystem.php';
 
 $auth = new AuthSystem();
 
