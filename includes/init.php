@@ -10,10 +10,10 @@ error_reporting(E_ALL);
 define('PUBLIC_PATH', realpath(__DIR__ . '/..')); // public_html
 define('ROOT_PATH', dirname(PUBLIC_PATH));        // one level above public_html
 
-// Resolve config path: prefer outside public, else fallback to /config inside public
-$__configPath = ROOT_PATH . DIRECTORY_SEPARATOR . 'config';
+// Resolve config path: prefer /config inside this project, else fallback to parent /config
+$__configPath = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'config';
 if (!is_dir($__configPath)) {
-    $__configPath = PUBLIC_PATH . DIRECTORY_SEPARATOR . 'config';
+    $__configPath = ROOT_PATH . DIRECTORY_SEPARATOR . 'config';
 }
 define('CONFIG_PATH', $__configPath);
 unset($__configPath);

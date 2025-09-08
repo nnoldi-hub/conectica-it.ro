@@ -9,7 +9,7 @@ require_once __DIR__ . '/includes/head.php';
   <div class="container">
     <div class="row align-items-center g-4 mb-5">
       <div class="col-lg-5">
-        <img src="assets/images/placeholders/wide-orange.svg" class="img-fluid rounded shadow-sm" alt="Portret Nyikora Noldi">
+        <img src="assets/images/placeholders/nnoldi.png" loading="lazy" class="img-fluid rounded shadow-sm" alt="Nyikora Noldi">
       </div>
       <div class="col-lg-7">
         <h1 class="mb-3">Despre mine</h1>

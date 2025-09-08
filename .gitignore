@@ -1,4 +1,10 @@
-# Conectica IT Portfolio - Git Ignore Configuration
+# Local overrides
+config/database.local.php
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/# Conectica IT Portfolio - Git Ignore Configuration
 
 # Sensitive Configuration Files
 config/config.php
