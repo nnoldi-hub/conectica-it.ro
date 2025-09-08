@@ -1,6 +1,8 @@
 # Local overrides
 config/database.local.php
 config/mail.local.php
+vendor/
+composer.lock
 
 # OS/Editor
 .DS_Store

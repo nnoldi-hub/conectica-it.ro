@@ -4,6 +4,7 @@
 
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../includes/mailer.php';
+require_once __DIR__ . '/../../includes/newsletter_template.php';
 require_once __DIR__ . '/../../config/mail.php';
 
 function h($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
@@ -23,7 +24,36 @@ if ($token !== NEWSLETTER_ADMIN_TOKEN) {
 $status = '';
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $subject = trim($_POST['subject'] ?? '');
-    $body = trim($_POST['body'] ?? '');
+    $mode = $_POST['mode'] ?? 'raw'; // 'raw' or 'builder'
+    $body = '';
+    if ($mode === 'builder') {
+        $preheader = trim($_POST['preheader'] ?? '');
+        $title = trim($_POST['title'] ?? $subject);
+        $intro = trim($_POST['intro'] ?? '');
+        $cta_text = trim($_POST['cta_text'] ?? 'Află mai mult');
+        $cta_url = trim($_POST['cta_url'] ?? 'blog.php');
+        $items = [];
+        for ($i=1; $i<=3; $i++) {
+            $items[] = [
+                'tag' => trim($_POST['item'.$i.'_tag'] ?? ''),
+                'title' => trim($_POST['item'.$i.'_title'] ?? ''),
+                'desc' => trim($_POST['item'.$i.'_desc'] ?? ''),
+                'url' => trim($_POST['item'.$i.'_url'] ?? ''),
+            ];
+        }
+        $body = newsletter_template_html([
+            'brand' => 'Conectica‑IT',
+            'subject' => $subject,
+            'preheader' => $preheader,
+            'title' => $title,
+            'intro' => $intro,
+            'items' => $items,
+            'cta_text' => $cta_text,
+            'cta_url' => $cta_url,
+        ]);
+    } else {
+        $body = trim($_POST['body'] ?? '');
+    }
     $dry = isset($_POST['dry_run']);
 
     if ($subject === '' || $body === '') {
@@ -75,10 +105,55 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     <?php if ($status): ?><div class="status"><?php echo h($status); ?></div><?php endif; ?>
     <form method="post">
         <input type="hidden" name="token" value="<?php echo h($token); ?>">
+        <div class="row">
+            <label>Mod trimitere</label>
+            <select name="mode">
+                <option value="builder">Builder (recomandat)</option>
+                <option value="raw">HTML manual</option>
+            </select>
+        </div>
         <label>Subiect</label>
         <input type="text" name="subject" placeholder="Ex: Noutăți AI & DevOps (Septembrie)" required>
-        <label>Conținut HTML</label>
-        <textarea name="body" rows="12" placeholder="&lt;h2&gt;Salut!&lt;/h2&gt; &lt;p&gt;Ultimele noutăți...&lt;/p&gt;" required></textarea>
+        <fieldset style="margin-top:12px;padding:10px;border:1px solid #ddd;border-radius:8px">
+            <legend>Builder</legend>
+            <label>Preheader</label>
+            <input type="text" name="preheader" placeholder="Rezumat scurt al newsletter-ului">
+            <label>Titlu</label>
+            <input type="text" name="title" placeholder="Titlul din header">
+            <label>Intro</label>
+            <textarea name="intro" rows="3" placeholder="Salut! Iată noutățile..."></textarea>
+            <div class="row">
+                <label>CTA Text</label>
+                <input type="text" name="cta_text" placeholder="Află mai mult">
+                <label>CTA URL</label>
+                <input type="text" name="cta_url" placeholder="blog.php">
+            </div>
+            <div class="row">
+                <div>
+                    <strong>Item 1</strong>
+                    <input type="text" name="item1_tag" placeholder="AI">
+                    <input type="text" name="item1_title" placeholder="Titlu">
+                    <input type="text" name="item1_url" placeholder="URL">
+                    <textarea name="item1_desc" rows="2" placeholder="Descriere"></textarea>
+                </div>
+                <div>
+                    <strong>Item 2</strong>
+                    <input type="text" name="item2_tag" placeholder="DevOps">
+                    <input type="text" name="item2_title" placeholder="Titlu">
+                    <input type="text" name="item2_url" placeholder="URL">
+                    <textarea name="item2_desc" rows="2" placeholder="Descriere"></textarea>
+                </div>
+                <div>
+                    <strong>Item 3</strong>
+                    <input type="text" name="item3_tag" placeholder="Security">
+                    <input type="text" name="item3_title" placeholder="Titlu">
+                    <input type="text" name="item3_url" placeholder="URL">
+                    <textarea name="item3_desc" rows="2" placeholder="Descriere"></textarea>
+                </div>
+            </div>
+        </fieldset>
+        <label>HTML manual (dacă alegi modul RAW)</label>
+        <textarea name="body" rows="12" placeholder="&lt;h2&gt;Salut!&lt;/h2&gt; &lt;p&gt;Ultimele noutăți...&lt;/p&gt;"></textarea>
         <label><input type="checkbox" name="dry_run" checked> Dry-run (nu trimite, doar calculează)</label>
         <div style="margin-top:12px"><button type="submit">Rulează</button></div>
     </form>
