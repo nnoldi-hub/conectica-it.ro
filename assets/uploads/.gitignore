@@ -1,0 +1,7 @@
+# Keep the uploads folder but ignore files
+*
+!.gitignore
+!README.md
+!blog/
+!projects/
+!avatars/

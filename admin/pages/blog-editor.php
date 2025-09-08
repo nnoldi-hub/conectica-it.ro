@@ -26,7 +26,12 @@ $csrf_token = $auth->generateCSRFToken();
 			</div>
 			<div>
 				<label>Imagine cover (URL)</label>
-				<input type="url" name="cover_image" id="cover_image" placeholder="/assets/images/placeholders/wide-purple.svg" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;">
+				<div style="display:flex;gap:8px;align-items:center;">
+					<input type="url" name="cover_image" id="cover_image" placeholder="/assets/images/placeholders/wide-purple.svg" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;">
+					<input type="file" id="coverFile" accept="image/*" style="display:none;" />
+					<button type="button" id="uploadBtn" class="logout-btn" style="white-space:nowrap;">Încarcă…</button>
+				</div>
+				<small id="uploadMsg" style="display:block;opacity:0.8;margin-top:6px;"></small>
 			</div>
 			<div>
 				<label>Categorie</label>
@@ -86,6 +91,9 @@ const form = document.getElementById('blogForm');
 const preview = document.getElementById('preview');
 const statusSel = document.getElementById('status');
 const saveMsg = document.getElementById('saveMsg');
+const uploadBtn = document.getElementById('uploadBtn');
+const coverFile = document.getElementById('coverFile');
+const uploadMsg = document.getElementById('uploadMsg');
 
 function buildPreview() {
 	const title = document.getElementById('title').value;
@@ -130,4 +138,29 @@ document.getElementById('publish').addEventListener('click', () => submitBlog('p
 
 // Initial preview
 buildPreview();
+
+// Image upload wiring -> uses /admin/api/upload-image.php with scope=blog
+uploadBtn.addEventListener('click', () => coverFile.click());
+coverFile.addEventListener('change', () => {
+	if (!coverFile.files || !coverFile.files[0]) return;
+	const fd = new FormData();
+	fd.append('file', coverFile.files[0]);
+	fd.append('csrf_token', form.querySelector('input[name="csrf_token"]').value);
+	fd.append('scope', 'blog');
+	uploadBtn.disabled = true;
+	uploadMsg.textContent = 'Se încarcă imaginea…';
+	fetch('/admin/api/upload-image.php', { method: 'POST', body: fd })
+		.then(r => r.json())
+		.then(res => {
+			if (res && res.success && res.url) {
+				document.getElementById('cover_image').value = res.url;
+				uploadMsg.textContent = 'Încărcată.';
+				buildPreview();
+			} else {
+				uploadMsg.textContent = 'Eroare încărcare: ' + (res && (res.error || res.message) || 'necunoscută');
+			}
+		})
+		.catch(() => uploadMsg.textContent = 'Eroare de rețea la încărcare')
+		.finally(() => { uploadBtn.disabled = false; coverFile.value=''; });
+});
 </script>

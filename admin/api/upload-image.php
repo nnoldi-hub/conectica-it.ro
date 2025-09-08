@@ -1,5 +1,5 @@
 <?php
-// Image upload endpoint for admin projects
+// Image upload endpoint for admin (projects/blog/avatars/misc)
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../includes/init.php';
@@ -40,7 +40,14 @@ $ext = $allowed[$mime];
 $safeName = preg_replace('/[^a-z0-9\-]+/i', '-', pathinfo($file['name'], PATHINFO_FILENAME));
 $filename = $safeName . '-' . date('Ymd-His') . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
 
-$targetDir = rtrim(PUBLIC_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'projects';
+// Determine destination subfolder securely
+$scope = $_POST['scope'] ?? 'projects';
+$allowedScopes = ['projects', 'blog', 'avatars', 'misc'];
+if (!in_array($scope, $allowedScopes, true)) {
+    $scope = 'projects';
+}
+
+$targetDir = rtrim(PUBLIC_PATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . $scope;
 if (!is_dir($targetDir)) {
     @mkdir($targetDir, 0755, true);
 }
@@ -52,5 +59,5 @@ if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
 }
 
 // Build web path absolute from site root
-$webPath = '/assets/uploads/projects/' . $filename;
+$webPath = '/assets/uploads/' . $scope . '/' . $filename;
 echo json_encode(['success' => true, 'url' => $webPath]);
