@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Proiecte";
-$page_description = "Portofoliul meu de proiecte web - aplicații PHP, soluții personalizate și dezvoltare web modernă.";
+$page_title = "Proiecte Web & Portofoliu | Aplicații PHP, JavaScript | Conectica IT";
+$page_description = "Descoperă proiectele web realizate: aplicații PHP personalizate, platforme e-commerce, sisteme de management. Tehnologii moderne: MySQL, Bootstrap, JavaScript, API-uri.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>

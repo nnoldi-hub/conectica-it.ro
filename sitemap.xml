@@ -1,0 +1,58 @@
+<?php
+header('Content-Type: application/xml; charset=utf-8');
+
+// Define base URL
+$base_url = 'https://www.conectica-it.ro';
+
+// Define static pages with their priority and change frequency
+$pages = [
+    '' => ['priority' => '1.0', 'changefreq' => 'weekly', 'lastmod' => '2025-09-08'],
+    'projects.php' => ['priority' => '0.9', 'changefreq' => 'weekly', 'lastmod' => '2025-09-08'],
+    'blog.php' => ['priority' => '0.8', 'changefreq' => 'daily', 'lastmod' => '2025-09-08'],
+    'contact.php' => ['priority' => '0.7', 'changefreq' => 'monthly', 'lastmod' => '2025-09-08'],
+    'request-quote.php' => ['priority' => '0.6', 'changefreq' => 'monthly', 'lastmod' => '2025-09-08'],
+    'politica-cookies.php' => ['priority' => '0.3', 'changefreq' => 'yearly', 'lastmod' => '2025-09-08']
+];
+
+echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?php foreach ($pages as $page => $settings): ?>
+  <url>
+    <loc><?= rtrim($base_url, '/') . '/' . $page ?></loc>
+    <lastmod><?= $settings['lastmod'] ?></lastmod>
+    <changefreq><?= $settings['changefreq'] ?></changefreq>
+    <priority><?= $settings['priority'] ?></priority>
+  </url>
+<?php endforeach; ?>
+
+<?php
+// Add dynamic blog articles if database is available
+try {
+    require_once __DIR__ . '/includes/init.php';
+    if ($pdo instanceof PDO) {
+        $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
+        $tableExists = $stmt && $stmt->fetchColumn();
+        
+        if ($tableExists) {
+            $stmt = $pdo->query("SELECT slug, COALESCE(published_at, created_at) as dt FROM blog_posts WHERE status='published' ORDER BY dt DESC");
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($articles as $article):
+                $lastmod = date('Y-m-d', strtotime($article['dt']));
+?>
+  <url>
+    <loc><?= $base_url ?>/article.php?slug=<?= urlencode($article['slug']) ?></loc>
+    <lastmod><?= $lastmod ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+<?php 
+            endforeach;
+        }
+    }
+} catch (Exception $e) {
+    // Ignore database errors in sitemap generation
+}
+?>
+</urlset>

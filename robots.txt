@@ -1,30 +1,21 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://conectica-it.ro/sitemap.xml
-
-# Block admin area
+# Directories to exclude from crawling
 Disallow: /admin/
-
-# Block config files
 Disallow: /config/
-
-# Block includes
+Disallow: /logs/
+Disallow: /uploads/
 Disallow: /includes/
-
-# Block install files
 Disallow: /install.sql
 
-# Allow important pages
-Allow: /index.php
-Allow: /projects.php
-Allow: /blog.php
-Allow: /contact.php
-Allow: /request-quote.php
-
-# Allow assets
+# Allow specific files and directories
 Allow: /assets/
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# Sitemap location
+Sitemap: https://www.conectica-it.ro/sitemap.xml
 
 # Crawl delay (optional - helps with server load)
 Crawl-delay: 1

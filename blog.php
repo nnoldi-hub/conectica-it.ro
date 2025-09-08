@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Blog IT";
-$page_description = "Blog cu articole despre dezvoltare web, PHP, MySQL, tehnologii moderne și tips & tricks pentru programatori.";
+$page_title = "Blog IT & Dezvoltare Web | Tutoriale PHP, JavaScript, MySQL | Conectica IT";
+$page_description = "Blog cu articole despre dezvoltare web, PHP, MySQL, JavaScript. Tutoriale practice, tips & tricks pentru programatori și insights din lumea IT modernă.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>

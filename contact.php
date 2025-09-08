@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Contact";
-$page_description = "Contactează Nyikora Noldi pentru servicii IT profesionale. Email, telefon și informații complete de contact.";
+$page_title = "Contact & Colaborare | Cere Ofertă Dezvoltare Web | Conectica IT";
+$page_description = "Contactează-mă pentru proiecte web, aplicații PHP, consultanță IT. Răspund rapid la cereri. Telefon: +40740173581, Email: conectica.it.ro@gmail.com";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>

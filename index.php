@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Acasă";
-$page_description = "Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate pentru afaceri moderne.";
+$page_title = "Conectica IT - Dezvoltare Web & Soluții IT Profesionale | Nyikora Noldi";
+$page_description = "Dezvoltator web freelancer cu experiență în PHP, MySQL, JavaScript. Creez aplicații web moderne, rapide și sigure pentru afaceri. Consultanță IT profesională în România.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>

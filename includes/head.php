@@ -18,10 +18,12 @@ $base_path = $is_admin ? '../' : '';
         echo $seo->generateMetaTags();
         echo "\n" . $seo->generateStructuredData();
     } else {
-        // Generate meta tags (fallback)
-        $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
+        // Generate enhanced meta tags (fallback)
+        $title = isset($page_title) ? htmlspecialchars($page_title) : SITE_NAME;
         $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
-        $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
+        $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web, programare România, consultant IT';
+        $canonical_url = BASE_URL . $_SERVER['REQUEST_URI'];
+        $og_image = BASE_URL . '/assets/images/og-image-conectica-it.jpg';
         
         echo "<title>{$title}</title>\n";
         echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
@@ -29,6 +31,52 @@ $base_path = $is_admin ? '../' : '';
         echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
         echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
         echo "    <meta name=\"robots\" content=\"index, follow\">\n";
+        echo "    <link rel=\"canonical\" href=\"{$canonical_url}\">\n";
+        
+        // Open Graph tags
+        echo "    <!-- Open Graph Meta Tags -->\n";
+        echo "    <meta property=\"og:type\" content=\"website\">\n";
+        echo "    <meta property=\"og:title\" content=\"{$title}\">\n";
+        echo "    <meta property=\"og:description\" content=\"{$description}\">\n";
+        echo "    <meta property=\"og:image\" content=\"{$og_image}\">\n";
+        echo "    <meta property=\"og:url\" content=\"{$canonical_url}\">\n";
+        echo "    <meta property=\"og:site_name\" content=\"Conectica IT\">\n";
+        echo "    <meta property=\"og:locale\" content=\"ro_RO\">\n";
+        
+        // Twitter Card tags
+        echo "    <!-- Twitter Card Meta Tags -->\n";
+        echo "    <meta name=\"twitter:card\" content=\"summary_large_image\">\n";
+        echo "    <meta name=\"twitter:title\" content=\"{$title}\">\n";
+        echo "    <meta name=\"twitter:description\" content=\"{$description}\">\n";
+        echo "    <meta name=\"twitter:image\" content=\"{$og_image}\">\n";
+        
+        // JSON-LD structured data for homepage
+        if (basename($_SERVER['PHP_SELF'], '.php') === 'index') {
+            echo "    <!-- JSON-LD Structured Data -->\n";
+            echo "    <script type=\"application/ld+json\">\n";
+            echo "    {\n";
+            echo "        \"@context\": \"https://schema.org\",\n";
+            echo "        \"@type\": [\"Person\", \"Organization\"],\n";
+            echo "        \"name\": \"Nyikora Noldi\",\n";
+            echo "        \"alternateName\": \"Conectica IT\",\n";
+            echo "        \"jobTitle\": \"Dezvoltator Web Freelancer\",\n";
+            echo "        \"description\": \"{$description}\",\n";
+            echo "        \"url\": \"" . BASE_URL . "\",\n";
+            echo "        \"telephone\": \"+40740173581\",\n";
+            echo "        \"email\": \"conectica.it.ro@gmail.com\",\n";
+            echo "        \"address\": {\n";
+            echo "            \"@type\": \"PostalAddress\",\n";
+            echo "            \"addressCountry\": \"Romania\"\n";
+            echo "        },\n";
+            echo "        \"knowsAbout\": [\"Dezvoltare Web\", \"PHP\", \"JavaScript\", \"MySQL\", \"Bootstrap\", \"Aplicații Web\"],\n";
+            echo "        \"offers\": {\n";
+            echo "            \"@type\": \"Service\",\n";
+            echo "            \"name\": \"Servicii Dezvoltare Web\",\n";
+            echo "            \"description\": \"Dezvoltare aplicații web moderne, consultanță IT și soluții personalizate\"\n";
+            echo "        }\n";
+            echo "    }\n";
+            echo "    </script>\n";
+        }
     }
     ?>
     
@@ -81,9 +129,14 @@ $base_path = $is_admin ? '../' : '';
                     <a class='btn btn-primary btn-sm me-2' href='<?php echo $base_path; ?>request-quote.php'>
                         <i class="fas fa-paper-plane me-1"></i>Cere Ofertă
                     </a>
+                    <?php
+                    // Show Admin only if user is already authenticated or on admin pages
+                    $show_admin = $is_admin || (isset($_SESSION['user_authenticated']) && $_SESSION['user_authenticated']);
+                    if ($show_admin): ?>
                     <a class='btn btn-outline-light btn-sm' href='<?php echo $is_admin ? '' : 'admin/'; ?>login.php'>
                         <i class="fas fa-user-shield me-1"></i>Admin
                     </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
