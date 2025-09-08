@@ -301,9 +301,11 @@ class SEOHelper {
         $pages = [
             '' => ['priority' => '1.0', 'changefreq' => 'weekly'],
             'projects.php' => ['priority' => '0.9', 'changefreq' => 'weekly'],
+            'about.php' => ['priority' => '0.7', 'changefreq' => 'monthly'],
             'blog.php' => ['priority' => '0.8', 'changefreq' => 'weekly'],
             'contact.php' => ['priority' => '0.7', 'changefreq' => 'monthly'],
-            'request-quote.php' => ['priority' => '0.6', 'changefreq' => 'monthly']
+            'request-quote.php' => ['priority' => '0.6', 'changefreq' => 'monthly'],
+            'politica-cookies.php' => ['priority' => '0.3', 'changefreq' => 'yearly']
         ];
         
         foreach ($pages as $page => $settings) {

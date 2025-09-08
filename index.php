@@ -93,49 +93,71 @@ require_once __DIR__ . '/includes/head.php';
 <section class='py-5 bg-light'>
     <div class='container'>
         <h2 class='text-center mb-5'>Testimoniale</h2>
-        <div class='row g-4'>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <div class='card-body'>
-                        <p>„Implementarea a fost rapidă și fără bătăi de cap. Recomand!”</p>
-                        <div class='d-flex align-items-center mt-3'>
-                            <div class='bg-primary rounded-circle me-3' style='width:40px;height:40px;'></div>
-                            <div>
-                                <strong>Andrei Pop</strong>
-                                <div class='text-muted small'>Manager, Axy</div>
+        <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class='row justify-content-center'>
+                        <div class='col-md-8 col-lg-6'>
+                            <div class='card border-0 shadow-sm'>
+                                <div class='card-body'>
+                                    <p>„Implementarea a fost rapidă și fără bătăi de cap. Recomand!”</p>
+                                    <div class='d-flex align-items-center mt-3'>
+                                        <div class='bg-primary rounded-circle me-3' style='width:40px;height:40px;'></div>
+                                        <div>
+                                            <strong>Andrei Pop</strong>
+                                            <div class='text-muted small'>Manager, Axy</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class='row justify-content-center'>
+                        <div class='col-md-8 col-lg-6'>
+                            <div class='card border-0 shadow-sm'>
+                                <div class='card-body'>
+                                    <p>„Profesionalism și comunicare excelentă. Rezultate peste așteptări.”</p>
+                                    <div class='d-flex align-items-center mt-3'>
+                                        <div class='bg-success rounded-circle me-3' style='width:40px;height:40px;'></div>
+                                        <div>
+                                            <strong>Roxana I.</strong>
+                                            <div class='text-muted small'>Fondator, R-Tex</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class='row justify-content-center'>
+                        <div class='col-md-8 col-lg-6'>
+                            <div class='card border-0 shadow-sm'>
+                                <div class='card-body'>
+                                    <p>„Abordare pragmatică și focus pe business. Vom colabora din nou.”</p>
+                                    <div class='d-flex align-items-center mt-3'>
+                                        <div class='bg-info rounded-circle me-3' style='width:40px;height:40px;'></div>
+                                        <div>
+                                            <strong>Marius C.</strong>
+                                            <div class='text-muted small'>CTO, Nexa</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <div class='card-body'>
-                        <p>„Profesionalism și comunicare excelentă. Rezultate peste așteptări.”</p>
-                        <div class='d-flex align-items-center mt-3'>
-                            <div class='bg-success rounded-circle me-3' style='width:40px;height:40px;'></div>
-                            <div>
-                                <strong>Roxana I.</strong>
-                                <div class='text-muted small'>Fondator, R-Tex</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <div class='card-body'>
-                        <p>„Abordare pragmatică și focus pe business. Vom colabora din nou.”</p>
-                        <div class='d-flex align-items-center mt-3'>
-                            <div class='bg-info rounded-circle me-3' style='width:40px;height:40px;'></div>
-                            <div>
-                                <strong>Marius C.</strong>
-                                <div class='text-muted small'>CTO, Nexa</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Următor</span>
+            </button>
         </div>
     </div>
 </section>

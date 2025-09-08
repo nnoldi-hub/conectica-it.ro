@@ -67,6 +67,9 @@ $base_path = $is_admin ? '../' : '';
                         <a class="nav-link" href="<?php echo $base_path; ?>projects.php">Proiecte</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="<?php echo $base_path; ?>about.php">Despre</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="<?php echo $base_path; ?>blog.php">Blog</a>
                     </li>
                     <li class="nav-item">
