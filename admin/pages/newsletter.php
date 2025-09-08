@@ -70,6 +70,7 @@ $csrf_token = $auth->generateCSRFToken();
     <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
       <label><input type="checkbox" name="dry_run" checked> Dry-run (test, nu trimite)</label>
       <input type="email" name="test_email" placeholder="trimite doar către această adresă (opțional)" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;">
+      <button type="button" id="testBtn" class="logout-btn" style="border-color:#f59e0b;background:rgba(245,158,11,0.25);">Test SMTP</button>
       <button type="button" id="previewBtn" class="logout-btn" style="border-color:#6b7280;background:rgba(107,114,128,0.25);">Previzualizează</button>
       <button type="button" id="sendBtn" class="logout-btn" style="border-color:#22c55e;background:rgba(34,197,94,0.25);">Trimite</button>
       <span id="sendMsg" style="opacity:.85"></span>
@@ -83,6 +84,7 @@ const subsWrap = document.getElementById('subsWrap');
 const postsList = document.getElementById('postsList');
 const chosenList = document.getElementById('chosenList');
 const sendBtn = document.getElementById('sendBtn');
+const testBtn = document.getElementById('testBtn');
 const sendMsg = document.getElementById('sendMsg');
 const previewBtn = document.getElementById('previewBtn');
 const previewHtml = document.getElementById('previewHtml');
@@ -170,6 +172,32 @@ previewBtn.addEventListener('click', ()=>{
     .catch(err=>{ console.error(err); previewHtml.style.display='block'; previewHtml.innerHTML = '<div class="card-description">Eroare: '+String(err.message||err)+'</div>'; });
 });
 
+testBtn.addEventListener('click', ()=>{
+  testBtn.disabled = true; sendMsg.textContent='Se testează conexiunea SMTP…';
+  fetch('/admin/api/campaign-send.php?test=1', { method:'POST', headers:{'Content-Type':'application/json'}, body: '{}' })
+    .then(async (r)=>{
+      const t = await r.text().catch(()=> '');
+      if(!r.ok){ throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,300):''}`); }
+      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,300)); }
+    })
+    .then(res=>{
+      if(res.success){
+        sendMsg.textContent = `✓ SMTP OK • ${res.message}`;
+        if (res.smtp_log && res.smtp_log.length > 0) {
+          console.log('SMTP Test Log:', res.smtp_log);
+        }
+        if (res.config_check) {
+          console.log('Config Check:', res.config_check);
+        }
+      } else {
+        sendMsg.textContent = `✗ SMTP Error: ${res.message || res.error}`;
+        if (res.smtp_log) { console.log('SMTP Error Log:', res.smtp_log); }
+      }
+    })
+    .catch(err=>{ console.error(err); sendMsg.textContent='Test eșuat: ' + String(err.message||err); })
+    .finally(()=> testBtn.disabled=false);
+});
+
 sendBtn.addEventListener('click', ()=>{
   const fd = new FormData(form);
   const payload = { csrf_token: fd.get('csrf_token'), mode:'builder', dry_run: fd.get('dry_run')?1:0, test_email: fd.get('test_email')||'',
@@ -188,10 +216,10 @@ sendBtn.addEventListener('click', ()=>{
       if(res.success){
         let extra = '';
         if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
-  const diag = res.diag? ` • smtp:${res.diag.hasSmtp? 'da':'nu'} • mail():${res.diag.mailAvailable? 'da':'nu'}` : '';
-  const logHint = (res.smtp_log && res.smtp_log.length) ? ' • log: '+String(res.smtp_log[res.smtp_log.length-1]).slice(0,80) : '';
-  sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}${logHint}`;
-  if (res.smtp_log) { try { console.table(res.smtp_log); } catch(_) { console.log(res.smtp_log); } }
+        const diag = res.diag? ` • phpmailer:${res.diag.phpmailer} • smtp:${res.diag.smtp_configured} • config:${res.diag.config_loaded}` : '';
+        const logHint = (res.smtp_log && res.smtp_log.length) ? ' • ultima linie: '+String(res.smtp_log[res.smtp_log.length-1]).slice(0,60) : '';
+        sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}${logHint}`;
+        if (res.smtp_log) { try { console.table(res.smtp_log); } catch(_) { console.log('SMTP Log:', res.smtp_log); } }
       } else {
         sendMsg.textContent = 'Eșec: ' + (res.error||'');
       }
