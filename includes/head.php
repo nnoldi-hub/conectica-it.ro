@@ -13,69 +13,127 @@ $base_path = $is_admin ? '../' : '';
     <meta charset='utf-8'>
     
     <?php 
-    // Prefer SEO helper meta if available, else fallback
-    if (isset($seo) && $seo instanceof SEOHelper) {
-        echo $seo->generateMetaTags();
-        echo "\n" . $seo->generateStructuredData();
-    } else {
-        // Generate enhanced meta tags (fallback)
-        $title = isset($page_title) ? htmlspecialchars($page_title) : SITE_NAME;
-        $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
-        $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web, programare România, consultant IT';
-        $canonical_url = BASE_URL . $_SERVER['REQUEST_URI'];
-        $og_image = BASE_URL . '/assets/images/og-image-conectica-it.jpg';
-        
-        echo "<title>{$title}</title>\n";
-        echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
-        echo "    <meta name=\"description\" content=\"{$description}\">\n";
-        echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
-        echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
-        echo "    <meta name=\"robots\" content=\"index, follow\">\n";
-        echo "    <link rel=\"canonical\" href=\"{$canonical_url}\">\n";
-        
-        // Open Graph tags
-        echo "    <!-- Open Graph Meta Tags -->\n";
-        echo "    <meta property=\"og:type\" content=\"website\">\n";
-        echo "    <meta property=\"og:title\" content=\"{$title}\">\n";
-        echo "    <meta property=\"og:description\" content=\"{$description}\">\n";
-        echo "    <meta property=\"og:image\" content=\"{$og_image}\">\n";
-        echo "    <meta property=\"og:url\" content=\"{$canonical_url}\">\n";
-        echo "    <meta property=\"og:site_name\" content=\"Conectica IT\">\n";
-        echo "    <meta property=\"og:locale\" content=\"ro_RO\">\n";
-        
-        // Twitter Card tags
-        echo "    <!-- Twitter Card Meta Tags -->\n";
-        echo "    <meta name=\"twitter:card\" content=\"summary_large_image\">\n";
-        echo "    <meta name=\"twitter:title\" content=\"{$title}\">\n";
-        echo "    <meta name=\"twitter:description\" content=\"{$description}\">\n";
-        echo "    <meta name=\"twitter:image\" content=\"{$og_image}\">\n";
-        
-        // JSON-LD structured data for homepage
-        if (basename($_SERVER['PHP_SELF'], '.php') === 'index') {
-            echo "    <!-- JSON-LD Structured Data -->\n";
-            echo "    <script type=\"application/ld+json\">\n";
-            echo "    {\n";
-            echo "        \"@context\": \"https://schema.org\",\n";
-            echo "        \"@type\": [\"Person\", \"Organization\"],\n";
-            echo "        \"name\": \"Nyikora Noldi\",\n";
-            echo "        \"alternateName\": \"Conectica IT\",\n";
-            echo "        \"jobTitle\": \"Dezvoltator Web Freelancer\",\n";
-            echo "        \"description\": \"{$description}\",\n";
-            echo "        \"url\": \"" . BASE_URL . "\",\n";
-            echo "        \"telephone\": \"+40740173581\",\n";
-            echo "        \"email\": \"conectica.it.ro@gmail.com\",\n";
-            echo "        \"address\": {\n";
-            echo "            \"@type\": \"PostalAddress\",\n";
-            echo "            \"addressCountry\": \"Romania\"\n";
-            echo "        },\n";
-            echo "        \"knowsAbout\": [\"Dezvoltare Web\", \"PHP\", \"JavaScript\", \"MySQL\", \"Bootstrap\", \"Aplicații Web\"],\n";
-            echo "        \"offers\": {\n";
-            echo "            \"@type\": \"Service\",\n";
-            echo "            \"name\": \"Servicii Dezvoltare Web\",\n";
-            echo "            \"description\": \"Dezvoltare aplicații web moderne, consultanță IT și soluții personalizate\"\n";
-            echo "        }\n";
-            echo "    }\n";
-            echo "    </script>\n";
+    // Enhanced meta tags for all pages
+    $title = isset($page_title) ? htmlspecialchars($page_title) : SITE_NAME;
+    $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
+    $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web, programare România, consultant IT';
+    $canonical_url = BASE_URL . $_SERVER['REQUEST_URI'];
+    $og_image = isset($page_image) ? BASE_URL . $page_image : BASE_URL . '/assets/images/og-image-conectica-it.jpg';
+    
+    // SEO Meta Tags
+    echo "<title>{$title}</title>\n";
+    echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
+    echo "    <meta name=\"description\" content=\"{$description}\">\n";
+    echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
+    echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
+    echo "    <meta name=\"robots\" content=\"index, follow\">\n";
+    echo "    <link rel=\"canonical\" href=\"{$canonical_url}\">\n";
+    
+    // Open Graph Meta Tags (Complete Set)
+    echo "    <!-- Open Graph Meta Tags -->\n";
+    echo "    <meta property=\"og:type\" content=\"website\">\n";
+    echo "    <meta property=\"og:title\" content=\"{$title}\">\n";
+    echo "    <meta property=\"og:description\" content=\"{$description}\">\n";
+    echo "    <meta property=\"og:image\" content=\"{$og_image}\">\n";
+    echo "    <meta property=\"og:image:width\" content=\"1200\">\n";
+    echo "    <meta property=\"og:image:height\" content=\"630\">\n";
+    echo "    <meta property=\"og:image:type\" content=\"image/jpeg\">\n";
+    echo "    <meta property=\"og:url\" content=\"{$canonical_url}\">\n";
+    echo "    <meta property=\"og:site_name\" content=\"Conectica IT\">\n";
+    echo "    <meta property=\"og:locale\" content=\"ro_RO\">\n";
+    
+    // Twitter Card Meta Tags (Complete Set)
+    echo "    <!-- Twitter Card Meta Tags -->\n";
+    echo "    <meta name=\"twitter:card\" content=\"summary_large_image\">\n";
+    echo "    <meta name=\"twitter:title\" content=\"{$title}\">\n";
+    echo "    <meta name=\"twitter:description\" content=\"{$description}\">\n";
+    echo "    <meta name=\"twitter:image\" content=\"{$og_image}\">\n";
+    echo "    <meta name=\"twitter:image:alt\" content=\"Conectica IT - {$title}\">\n";
+    echo "    <meta name=\"twitter:site\" content=\"@conectica_it\">\n";
+    echo "    <meta name=\"twitter:creator\" content=\"@nyikora_noldi\">\n";
+    
+    // Additional Meta Tags
+    echo "    <meta name=\"theme-color\" content=\"#0d47a1\">\n";
+    echo "    <meta name=\"msapplication-TileColor\" content=\"#0d47a1\">\n";
+    
+    // JSON-LD Structured Data
+    $current_page = basename($_SERVER['PHP_SELF'], '.php');
+    
+    if ($current_page === 'index') {
+        // Person + Organization schema for homepage
+        echo "    <!-- JSON-LD Structured Data -->\n";
+        echo "    <script type=\"application/ld+json\">\n";
+        echo "    {\n";
+        echo "        \"@context\": \"https://schema.org\",\n";
+        echo "        \"@type\": [\"Person\", \"Organization\"],\n";
+        echo "        \"name\": \"Nyikora Noldi\",\n";
+        echo "        \"alternateName\": \"Conectica IT\",\n";
+        echo "        \"jobTitle\": \"Dezvoltator Web Freelancer\",\n";
+        echo "        \"description\": \"{$description}\",\n";
+        echo "        \"url\": \"" . BASE_URL . "\",\n";
+        echo "        \"telephone\": \"+40740173581\",\n";
+        echo "        \"email\": \"conectica.it.ro@gmail.com\",\n";
+        echo "        \"image\": \"{$og_image}\",\n";
+        echo "        \"address\": {\n";
+        echo "            \"@type\": \"PostalAddress\",\n";
+        echo "            \"addressCountry\": \"Romania\"\n";
+        echo "        },\n";
+        echo "        \"knowsAbout\": [\"Dezvoltare Web\", \"PHP\", \"JavaScript\", \"MySQL\", \"Bootstrap\", \"Aplicații Web\"],\n";
+        echo "        \"offers\": {\n";
+        echo "            \"@type\": \"Service\",\n";
+        echo "            \"name\": \"Servicii Dezvoltare Web\",\n";
+        echo "            \"description\": \"Dezvoltare aplicații web moderne, consultanță IT și soluții personalizate\"\n";
+        echo "        },\n";
+        echo "        \"sameAs\": [\n";
+        echo "            \"https://github.com/nnoldi-hub\",\n";
+        echo "            \"https://www.linkedin.com/in/nyikora-noldi\"\n";
+        echo "        ]\n";
+        echo "    }\n";
+        echo "    </script>\n";
+    } elseif ($current_page === 'article' && isset($_GET['slug'])) {
+        // Article schema for blog posts
+        try {
+            require_once __DIR__ . '/init.php';
+            if ($pdo instanceof PDO) {
+                $stmt = $pdo->prepare("SELECT title, excerpt, cover_image, COALESCE(published_at, created_at) as dt FROM blog_posts WHERE slug=? AND status='published' LIMIT 1");
+                $stmt->execute([$_GET['slug']]);
+                $article = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($article) {
+                    $article_image = $article['cover_image'] ? BASE_URL . $article['cover_image'] : $og_image;
+                    echo "    <!-- Article JSON-LD Structured Data -->\n";
+                    echo "    <script type=\"application/ld+json\">\n";
+                    echo "    {\n";
+                    echo "        \"@context\": \"https://schema.org\",\n";
+                    echo "        \"@type\": \"Article\",\n";
+                    echo "        \"headline\": \"" . addslashes($article['title']) . "\",\n";
+                    echo "        \"description\": \"" . addslashes($article['excerpt']) . "\",\n";
+                    echo "        \"image\": \"{$article_image}\",\n";
+                    echo "        \"datePublished\": \"" . date('c', strtotime($article['dt'])) . "\",\n";
+                    echo "        \"dateModified\": \"" . date('c', strtotime($article['dt'])) . "\",\n";
+                    echo "        \"author\": {\n";
+                    echo "            \"@type\": \"Person\",\n";
+                    echo "            \"name\": \"Nyikora Noldi\",\n";
+                    echo "            \"url\": \"" . BASE_URL . "\"\n";
+                    echo "        },\n";
+                    echo "        \"publisher\": {\n";
+                    echo "            \"@type\": \"Organization\",\n";
+                    echo "            \"name\": \"Conectica IT\",\n";
+                    echo "            \"logo\": {\n";
+                    echo "                \"@type\": \"ImageObject\",\n";
+                    echo "                \"url\": \"" . BASE_URL . "/assets/images/logo.png\"\n";
+                    echo "            }\n";
+                    echo "        },\n";
+                    echo "        \"mainEntityOfPage\": {\n";
+                    echo "            \"@type\": \"WebPage\",\n";
+                    echo "            \"@id\": \"{$canonical_url}\"\n";
+                    echo "        }\n";
+                    echo "    }\n";
+                    echo "    </script>\n";
+                }
+            }
+        } catch (Exception $e) {
+            // Fallback if database fails
         }
     }
     ?>

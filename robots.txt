@@ -12,10 +12,14 @@ Disallow: /install.sql
 # Allow specific files and directories
 Allow: /assets/
 Allow: /sitemap.xml
+Allow: /rss.xml
 Allow: /robots.txt
 
 # Sitemap location
 Sitemap: https://www.conectica-it.ro/sitemap.xml
+
+# RSS Feed
+# RSS: https://www.conectica-it.ro/rss.xml
 
 # Crawl delay (optional - helps with server load)
 Crawl-delay: 1

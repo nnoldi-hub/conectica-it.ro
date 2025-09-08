@@ -1,6 +1,30 @@
 <?php
 $page_title = 'Articol';
+$page_description = 'Citește articolul complet pe Conectica IT';
+$page_image = '/assets/images/og-image-conectica-it.jpg'; // Default, will be overridden below
+
 require_once __DIR__ . '/includes/init.php';
+
+// Try to get article info for better meta tags
+$slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
+if ($slug) {
+    try {
+        if ($pdo instanceof PDO) {
+            $stmt = $pdo->prepare("SELECT title, excerpt, cover_image FROM blog_posts WHERE slug=? AND status='published' LIMIT 1");
+            $stmt->execute([$slug]);
+            $meta_article = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($meta_article) {
+                $page_title = $meta_article['title'] . ' | Blog Conectica IT';
+                $page_description = $meta_article['excerpt'] ?: 'Citește articolul complet pe blog-ul Conectica IT cu sfaturi și tutoriale despre dezvoltare web.';
+                $page_image = $meta_article['cover_image'] ?: '/assets/images/og-image-conectica-it.jpg';
+            }
+        }
+    } catch (Exception $e) {
+        // Use defaults if DB fails
+    }
+}
+
 require_once __DIR__ . '/includes/head.php';
 
 // Static demo articles mapped by slug until DB is added

@@ -11,12 +11,15 @@
                 </div>
                 <div class="col-lg-5">
                     <form id="newsletterForm" class="d-flex gap-2 flex-column flex-sm-row" novalidate>
-                        <label for="newsletterEmail" class="visually-hidden">Email</label>
-                        <input type="email" id="newsletterEmail" name="email" class="form-control form-control-lg" placeholder="adresa@exemplu.ro" required>
-                        <button class="btn btn-dark btn-lg flex-shrink-0" type="submit">
+                        <label for="nl_email" class="visually-hidden">Adresa de email pentru newsletter</label>
+                        <input type="email" id="nl_email" name="email" class="form-control form-control-lg" placeholder="adresa@exemplu.ro" aria-describedby="nl_email_help" required>
+                        <button class="btn btn-dark btn-lg flex-shrink-0" type="submit" aria-describedby="nl_email_help">
                             <i class="fas fa-envelope-open me-1"></i> Mă abonez
                         </button>
                     </form>
+                    <div id="nl_email_help" class="mt-2 small text-white-50">
+                        <i class="fas fa-shield-alt me-1"></i>Nu trimitem spam. Te poți dezabona oricând.
+                    </div>
                     <div id="newsletterMsg" class="mt-2 small" role="status" aria-live="polite"></div>
                 </div>
             </div>

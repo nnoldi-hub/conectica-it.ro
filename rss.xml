@@ -1,0 +1,109 @@
+<?php
+header('Content-Type: application/rss+xml; charset=utf-8');
+
+// RSS Feed Configuration
+$site_url = 'https://www.conectica-it.ro';
+$feed_title = 'Conectica IT - Blog despre Dezvoltare Web';
+$feed_description = 'Articole, tutoriale și insights despre dezvoltare web, PHP, JavaScript, MySQL și tehnologii moderne.';
+$feed_language = 'ro-RO';
+
+echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title><?= htmlspecialchars($feed_title) ?></title>
+        <description><?= htmlspecialchars($feed_description) ?></description>
+        <link><?= $site_url ?></link>
+        <language><?= $feed_language ?></language>
+        <lastBuildDate><?= date('r') ?></lastBuildDate>
+        <managingEditor>conectica.it.ro@gmail.com (Nyikora Noldi)</managingEditor>
+        <webMaster>conectica.it.ro@gmail.com (Nyikora Noldi)</webMaster>
+        <atom:link href="<?= $site_url ?>/rss.xml" rel="self" type="application/rss+xml" />
+        <image>
+            <url><?= $site_url ?>/assets/images/logo.png</url>
+            <title><?= htmlspecialchars($feed_title) ?></title>
+            <link><?= $site_url ?></link>
+            <width>144</width>
+            <height>144</height>
+        </image>
+
+<?php
+// Get articles from database
+try {
+    require_once __DIR__ . '/includes/init.php';
+    
+    if ($pdo instanceof PDO) {
+        $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
+        $tableExists = $stmt && $stmt->fetchColumn();
+        
+        if ($tableExists) {
+            $stmt = $pdo->query("SELECT title, slug, excerpt, content_html, cover_image, COALESCE(published_at, created_at) as dt, category FROM blog_posts WHERE status='published' ORDER BY dt DESC LIMIT 20");
+            $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($articles as $article):
+                $article_url = $site_url . '/article.php?slug=' . urlencode($article['slug']);
+                $pub_date = date('r', strtotime($article['dt']));
+                $content = $article['content_html'] ?: $article['excerpt'];
+                $image_url = $article['cover_image'] ? $site_url . $article['cover_image'] : $site_url . '/assets/images/og-image-conectica-it.jpg';
+?>
+        <item>
+            <title><?= htmlspecialchars($article['title']) ?></title>
+            <description><?= htmlspecialchars($article['excerpt']) ?></description>
+            <content:encoded><![CDATA[
+                <?php if ($article['cover_image']): ?>
+                <img src="<?= $image_url ?>" alt="<?= htmlspecialchars($article['title']) ?>" style="max-width: 100%; height: auto; margin-bottom: 20px;" />
+                <?php endif; ?>
+                <?= $content ?>
+            ]]></content:encoded>
+            <link><?= $article_url ?></link>
+            <guid isPermaLink="true"><?= $article_url ?></guid>
+            <pubDate><?= $pub_date ?></pubDate>
+            <category><?= htmlspecialchars($article['category'] ?: 'General') ?></category>
+            <author>conectica.it.ro@gmail.com (Nyikora Noldi)</author>
+            <?php if ($article['cover_image']): ?>
+            <enclosure url="<?= $image_url ?>" type="image/jpeg" length="0" />
+            <?php endif; ?>
+        </item>
+<?php 
+            endforeach;
+        } else {
+            // Fallback demo articles when no database
+?>
+        <item>
+            <title>Securitatea în PHP: Cele mai importante vulnerabilități</title>
+            <description>Cum să protejezi aplicațiile PHP împotriva atacurilor comune: SQL injection, XSS, CSRF și multe altele.</description>
+            <link><?= $site_url ?>/article.php?slug=securitatea-in-php</link>
+            <guid isPermaLink="true"><?= $site_url ?>/article.php?slug=securitatea-in-php</guid>
+            <pubDate><?= date('r', strtotime('-1 week')) ?></pubDate>
+            <category>Security</category>
+            <author>conectica.it.ro@gmail.com (Nyikora Noldi)</author>
+        </item>
+        <item>
+            <title>Cum să construiești o aplicație web modernă cu PHP și MySQL</title>
+            <description>Un ghid complet pentru dezvoltarea unei aplicații web robuste, de la planificare până la deployment.</description>
+            <link><?= $site_url ?>/article.php?slug=php-mysql-aplicatie-web-moderna</link>
+            <guid isPermaLink="true"><?= $site_url ?>/article.php?slug=php-mysql-aplicatie-web-moderna</guid>
+            <pubDate><?= date('r', strtotime('-2 weeks')) ?></pubDate>
+            <category>PHP</category>
+            <author>conectica.it.ro@gmail.com (Nyikora Noldi)</author>
+        </item>
+<?php
+        }
+    }
+} catch (Exception $e) {
+    // Error handling - show at least one item so feed is valid
+?>
+        <item>
+            <title>Blog Conectica IT</title>
+            <description>Bine ai venit pe blog-ul Conectica IT! Aici vei găsi articole despre dezvoltare web și tehnologii moderne.</description>
+            <link><?= $site_url ?>/blog.php</link>
+            <guid isPermaLink="true"><?= $site_url ?>/blog.php</guid>
+            <pubDate><?= date('r') ?></pubDate>
+            <category>General</category>
+            <author>conectica.it.ro@gmail.com (Nyikora Noldi)</author>
+        </item>
+<?php
+}
+?>
+    </channel>
+</rss>
