@@ -53,8 +53,16 @@
             
             <hr class='my-4 border-secondary'>
             <div class='text-center'>
-                <p class='mb-0 text-light-emphasis'>
+                <p class='mb-2 text-light-emphasis'>
                     &copy; <?php echo date('Y'); ?> Conectica‑IT - Nyikora Noldi. Toate drepturile rezervate.
+                </p>
+                <p class='mb-0'>
+                    <a href='politica-cookies.php' class='text-light-emphasis text-decoration-none me-3'>
+                        <i class='fas fa-cookie-bite me-1'></i>Politica Cookies
+                    </a>
+                    <a href='contact.php' class='text-light-emphasis text-decoration-none'>
+                        <i class='fas fa-shield-alt me-1'></i>Confidențialitate
+                    </a>
                 </p>
             </div>
         </div>
@@ -63,15 +71,21 @@
     <!-- Bootstrap JS -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
     
+    
+    
     <?php if (defined('CHAT_ENABLED') && CHAT_ENABLED): ?>
     <!-- Live Chat Widget -->
     <?php if (defined('CHAT_PROVIDER') && CHAT_PROVIDER === 'tawk' && defined('CHAT_TAWK_PROPERTY_ID') && CHAT_TAWK_PROPERTY_ID && defined('CHAT_TAWK_WIDGET_ID') && CHAT_TAWK_WIDGET_ID): ?>
         <!-- Tawk.to -->
         <script type="text/javascript">
+        // Load chat only if cookie consent given
+        function __hasCookieConsent(){
+            try{ return document.cookie.split(';').some(c=>c.trim().startsWith('cookie_consent=1')); }catch(e){ return false; }
+        }
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
         (function(){
             // Guard: do not inject twice
-            if (!document.querySelector('script[src^="https://embed.tawk.to/"]')) {
+            if (__hasCookieConsent() && !document.querySelector('script[src^="https://embed.tawk.to/"]')) {
                 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
                 s1.async=true;
                 s1.src='https://embed.tawk.to/<?php echo CHAT_TAWK_PROPERTY_ID; ?>/<?php echo CHAT_TAWK_WIDGET_ID; ?>';
@@ -84,18 +98,21 @@
     <?php elseif (defined('CHAT_CRISP_WEBSITE_ID') && CHAT_CRISP_WEBSITE_ID): ?>
         <!-- Crisp Chat -->
         <script type="text/javascript">
-        // eslint-disable-next-line dot-notation
-        // Declare via bracket notation to avoid editor warnings with special chars
+        // Define globals before loading Crisp
         window['$crisp'] = window['$crisp'] || [];
         window['CRISP_WEBSITE_ID'] = window['CRISP_WEBSITE_ID'] || "<?php echo CHAT_CRISP_WEBSITE_ID; ?>";
-        (function(){
-            // Guard: do not inject twice
-            if (!document.querySelector('script[src^="https://client.crisp.chat/"]')) {
-                var d=document;var s=d.createElement("script");
-                s.src="https://client.crisp.chat/l.js";s.async=1;
-                d.getElementsByTagName("head")[0].appendChild(s);
+        window.addEventListener('load', function(){
+            var hasConsent=false;
+            try {
+                hasConsent = document.cookie.split(';').some(function(c){return c.trim().indexOf('cookie_consent=1')===0;});
+            } catch(_) { hasConsent=false; }
+            var alreadyLoaded = !!document.querySelector('script[src^="https://client.crisp.chat/"]');
+            if (hasConsent && !alreadyLoaded) {
+                var d=document; var s=d.createElement('script');
+                s.src='https://client.crisp.chat/l.js'; s.async=1;
+                (d.head||d.getElementsByTagName('head')[0]).appendChild(s);
             }
-        })();
+        });
         </script>
     <?php endif; ?>
 
@@ -214,6 +231,43 @@
                 item.classList.add('active');
             }
         });
+    </script>
+
+    <!-- Cookie Consent Banner -->
+    <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Informare cookie-uri" style="display:none;">
+        <div class="cookie-text">
+            Folosim cookie-uri pentru funcționarea site-ului și îmbunătățirea experienței. Prin „Accept”, ești de acord cu utilizarea cookie-urilor. 
+            <a href="politica-cookies.php" class="link-light text-decoration-underline">Află mai multe</a>.
+        </div>
+        <div class="cookie-actions">
+            <button id="cookie-essentials" class="btn btn-outline-light btn-sm">Doar esențiale</button>
+            <button id="cookie-accept" class="btn btn-primary btn-sm ms-2">Accept</button>
+        </div>
+    </div>
+    <style>
+        .cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:2147483001;background:rgba(22,22,22,.96);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .cookie-text{flex:1;opacity:.95}
+    </style>
+    <script>
+        (function(){
+            function getCookie(name){
+                const v=('; '+document.cookie).split('; '+name+'=');
+                return v.length===2 ? v.pop().split(';').shift() : null;
+            }
+            function setCookie(name,value,days){
+                const d=new Date(); d.setTime(d.getTime()+days*24*60*60*1000);
+                document.cookie = name+'='+value+'; expires='+d.toUTCString()+'; path=/; SameSite=Lax';
+            }
+            var accepted = getCookie('cookie_consent')==='1';
+            var banner = document.getElementById('cookie-banner');
+            function hide(){ if(banner) banner.style.display='none'; }
+            function show(){ if(banner) banner.style.display='flex'; }
+            if(!accepted){ show(); }
+            var btnAccept = document.getElementById('cookie-accept');
+            var btnEss = document.getElementById('cookie-essentials');
+            if(btnAccept){ btnAccept.addEventListener('click', function(){ setCookie('cookie_consent','1',180); hide(); location.reload(); }); }
+            if(btnEss){ btnEss.addEventListener('click', function(){ setCookie('cookie_consent','0',180); hide(); }); }
+        })();
     </script>
 </body>
 </html>
