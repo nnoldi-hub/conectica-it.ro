@@ -96,7 +96,45 @@ $articles = [
 ];
 
 $slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
-$article = $slug && isset($articles[$slug]) ? $articles[$slug] : null;
+$article = null;
+
+// Try database first if available
+try {
+    $tableExists = false;
+    if ($pdo instanceof PDO) {
+        $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
+        $tableExists = $stmt && $stmt->fetchColumn();
+    }
+    if ($tableExists && $slug !== '') {
+        $stmt = $pdo->prepare("SELECT id,title,slug,excerpt,content_html,cover_image,author,read_minutes,COALESCE(published_at, created_at) as dt,tags,views FROM blog_posts WHERE slug=? AND status='published' LIMIT 1");
+        $stmt->execute([$slug]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            // increment view counter (non-blocking)
+            try { $pdo->prepare("UPDATE blog_posts SET views = views + 1 WHERE id=?")->execute([(int)$row['id']]); } catch (Throwable $e2) {}
+            $tags = [];
+            if (!empty($row['tags'])) {
+                $tj = json_decode($row['tags'], true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($tj)) { $tags = $tj; }
+            }
+            $article = [
+                'title' => $row['title'],
+                'date' => date('d M Y', strtotime($row['dt'])),
+                'read' => (int)($row['read_minutes'] ?: 6),
+                'cover' => $row['cover_image'] ?: '/assets/images/placeholders/wide-purple.svg',
+                'excerpt' => $row['excerpt'] ?: '',
+                'content_html' => $row['content_html'] ?: '',
+                'tags' => $tags,
+                'author' => $row['author'] ?: 'Conectica IT',
+            ];
+        }
+    }
+} catch (Throwable $e) { /* ignore and fallback */ }
+
+// Fallback to demo map
+if (!$article) {
+    $article = $slug && isset($articles[$slug]) ? $articles[$slug] : null;
+}
 ?>
 
 <div class="container py-5">
@@ -115,9 +153,13 @@ $article = $slug && isset($articles[$slug]) ? $articles[$slug] : null;
             <p class="lead"><?= htmlspecialchars($article['excerpt']) ?></p>
             <hr>
             <div class="content">
-                <?php foreach ($article['content'] as $p): ?>
-                    <p><?= htmlspecialchars($p) ?></p>
-                <?php endforeach; ?>
+                <?php if (!empty($article['content_html'])): ?>
+                    <?= $article['content_html'] ?>
+                <?php else: ?>
+                    <?php foreach ($article['content'] as $p): ?>
+                        <p><?= htmlspecialchars($p) ?></p>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
             <?php if (!empty($article['tags'])): ?>
                 <div class="mt-4 d-flex gap-2 flex-wrap">
