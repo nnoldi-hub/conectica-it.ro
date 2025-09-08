@@ -1,6 +1,28 @@
         </div>
     </main>
     
+    <!-- Newsletter Subscribe -->
+    <section class="container my-5">
+        <div class="p-4 p-md-5 rounded-4 text-white" style="background: linear-gradient(135deg,#667eea,#764ba2);">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <h2 class="h3 fw-bold mb-2">Abonează-te la noutăți</h2>
+                    <p class="mb-0">Primește periodic insight-uri și știri tehnice despre AI, DevOps și securitate, plus noutăți din proiectele mele.</p>
+                </div>
+                <div class="col-lg-5">
+                    <form id="newsletterForm" class="d-flex gap-2 flex-column flex-sm-row" novalidate>
+                        <label for="newsletterEmail" class="visually-hidden">Email</label>
+                        <input type="email" id="newsletterEmail" name="email" class="form-control form-control-lg" placeholder="adresa@exemplu.ro" required>
+                        <button class="btn btn-dark btn-lg flex-shrink-0" type="submit">
+                            <i class="fas fa-envelope-open me-1"></i> Abonează-mă
+                        </button>
+                    </form>
+                    <div id="newsletterMsg" class="mt-2 small" role="status" aria-live="polite"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <footer class='bg-dark text-light py-5 mt-5'>
         <div class='container'>
             <div class='row g-4'>
@@ -70,6 +92,29 @@
     
     <!-- Bootstrap JS -->
     <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
+    
+    <script>
+    // Newsletter subscribe handler
+    (function(){
+        const form = document.getElementById('newsletterForm');
+        if(!form) return;
+        const emailInput = document.getElementById('newsletterEmail');
+        const msg = document.getElementById('newsletterMsg');
+        function show(m, type){ if(!msg) return; msg.className = 'mt-2 small text-' + (type||'light'); msg.textContent = m; }
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            const email = (emailInput?.value||'').trim();
+            if(!email){ show('Te rog introdu o adresă de email.', 'warning'); emailInput?.focus(); return; }
+            show('Se procesează...', 'light');
+            try {
+                const res = await fetch('api/newsletter-subscribe.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, source: window.location.pathname }) });
+                const data = await res.json().catch(()=>({ ok:false, message:'Eroare răspuns server' }));
+                if (data.ok) { show('Mulțumesc! Verifică-ți inbox-ul pentru confirmare (dacă e cazul).', 'success'); form.reset(); }
+                else { show(data.message || 'Nu am putut înregistra abonarea.', 'warning'); }
+            } catch(err){ show('Eroare rețea. Încearcă din nou.', 'danger'); }
+        });
+    })();
+    </script>
     
     
     

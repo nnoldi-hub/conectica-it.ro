@@ -170,4 +170,51 @@ require_once __DIR__ . '/includes/head.php';
     </div>
 </section>
 
+<section class='py-5'>
+    <div class='container'>
+        <div class='d-flex justify-content-between align-items-center mb-4'>
+            <h2 class='mb-0'>Tech Insights</h2>
+            <a class='btn btn-outline-primary' href='blog.php'>Toate articolele</a>
+        </div>
+        <div class='row g-4'>
+            <div class='col-md-4'>
+                <div class='card h-100 border-0 shadow-sm'>
+                    <img src='assets/images/placeholders/wide-green.svg' class='card-img-top' alt='AI'>
+                    <div class='card-body'>
+                        <span class='badge bg-primary mb-2'>AI</span>
+                        <h5 class='card-title'>AI practic pentru proiecte mici</h5>
+                        <p class='card-text text-muted'>Cum integrezi AI în aplicații PHP fără infrastructură complexă.</p>
+                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-4'>
+                <div class='card h-100 border-0 shadow-sm'>
+                    <img src='assets/images/placeholders/wide-purple.svg' class='card-img-top' alt='DevOps'>
+                    <div class='card-body'>
+                        <span class='badge bg-dark mb-2'>DevOps</span>
+                        <h5 class='card-title'>Automatizări simple cu GitHub + cPanel</h5>
+                        <p class='card-text text-muted'>Workflow minim pentru deploy rapid și sigur pe shared hosting.</p>
+                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-4'>
+                <div class='card h-100 border-0 shadow-sm'>
+                    <img src='assets/images/placeholders/wide-orange.svg' class='card-img-top' alt='Security'>
+                    <div class='card-body'>
+                        <span class='badge bg-danger mb-2'>Security</span>
+                        <h5 class='card-title'>Securitate esențială pentru formulare</h5>
+                        <p class='card-text text-muted'>CSRF, rate limiting și validare input — ce să nu lipsească.</p>
+                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .card .badge { letter-spacing: .3px; }
+    </style>
+</section>
+
 <?php require_once __DIR__ . '/includes/foot.php'; ?>
