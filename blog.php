@@ -60,7 +60,15 @@ require_once __DIR__ . '/includes/head.php';
             $tableExists = $stmt && $stmt->fetchColumn();
         }
         if ($tableExists) {
-            $sql = "SELECT id,title,slug,excerpt,cover_image,category,read_minutes,views,COALESCE(published_at, created_at) as dt FROM blog_posts WHERE status='published' ORDER BY featured DESC, dt DESC LIMIT 24";
+            $cc = $pdo->query("SHOW COLUMNS FROM `blog_posts`")->fetchAll(PDO::FETCH_ASSOC);
+            $names = array_map(function($r){ return $r['Field'] ?? $r[0]; }, $cc);
+            $has = function($n) use ($names){ return in_array($n, $names, true); };
+            $legacy = $has('content') && $has('featured_image') && $has('reading_time') && $has('is_published');
+            if ($legacy) {
+                $sql = "SELECT id,title,slug,excerpt,featured_image as cover_image,category,reading_time as read_minutes,views,COALESCE(published_at, created_at) as dt FROM blog_posts WHERE is_published=1 ORDER BY featured DESC, dt DESC LIMIT 24";
+            } else {
+                $sql = "SELECT id,title,slug,excerpt,cover_image,category,read_minutes,views,COALESCE(published_at, created_at) as dt FROM blog_posts WHERE status='published' ORDER BY featured DESC, dt DESC LIMIT 24";
+            }
             $stmt = $pdo->query($sql);
             $items = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         }

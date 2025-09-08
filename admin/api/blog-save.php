@@ -114,31 +114,58 @@ try {
         }
     }
 
+    // Detect legacy schema (content/featured_image/reading_time/is_published) vs new schema (content_html/cover_image/read_minutes/status/author)
+    $colsStmt = $pdo->query("SHOW COLUMNS FROM `blog_posts`");
+    $colNames = array_map(function($r){ return $r['Field'] ?? $r[0]; }, $colsStmt->fetchAll(PDO::FETCH_ASSOC));
+    $has = function($name) use ($colNames) { return in_array($name, $colNames, true); };
+    $legacy = $has('content') && $has('featured_image') && $has('reading_time') && $has('is_published') && !$has('content_html');
+
     if ($id > 0) {
         // Update
-        $sql = "UPDATE `blog_posts` SET `title`=?, `slug`=?, `excerpt`=?, `content_html`=?, `cover_image`=?, `category`=?, `tags`=?, `status`=?, `author`=?, `read_minutes`=?, `featured`=?, `updated_at`=CURRENT_TIMESTAMP, `published_at`=? WHERE `id`=?";
-        $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
-        // Keep existing published_at if already set and still published
-        if ($status === 'published') {
-            $stmt = $pdo->prepare("SELECT `published_at` FROM `blog_posts` WHERE `id` = ?");
-            $stmt->execute([$id]);
-            $currentPub = $stmt->fetchColumn();
-            if ($currentPub) { $publishedAt = $currentPub; }
+        if ($legacy) {
+            $sql = "UPDATE `blog_posts` SET `title`=?, `slug`=?, `excerpt`=?, `content`=?, `featured_image`=?, `category`=?, `tags`=?, `reading_time`=?, `is_published`=?, `featured`=? WHERE `id`=?";
+            $isPub = ($status === 'published') ? 1 : 0;
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $read_minutes, $isPub, $featured, $id]);
+        } else {
+            $sql = "UPDATE `blog_posts` SET `title`=?, `slug`=?, `excerpt`=?, `content_html`=?, `cover_image`=?, `category`=?, `tags`=?, `status`=?, `author`=?, `read_minutes`=?, `featured`=?, `updated_at`=CURRENT_TIMESTAMP, `published_at`=? WHERE `id`=?";
+            $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
+            // Keep existing published_at if already set and still published
+            if ($status === 'published') {
+                $stmt = $pdo->prepare("SELECT `published_at` FROM `blog_posts` WHERE `id` = ?");
+                $stmt->execute([$id]);
+                $currentPub = $stmt->fetchColumn();
+                if ($currentPub) { $publishedAt = $currentPub; }
+            }
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt, $id]);
         }
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt, $id]);
     } else {
         // Insert with unique slug handling
-        $sql = "INSERT INTO `blog_posts` (`title`, `slug`, `excerpt`, `content_html`, `cover_image`, `category`, `tags`, `status`, `author`, `read_minutes`, `featured`, `published_at`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-        $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
-        $stmt = $pdo->prepare($sql);
-        try {
-            $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt]);
-        } catch (PDOException $ex) {
-            if ($ex->getCode() === '23000') {
-                $slug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
+        if ($legacy) {
+            $sql = "INSERT INTO `blog_posts` (`title`,`slug`,`excerpt`,`content`,`featured_image`,`category`,`tags`,`reading_time`,`is_published`,`featured`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            $isPub = ($status === 'published') ? 1 : 0;
+            $stmt = $pdo->prepare($sql);
+            try {
+                $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $read_minutes, $isPub, $featured]);
+            } catch (PDOException $ex) {
+                if ($ex->getCode() === '23000') {
+                    $slug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
+                    $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $read_minutes, $isPub, $featured]);
+                } else { throw $ex; }
+            }
+        } else {
+            $sql = "INSERT INTO `blog_posts` (`title`, `slug`, `excerpt`, `content_html`, `cover_image`, `category`, `tags`, `status`, `author`, `read_minutes`, `featured`, `published_at`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
+            $stmt = $pdo->prepare($sql);
+            try {
                 $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt]);
-            } else { throw $ex; }
+            } catch (PDOException $ex) {
+                if ($ex->getCode() === '23000') {
+                    $slug .= '-' . substr(bin2hex(random_bytes(2)), 0, 3);
+                    $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt]);
+                } else { throw $ex; }
+            }
         }
         $id = (int)$pdo->lastInsertId();
     }

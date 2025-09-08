@@ -106,7 +106,15 @@ try {
         $tableExists = $stmt && $stmt->fetchColumn();
     }
     if ($tableExists && $slug !== '') {
-        $stmt = $pdo->prepare("SELECT id,title,slug,excerpt,content_html,cover_image,author,read_minutes,COALESCE(published_at, created_at) as dt,tags,views FROM blog_posts WHERE slug=? AND status='published' LIMIT 1");
+        $cc = $pdo->query("SHOW COLUMNS FROM `blog_posts`")->fetchAll(PDO::FETCH_ASSOC);
+        $names = array_map(function($r){ return $r['Field'] ?? $r[0]; }, $cc);
+        $has = function($n) use ($names){ return in_array($n, $names, true); };
+        $legacy = $has('content') && $has('featured_image') && $has('reading_time') && $has('is_published');
+        if ($legacy) {
+            $stmt = $pdo->prepare("SELECT id,title,slug,excerpt,content as content_html,featured_image as cover_image,'' as author,reading_time as read_minutes,COALESCE(published_at, created_at) as dt,tags,views FROM blog_posts WHERE slug=? AND is_published=1 LIMIT 1");
+        } else {
+            $stmt = $pdo->prepare("SELECT id,title,slug,excerpt,content_html,cover_image,author,read_minutes,COALESCE(published_at, created_at) as dt,tags,views FROM blog_posts WHERE slug=? AND status='published' LIMIT 1");
+        }
         $stmt->execute([$slug]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
