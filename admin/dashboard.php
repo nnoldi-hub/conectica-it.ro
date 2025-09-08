@@ -416,6 +416,12 @@ $current_page = $_GET['page'] ?? 'dashboard';
                         </a>
                     </li>
                     <li class="menu-item">
+                        <a href="?page=newsletter" class="menu-link <?php echo ($current_page == 'newsletter') ? 'active' : ''; ?>">
+                            <i class="menu-icon fas fa-paper-plane"></i>
+                            <span>Newsletter</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
                         <a href="?page=messages" class="menu-link <?php echo ($current_page == 'messages') ? 'active' : ''; ?>">
                             <i class="menu-icon fas fa-envelope"></i>
                             <span>Mesaje</span>
@@ -480,6 +486,9 @@ $current_page = $_GET['page'] ?? 'dashboard';
                     break;
                 case 'blog-preview':
                     include 'pages/blog-preview.php';
+                    break;
+                case 'newsletter':
+                    include 'pages/newsletter.php';
                     break;
                 case 'messages':
                     include 'pages/messages.php';

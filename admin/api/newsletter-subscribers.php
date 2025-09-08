@@ -1,0 +1,26 @@
+<?php
+header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../../includes/init.php';
+require_once __DIR__ . '/../AuthSystem.php';
+
+$auth = new AuthSystem(isset($pdo) ? $pdo : null);
+if (!$auth->isAuthenticated()) { echo json_encode(['success'=>false,'error'=>'NEAUTH']); exit; }
+
+try {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(190) NOT NULL UNIQUE,
+        source VARCHAR(255) DEFAULT NULL,
+        ip_address VARCHAR(45) DEFAULT NULL,
+        user_agent VARCHAR(255) DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        confirmed_at DATETIME DEFAULT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $total = (int)$pdo->query('SELECT COUNT(*) FROM newsletter_subscribers')->fetchColumn();
+    $stmt = $pdo->query('SELECT email, source, created_at FROM newsletter_subscribers ORDER BY id DESC LIMIT 200');
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode(['success'=>true,'total'=>$total,'items'=>$rows]);
+} catch (Throwable $e) {
+    echo json_encode(['success'=>false,'error'=>'DB_ERROR']);
+}
