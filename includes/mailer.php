@@ -61,9 +61,23 @@ class SimpleMailer {
         $write('MAIL FROM:<'.$fromAddr.'>'); if ($this->debug) $this->smtpLog[] = 'C: MAIL FROM:<'.$fromAddr.'>'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'MAIL FROM eșuat: '.trim($resp); return false; }
         $write('RCPT TO:<'.$toEmail.'>'); if ($this->debug) $this->smtpLog[] = 'C: RCPT TO:<'.$toEmail.'>'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'RCPT TO eșuat: '.trim($resp); return false; }
         $write('DATA'); if ($this->debug) $this->smtpLog[] = 'C: DATA'; list($ok,$resp) = $expect(354); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'DATA eșuat: '.trim($resp); return false; }
-        // Build DATA payload
+        // Build DATA payload with line length safety
         $lines = [];
-        foreach ($data as $k=>$v) { if ($k==='Body') continue; $lines[] = $k.': '.$v; }
+        foreach ($data as $k=>$v) { 
+            if ($k==='Body') continue; 
+            // Split long header lines at 76 chars with proper folding
+            $header = $k.': '.$v;
+            if (strlen($header) > 76) {
+                $lines[] = substr($header, 0, 76);
+                $remaining = substr($header, 76);
+                while (strlen($remaining) > 0) {
+                    $lines[] = ' ' . substr($remaining, 0, 75); // continuation with space
+                    $remaining = substr($remaining, 75);
+                }
+            } else {
+                $lines[] = $header;
+            }
+        }
         $lines[] = '';
         $body = str_replace(["\r\n","\r"], "\n", $data['Body']);
         $body = preg_replace('~\n\.~', "\n..", $body); // dot-stuffing
@@ -136,15 +150,9 @@ class SimpleMailer {
 
         $altText = $text ?: strip_tags(str_replace(['<br>','<br/>','<br />'], "\n", $html));
         $encodeQP = function($s){
-            if (function_exists('quoted_printable_encode')) {
-                // Normalize to \r\n first
-                $s = str_replace(["\r\n","\r"], "\n", (string)$s);
-                $s = str_replace("\n", "\r\n", $s);
-                return ['encoded' => quoted_printable_encode($s), 'cte' => 'quoted-printable'];
-            } else {
-                $b64 = rtrim(chunk_split(base64_encode((string)$s), 76, "\r\n"));
-                return ['encoded' => $b64, 'cte' => 'base64'];
-            }
+            // Always use base64 for safety - ensures no lines exceed 76 chars
+            $b64 = rtrim(chunk_split(base64_encode((string)$s), 76, "\r\n"));
+            return ['encoded' => $b64, 'cte' => 'base64'];
         };
         $plainEnc = $encodeQP($altText);
         $htmlEnc = $encodeQP($html);
@@ -163,16 +171,18 @@ class SimpleMailer {
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
         // If SMTP creds exist but PHPMailer isn't present, use native SMTP
         $hasSmtpCreds = (defined('SMTP_PASS') && trim((string)SMTP_PASS) !== '');
-    if ($hasSmtpCreds && !class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+        if ($hasSmtpCreds && !class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+            // Generate short Message-ID to avoid long lines
+            $msgId = '<' . uniqid('m') . '@conectica-it.ro>';
             $smtpHeaders = [
-        'Date' => gmdate('D, d M Y H:i:s').' +0000',
-        'From' => $fromName . ' <' . $this->from . '>',
-                'To' => ($toName? $toName.' ' : '') . '<'.$toEmail.'>',
+                'Date' => gmdate('D, d M Y H:i:s').' +0000',
+                'From' => $this->from, // Simplified From header
+                'To' => '<'.$toEmail.'>',
                 'Subject' => $encodedSubject,
                 'MIME-Version' => '1.0',
                 'Reply-To' => $this->from,
-        'Content-Type' => 'multipart/alternative; boundary='.$boundary,
-        'Message-ID' => '<' . uniqid('cid'). '@' . preg_replace('~^.*@~', '', $this->from) . '>',
+                'Content-Type' => 'multipart/alternative; boundary="'.$boundary.'"',
+                'Message-ID' => $msgId,
             ];
             $bodyData = [
                 'From' => $smtpHeaders['From'],
@@ -181,8 +191,8 @@ class SimpleMailer {
                 'MIME-Version' => '1.0',
                 'Reply-To' => $smtpHeaders['Reply-To'],
                 'Content-Type' => $smtpHeaders['Content-Type'],
-        'Date' => $smtpHeaders['Date'],
-        'Message-ID' => $smtpHeaders['Message-ID'],
+                'Date' => $smtpHeaders['Date'],
+                'Message-ID' => $smtpHeaders['Message-ID'],
                 'Body' => $message,
             ];
             $ok = $this->smtpSendRaw($toEmail, $bodyData);
