@@ -176,40 +176,83 @@ require_once __DIR__ . '/includes/head.php';
             <h2 class='mb-0'>Tech Insights</h2>
             <a class='btn btn-outline-primary' href='blog.php'>Toate articolele</a>
         </div>
+        
+        <?php
+        // Get blog articles (same logic as blog.php)
+        $blog_items = [];
+        $blogTableExists = false;
+        try {
+            if ($pdo instanceof PDO) {
+                $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
+                $blogTableExists = $stmt && $stmt->fetchColumn();
+            }
+            if ($blogTableExists) {
+                $cc = $pdo->query("SHOW COLUMNS FROM `blog_posts`")->fetchAll(PDO::FETCH_ASSOC);
+                $names = array_map(function($r){ return $r['Field'] ?? $r[0]; }, $cc);
+                $has = function($n) use ($names){ return in_array($n, $names, true); };
+                $legacy = $has('content') && $has('featured_image') && $has('reading_time') && $has('is_published');
+                if ($legacy) {
+                    $sql = "SELECT id,title,slug,excerpt,featured_image as cover_image,category,reading_time as read_minutes,views,COALESCE(published_at, created_at) as dt FROM blog_posts WHERE is_published=1 ORDER BY featured DESC, dt DESC LIMIT 3";
+                } else {
+                    $sql = "SELECT id,title,slug,excerpt,cover_image,category,read_minutes,views,COALESCE(published_at, created_at) as dt FROM blog_posts WHERE status='published' ORDER BY featured DESC, dt DESC LIMIT 3";
+                }
+                $stmt = $pdo->query($sql);
+                $blog_items = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            }
+        } catch (Throwable $e) { $blog_items = []; }
+        ?>
+        
         <div class='row g-4'>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <img src='assets/images/placeholders/wide-green.svg' class='card-img-top' alt='AI'>
-                    <div class='card-body'>
-                        <span class='badge bg-primary mb-2'>AI</span>
-                        <h5 class='card-title'>AI practic pentru proiecte mici</h5>
-                        <p class='card-text text-muted'>Cum integrezi AI în aplicații PHP fără infrastructură complexă.</p>
-                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+            <?php if ($blogTableExists && $blog_items): ?>
+                <?php foreach ($blog_items as $item): ?>
+                <div class='col-md-4'>
+                    <div class='card h-100 border-0 shadow-sm'>
+                        <img src='<?= htmlspecialchars($item['cover_image'] ?: 'assets/images/placeholders/wide-purple.svg') ?>' class='card-img-top' alt='<?= htmlspecialchars($item['title']) ?>'>
+                        <div class='card-body'>
+                            <span class='badge bg-primary mb-2'><?= htmlspecialchars($item['category'] ?: 'Tech') ?></span>
+                            <h5 class='card-title'><?= htmlspecialchars($item['title']) ?></h5>
+                            <p class='card-text text-muted'><?= htmlspecialchars($item['excerpt']) ?></p>
+                            <a href='article.php?slug=<?= urlencode($item['slug']) ?>' class='btn btn-sm btn-primary'>Citește ▶</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <img src='assets/images/placeholders/wide-purple.svg' class='card-img-top' alt='DevOps'>
-                    <div class='card-body'>
-                        <span class='badge bg-dark mb-2'>DevOps</span>
-                        <h5 class='card-title'>Automatizări simple cu GitHub + cPanel</h5>
-                        <p class='card-text text-muted'>Workflow minim pentru deploy rapid și sigur pe shared hosting.</p>
-                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Fallback static content when no DB articles -->
+                <div class='col-md-4'>
+                    <div class='card h-100 border-0 shadow-sm'>
+                        <img src='assets/images/placeholders/wide-green.svg' class='card-img-top' alt='AI'>
+                        <div class='card-body'>
+                            <span class='badge bg-primary mb-2'>AI</span>
+                            <h5 class='card-title'>AI practic pentru proiecte mici</h5>
+                            <p class='card-text text-muted'>Cum integrezi AI în aplicații PHP fără infrastructură complexă.</p>
+                            <a href='blog.php' class='btn btn-sm btn-primary'>Citește ▶</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class='col-md-4'>
-                <div class='card h-100 border-0 shadow-sm'>
-                    <img src='assets/images/placeholders/wide-orange.svg' class='card-img-top' alt='Security'>
-                    <div class='card-body'>
-                        <span class='badge bg-danger mb-2'>Security</span>
-                        <h5 class='card-title'>Securitate esențială pentru formulare</h5>
-                        <p class='card-text text-muted'>CSRF, rate limiting și validare input — ce să nu lipsească.</p>
-                        <a href='blog.php' class='btn btn-sm btn-primary'>Citește</a>
+                <div class='col-md-4'>
+                    <div class='card h-100 border-0 shadow-sm'>
+                        <img src='assets/images/placeholders/wide-purple.svg' class='card-img-top' alt='DevOps'>
+                        <div class='card-body'>
+                            <span class='badge bg-dark mb-2'>DevOps</span>
+                            <h5 class='card-title'>Automatizări simple cu GitHub + cPanel</h5>
+                            <p class='card-text text-muted'>Workflow minim pentru deploy rapid și sigur pe shared hosting.</p>
+                            <a href='blog.php' class='btn btn-sm btn-primary'>Citește ▶</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class='col-md-4'>
+                    <div class='card h-100 border-0 shadow-sm'>
+                        <img src='assets/images/placeholders/wide-orange.svg' class='card-img-top' alt='Security'>
+                        <div class='card-body'>
+                            <span class='badge bg-danger mb-2'>Security</span>
+                            <h5 class='card-title'>Securitate esențială pentru formulare</h5>
+                            <p class='card-text text-muted'>CSRF, rate limiting și validare input — ce să nu lipsească.</p>
+                            <a href='blog.php' class='btn btn-sm btn-primary'>Citește ▶</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     <style>
