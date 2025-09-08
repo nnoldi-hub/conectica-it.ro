@@ -173,8 +173,13 @@ sendBtn.addEventListener('click', ()=>{
   sendBtn.disabled = true; sendMsg.textContent='Se trimite…';
   fetch('/admin/api/newsletter-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(r=>r.json()).then(res=>{
-      if(res.success){ sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}`; }
-      else { sendMsg.textContent = 'Eșec: ' + (res.error||''); }
+      if(res.success){
+        let extra = '';
+        if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
+        sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${extra}`;
+      } else {
+        sendMsg.textContent = 'Eșec: ' + (res.error||'');
+      }
     })
     .catch(()=> sendMsg.textContent='Eroare de rețea')
     .finally(()=> sendBtn.disabled=false);

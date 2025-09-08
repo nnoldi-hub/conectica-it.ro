@@ -7,11 +7,12 @@ require_once __DIR__ . '/../config/mail.php';
  * If you need SMTP auth, set up PHPMailer via Composer and swap implementation.
  */
 class SimpleMailer {
-    private $from; private $fromName;
+    private $from; private $fromName; private $lastError = '';
     public function __construct() {
         $this->from = MAIL_FROM;
         $this->fromName = MAIL_FROM_NAME;
     }
+    public function getLastError() { return $this->lastError; }
     public function send($toEmail, $toName, $subject, $html, $text = '') {
         // Prefer PHPMailer if available; gracefully fall back to mail()
         if (class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
@@ -45,11 +46,11 @@ class SimpleMailer {
                 if ($text) { $mail->AltBody = $text; }
 
                 $sent = $mail->send();
-                if ($sent) {
-                    return true;
-                }
+                if ($sent) { return true; }
+                $this->lastError = method_exists($mail, 'ErrorInfo') ? (string)$mail->ErrorInfo : 'PHPMailer send() returned false';
                 // If send() reported false, fall through to basic mail()
             } catch (Throwable $e) {
+                $this->lastError = $e->getMessage();
                 // fall through to basic mail()
             }
         }
@@ -70,7 +71,13 @@ class SimpleMailer {
         $message .= "--$boundary--";
 
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-        return @mail($toEmail, $encodedSubject, $message, implode("\r\n", $headers));
+        $ok = @mail($toEmail, $encodedSubject, $message, implode("\r\n", $headers));
+        if (!$ok && (!defined('SMTP_PASS') || trim((string)SMTP_PASS) === '')) {
+            $this->lastError = 'mail() a eșuat. Configurează SMTP în config/mail.local.php (SMTP_PASS).';
+        } elseif (!$ok) {
+            $this->lastError = 'mail() a returnat false.';
+        }
+        return $ok;
     }
 }
 ?>

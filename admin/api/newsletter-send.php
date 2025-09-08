@@ -66,17 +66,18 @@ try {
     }
 
     $mailer = new SimpleMailer();
-    $sent=0; $fail=0; $skipped=0;
+    $sent=0; $fail=0; $skipped=0; $errors=[];
     if (!$dry) {
         foreach ($targets as $i=>$email) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { $skipped++; continue; }
-            $ok = false; try { $ok = $mailer->send($email, '', $subject, $html); } catch (Throwable $e) { $ok=false; }
-            if ($ok) $sent++; else $fail++;
+            $ok = false; try { $ok = $mailer->send($email, '', $subject, $html); } catch (Throwable $e) { $ok=false; $errors[] = $e->getMessage(); }
+            if ($ok) { $sent++; }
+            else { $fail++; $le = $mailer->getLastError(); if ($le) { $errors[] = $le; } }
             if (($i+1)%30===0) { usleep(300000); }
         }
     }
 
-    echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry]);
+    echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors]);
 } catch (Throwable $e) {
     echo json_encode(['success'=>false,'error'=>'SERVER_ERROR']);
 }
