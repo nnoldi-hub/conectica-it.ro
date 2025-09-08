@@ -87,6 +87,31 @@ try {
             `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
             `published_at` TIMESTAMP NULL DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+    } else {
+        // Soft migrations: add any missing columns to match expected schema
+        $need = [
+            'excerpt' => "ALTER TABLE `blog_posts` ADD COLUMN `excerpt` TEXT NULL",
+            'content_html' => "ALTER TABLE `blog_posts` ADD COLUMN `content_html` MEDIUMTEXT NULL",
+            'cover_image' => "ALTER TABLE `blog_posts` ADD COLUMN `cover_image` VARCHAR(255) NULL",
+            'category' => "ALTER TABLE `blog_posts` ADD COLUMN `category` VARCHAR(100) NULL",
+            'tags' => "ALTER TABLE `blog_posts` ADD COLUMN `tags` TEXT NULL",
+            'status' => "ALTER TABLE `blog_posts` ADD COLUMN `status` ENUM('draft','published') NOT NULL DEFAULT 'draft'",
+            'author' => "ALTER TABLE `blog_posts` ADD COLUMN `author` VARCHAR(100) NULL",
+            'read_minutes' => "ALTER TABLE `blog_posts` ADD COLUMN `read_minutes` INT NOT NULL DEFAULT 5",
+            'views' => "ALTER TABLE `blog_posts` ADD COLUMN `views` INT NOT NULL DEFAULT 0",
+            'featured' => "ALTER TABLE `blog_posts` ADD COLUMN `featured` TINYINT(1) NOT NULL DEFAULT 0",
+            'created_at' => "ALTER TABLE `blog_posts` ADD COLUMN `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+            'updated_at' => "ALTER TABLE `blog_posts` ADD COLUMN `updated_at` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP",
+            'published_at' => "ALTER TABLE `blog_posts` ADD COLUMN `published_at` TIMESTAMP NULL DEFAULT NULL",
+        ];
+        foreach ($need as $col => $ddl) {
+            try {
+                $cs = $pdo->prepare("SHOW COLUMNS FROM `blog_posts` LIKE ?");
+                $cs->execute([$col]);
+                $existsCol = (bool)$cs->fetch(PDO::FETCH_ASSOC);
+                if (!$existsCol) { $pdo->exec($ddl); }
+            } catch (Throwable $eCol) { /* ignore non-critical */ }
+        }
     }
 
     if ($id > 0) {
