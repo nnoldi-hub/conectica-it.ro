@@ -3,8 +3,9 @@
 // Prefer CONFIG_PATH from init.php; fallback to local ../config
 $__cfgDir = defined('CONFIG_PATH') ? CONFIG_PATH : realpath(__DIR__ . '/../config');
 if ($__cfgDir && is_dir($__cfgDir)) {
-    if (file_exists($__cfgDir . '/mail.php')) { require_once $__cfgDir . '/mail.php'; }
+    // Load local overrides first so they take precedence (defines are immutable)
     if (file_exists($__cfgDir . '/mail.local.php')) { require_once $__cfgDir . '/mail.local.php'; }
+    if (file_exists($__cfgDir . '/mail.php')) { require_once $__cfgDir . '/mail.php'; }
 }
 // Defaults if not provided by config
 if (!defined('MAIL_FROM')) { define('MAIL_FROM', 'no-reply@localhost'); }

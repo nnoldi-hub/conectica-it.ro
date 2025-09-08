@@ -187,7 +187,8 @@ sendBtn.addEventListener('click', ()=>{
       if(res.success){
         let extra = '';
         if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
-        sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${extra}`;
+        const diag = res.diag? ` • smtp:${res.diag.hasSmtp? 'da':'nu'} • mail():${res.diag.mailAvailable? 'da':'nu'}` : '';
+        sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}`;
       } else {
         sendMsg.textContent = 'Eșec: ' + (res.error||'');
       }

@@ -65,6 +65,14 @@ try {
     }
 
     $mailer = new SimpleMailer();
+    $diag = [
+        'hasSmtp' => (defined('SMTP_PASS') && trim((string)SMTP_PASS) !== ''),
+        'host' => defined('SMTP_HOST') ? SMTP_HOST : null,
+        'port' => defined('SMTP_PORT') ? SMTP_PORT : null,
+        'secure' => defined('SMTP_SECURE') ? SMTP_SECURE : null,
+        'mailAvailable' => function_exists('mail'),
+        'phpmailer' => class_exists('PHPMailer\\PHPMailer\\PHPMailer'),
+    ];
     $sent=0; $fail=0; $skipped=0; $errors=[];
     if (!$dry) {
         foreach ($targets as $i=>$email) {
@@ -76,7 +84,7 @@ try {
         }
     }
 
-    ob_end_clean(); echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors]);
+    ob_end_clean(); echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors,'diag'=>$diag]);
 } catch (Throwable $e) {
     $out = ob_get_clean();
     echo json_encode(['success'=>false,'error'=>'SERVER_ERROR','details'=>$e->getMessage(),'out'=>substr((string)$out,0,500)]);
