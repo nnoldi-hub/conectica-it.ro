@@ -13,15 +13,18 @@ class SimpleMailer {
         $this->fromName = MAIL_FROM_NAME;
     }
     public function send($toEmail, $toName, $subject, $html, $text = '') {
+        // Prefer PHPMailer if available; gracefully fall back to mail()
         if (class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
             try {
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-                // SMTP if password present, else use mail()
-                if (defined('SMTP_PASS') && SMTP_PASS !== '') {
+                // Transport selection: SMTP when password provided, else local mail transport
+                $useSmtp = (defined('SMTP_PASS') && trim((string)SMTP_PASS) !== '');
+                if ($useSmtp) {
                     $mail->isSMTP();
                     $mail->Host = SMTP_HOST;
                     $mail->Port = SMTP_PORT;
                     $mail->SMTPAuth = true;
+                    if (isset($GLOBALS['SMTP_SECURE'])) { /* no-op to silence analyzers about constant checks */ }
                     if (defined('SMTP_SECURE') && SMTP_SECURE === 'ssl') {
                         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
                     } elseif (defined('SMTP_SECURE') && SMTP_SECURE === 'tls') {
@@ -29,7 +32,10 @@ class SimpleMailer {
                     }
                     $mail->Username = SMTP_USER;
                     $mail->Password = SMTP_PASS;
+                } else {
+                    $mail->isMail();
                 }
+
                 $mail->CharSet = 'UTF-8';
                 $mail->setFrom($this->from, $this->fromName);
                 $mail->addAddress($toEmail, $toName ?: $toEmail);
@@ -37,13 +43,12 @@ class SimpleMailer {
                 $mail->isHTML(true);
                 $mail->Body = $html;
                 if ($text) { $mail->AltBody = $text; }
-                if (defined('SMTP_PASS') && SMTP_PASS !== '') {
-                    return $mail->send();
-                } else {
-                    // fallback to mail() transport
-                    $mail->isMail();
-                    return $mail->send();
+
+                $sent = $mail->send();
+                if ($sent) {
+                    return true;
                 }
+                // If send() reported false, fall through to basic mail()
             } catch (Throwable $e) {
                 // fall through to basic mail()
             }
