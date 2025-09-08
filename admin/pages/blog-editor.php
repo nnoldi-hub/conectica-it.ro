@@ -94,6 +94,7 @@ const saveMsg = document.getElementById('saveMsg');
 const uploadBtn = document.getElementById('uploadBtn');
 const coverFile = document.getElementById('coverFile');
 const uploadMsg = document.getElementById('uploadMsg');
+const qs = new URLSearchParams(location.search);
 
 function buildPreview() {
 	const title = document.getElementById('title').value;
@@ -163,4 +164,29 @@ coverFile.addEventListener('change', () => {
 		.catch(() => uploadMsg.textContent = 'Eroare de rețea la încărcare')
 		.finally(() => { uploadBtn.disabled = false; coverFile.value=''; });
 });
+
+// Load existing post if id is present
+const editId = parseInt(qs.get('id') || '0', 10);
+if (editId > 0) {
+	fetch('/admin/api/blog-get.php?id=' + editId)
+		.then(r => r.json())
+		.then(res => {
+			if (!res || !res.success || !res.item) return;
+			const p = res.item;
+			document.getElementById('post_id').value = p.id;
+			document.getElementById('title').value = p.title || '';
+			document.getElementById('slug').value = p.slug || '';
+			document.getElementById('cover_image').value = p.cover_image || '';
+			document.getElementById('category').value = p.category || '';
+			document.getElementById('excerpt').value = p.excerpt || '';
+			document.getElementById('content_html').value = p.content_html || '';
+			document.getElementById('tags').value = (typeof p.tags === 'string' ? p.tags : (p.tags ? JSON.stringify(p.tags) : '')) || '';
+			document.getElementById('author').value = p.author || document.getElementById('author').value;
+			document.getElementById('read_minutes').value = p.read_minutes || 5;
+			document.getElementById('featured').checked = !!(p.featured && Number(p.featured) === 1);
+			document.getElementById('status').value = p.status || 'draft';
+			buildPreview();
+		})
+		.catch(() => {/* ignore load errors */});
+}
 </script>
