@@ -130,18 +130,35 @@ class SimpleMailer {
         $headers[] = 'From: ' . $fromName . ' <' . $this->from . '>';
         $headers[] = 'Reply-To: ' . $this->from;
         $headers[] = 'MIME-Version: 1.0';
-        $headers[] = 'Content-Type: multipart/alternative;boundary=' . $boundary;
+        $headers[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
         $headers[] = 'Date: ' . gmdate('D, d M Y H:i:s') . ' +0000';
         $headers[] = 'Message-ID: <' . uniqid('cid'). '@' . preg_replace('~^.*@~', '', $this->from) . '>';
 
         $altText = $text ?: strip_tags(str_replace(['<br>','<br/>','<br />'], "\n", $html));
-        $message = "--$boundary\r\n";
-        $message .= "Content-Type: text/plain; charset=utf-8\r\n\r\n";
-        $message .= $altText . "\r\n";
+        $encodeQP = function($s){
+            if (function_exists('quoted_printable_encode')) {
+                // Normalize to \r\n first
+                $s = str_replace(["\r\n","\r"], "\n", (string)$s);
+                $s = str_replace("\n", "\r\n", $s);
+                return ['encoded' => quoted_printable_encode($s), 'cte' => 'quoted-printable'];
+            } else {
+                $b64 = rtrim(chunk_split(base64_encode((string)$s), 76, "\r\n"));
+                return ['encoded' => $b64, 'cte' => 'base64'];
+            }
+        };
+        $plainEnc = $encodeQP($altText);
+        $htmlEnc = $encodeQP($html);
+
+        $message = "This is a multi-part message in MIME format.\r\n";
         $message .= "--$boundary\r\n";
-        $message .= "Content-Type: text/html; charset=utf-8\r\n\r\n";
-        $message .= $html . "\r\n";
-        $message .= "--$boundary--";
+        $message .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        $message .= "Content-Transfer-Encoding: {$plainEnc['cte']}\r\n\r\n";
+        $message .= $plainEnc['encoded'] . "\r\n";
+        $message .= "--$boundary\r\n";
+        $message .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $message .= "Content-Transfer-Encoding: {$htmlEnc['cte']}\r\n\r\n";
+        $message .= $htmlEnc['encoded'] . "\r\n";
+        $message .= "--$boundary--\r\n";
 
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
         // If SMTP creds exist but PHPMailer isn't present, use native SMTP
