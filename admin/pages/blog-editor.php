@@ -119,7 +119,7 @@ function submitBlog(statusOverride) {
 				saveMsg.textContent = (fd.get('status') === 'published') ? 'Publicat.' : 'Draft salvat.';
 				setTimeout(()=> saveMsg.textContent='', 2500);
 			} else {
-				saveMsg.textContent = res.error || 'Eroare la salvare';
+				saveMsg.textContent = (res.error || 'Eroare la salvare') + (res.message ? ' • ' + res.message : '');
 			}
 		})
 		.catch(() => saveMsg.textContent = 'Eroare de rețea');

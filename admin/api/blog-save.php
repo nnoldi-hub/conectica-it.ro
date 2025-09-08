@@ -60,40 +60,42 @@ if ($tags !== '') {
 }
 
 try {
+    if (!($pdo instanceof PDO)) {
+        echo json_encode(['success' => false, 'error' => 'DB_OFFLINE', 'message' => 'Conexiunea la baza de date lipsește.']);
+        exit;
+    }
     // Ensure table exists
     $tableExists = false;
-    if ($pdo instanceof PDO) {
-        $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
-        $tableExists = $stmt && $stmt->fetchColumn();
-    }
+    $stmt = $pdo->query("SHOW TABLES LIKE 'blog_posts'");
+    $tableExists = $stmt && $stmt->fetchColumn();
     if (!$tableExists) {
-        $pdo->exec("CREATE TABLE IF NOT EXISTS blog_posts (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(200) NOT NULL,
-            slug VARCHAR(200) NOT NULL UNIQUE,
-            excerpt TEXT NULL,
-            content_html MEDIUMTEXT NULL,
-            cover_image VARCHAR(255) NULL,
-            category VARCHAR(100) NULL,
-            tags TEXT NULL,
-            status ENUM('draft','published') NOT NULL DEFAULT 'draft',
-            author VARCHAR(100) NULL,
-            read_minutes INT NOT NULL DEFAULT 5,
-            views INT NOT NULL DEFAULT 0,
-            featured TINYINT(1) NOT NULL DEFAULT 0,
-            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            published_at DATETIME NULL
+        $pdo->exec("CREATE TABLE IF NOT EXISTS `blog_posts` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `title` VARCHAR(200) NOT NULL,
+            `slug` VARCHAR(200) NOT NULL UNIQUE,
+            `excerpt` TEXT NULL,
+            `content_html` MEDIUMTEXT NULL,
+            `cover_image` VARCHAR(255) NULL,
+            `category` VARCHAR(100) NULL,
+            `tags` TEXT NULL,
+            `status` ENUM('draft','published') NOT NULL DEFAULT 'draft',
+            `author` VARCHAR(100) NULL,
+            `read_minutes` INT NOT NULL DEFAULT 5,
+            `views` INT NOT NULL DEFAULT 0,
+            `featured` TINYINT(1) NOT NULL DEFAULT 0,
+            `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            `published_at` TIMESTAMP NULL DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
     }
 
     if ($id > 0) {
         // Update
-        $sql = "UPDATE blog_posts SET title=?, slug=?, excerpt=?, content_html=?, cover_image=?, category=?, tags=?, status=?, author=?, read_minutes=?, featured=?, updated_at=NOW(), published_at=? WHERE id=?";
+        $sql = "UPDATE `blog_posts` SET `title`=?, `slug`=?, `excerpt`=?, `content_html`=?, `cover_image`=?, `category`=?, `tags`=?, `status`=?, `author`=?, `read_minutes`=?, `featured`=?, `updated_at`=CURRENT_TIMESTAMP, `published_at`=? WHERE `id`=?";
         $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
         // Keep existing published_at if already set and still published
         if ($status === 'published') {
-            $stmt = $pdo->prepare("SELECT published_at FROM blog_posts WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT `published_at` FROM `blog_posts` WHERE `id` = ?");
             $stmt->execute([$id]);
             $currentPub = $stmt->fetchColumn();
             if ($currentPub) { $publishedAt = $currentPub; }
@@ -102,7 +104,7 @@ try {
         $stmt->execute([$title, $slug, $excerpt, $content_html, $cover_image, $category, $tagsJson, $status, $author, $read_minutes, $featured, $publishedAt, $id]);
     } else {
         // Insert with unique slug handling
-        $sql = "INSERT INTO blog_posts (title, slug, excerpt, content_html, cover_image, category, tags, status, author, read_minutes, featured, published_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO `blog_posts` (`title`, `slug`, `excerpt`, `content_html`, `cover_image`, `category`, `tags`, `status`, `author`, `read_minutes`, `featured`, `published_at`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $publishedAt = ($status === 'published') ? date('Y-m-d H:i:s') : null;
         $stmt = $pdo->prepare($sql);
         try {
@@ -119,5 +121,6 @@ try {
     echo json_encode(['success' => true, 'id' => $id, 'slug' => $slug, 'status' => $status]);
 } catch (Throwable $e) {
     $msg = $e instanceof PDOException ? $e->getMessage() : 'Unexpected';
+    error_log('[blog-save] ' . $msg);
     echo json_encode(['success' => false, 'error' => 'DB_ERROR', 'message' => $msg]);
 }
