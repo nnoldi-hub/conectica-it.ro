@@ -5,7 +5,7 @@ ob_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../includes/init.php';
-require_once __DIR__ . '/../../includes/simple_mailer.php';
+require_once __DIR__ . '/../../includes/hostico_mailer.php';
 require_once __DIR__ . '/../../includes/newsletter_template.php';
 require_once __DIR__ . '/../AuthSystem.php';
 
@@ -99,7 +99,7 @@ try {
     }
 
     // Initialize mailer
-    $mailer = new NewsletterMailer();
+    $mailer = new HosticoMailer();
     if (isset($_GET['debugsmtp']) || isset($_GET['test'])) { 
         $mailer->setDebug(true); 
     }
@@ -118,8 +118,8 @@ try {
                 'smtp_user' => defined('SMTP_USER') ? SMTP_USER : 'MISSING',
                 'smtp_pass' => defined('SMTP_PASS') && trim(SMTP_PASS) ? 'SET' : 'MISSING',
                 'mail_from' => defined('MAIL_FROM') ? MAIL_FROM : 'MISSING',
-                'phpmailer_available' => class_exists('PHPMailer\\PHPMailer\\PHPMailer') ? 'YES' : 'NO',
-                'composer_autoload' => file_exists(__DIR__ . '/../../vendor/autoload.php') ? 'YES' : 'NO'
+                'native_smtp' => 'YES (Hostico compatible)',
+                'phpmailer_blocked' => 'YES (expected on Hostico)'
             ]
         ]);
         exit;
@@ -170,9 +170,10 @@ try {
         'dry' => $dry,
         'errors' => array_slice($errors, 0, 5), // Limit errors shown
         'diag' => [
-            'phpmailer' => class_exists('PHPMailer\\PHPMailer\\PHPMailer') ? 'da' : 'nu',
+            'native_smtp' => 'da',
             'smtp_configured' => (defined('SMTP_PASS') && trim(SMTP_PASS) !== '') ? 'da' : 'nu',
-            'config_loaded' => defined('MAIL_FROM') ? 'da' : 'nu'
+            'config_loaded' => defined('MAIL_FROM') ? 'da' : 'nu',
+            'hostico_mode' => 'da'
         ]
     ];
 

@@ -216,7 +216,7 @@ sendBtn.addEventListener('click', ()=>{
       if(res.success){
         let extra = '';
         if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
-        const diag = res.diag? ` • phpmailer:${res.diag.phpmailer} • smtp:${res.diag.smtp_configured} • config:${res.diag.config_loaded}` : '';
+        const diag = res.diag? ` • native:${res.diag.native_smtp} • smtp:${res.diag.smtp_configured} • config:${res.diag.config_loaded} • hostico:${res.diag.hostico_mode}` : '';
         const logHint = (res.smtp_log && res.smtp_log.length) ? ' • ultima linie: '+String(res.smtp_log[res.smtp_log.length-1]).slice(0,60) : '';
         sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}${logHint}`;
         if (res.smtp_log) { try { console.table(res.smtp_log); } catch(_) { console.log('SMTP Log:', res.smtp_log); } }
