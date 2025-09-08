@@ -1,5 +1,19 @@
 <?php
-require_once __DIR__ . '/../config/mail.php';
+// Load mail configuration gracefully (optional files) and define defaults
+// Prefer CONFIG_PATH from init.php; fallback to local ../config
+$__cfgDir = defined('CONFIG_PATH') ? CONFIG_PATH : realpath(__DIR__ . '/../config');
+if ($__cfgDir && is_dir($__cfgDir)) {
+    if (file_exists($__cfgDir . '/mail.php')) { require_once $__cfgDir . '/mail.php'; }
+    if (file_exists($__cfgDir . '/mail.local.php')) { require_once $__cfgDir . '/mail.local.php'; }
+}
+// Defaults if not provided by config
+if (!defined('MAIL_FROM')) { define('MAIL_FROM', 'no-reply@localhost'); }
+if (!defined('MAIL_FROM_NAME')) { define('MAIL_FROM_NAME', 'Conectica-IT'); }
+if (!defined('SMTP_HOST')) { define('SMTP_HOST', 'localhost'); }
+if (!defined('SMTP_PORT')) { define('SMTP_PORT', 587); }
+if (!defined('SMTP_SECURE')) { define('SMTP_SECURE', 'tls'); }
+if (!defined('SMTP_USER')) { define('SMTP_USER', ''); }
+if (!defined('SMTP_PASS')) { define('SMTP_PASS', ''); }
 
 /**
  * SimpleMailer: HTML email via PHP mail() using correct headers.
@@ -9,8 +23,8 @@ require_once __DIR__ . '/../config/mail.php';
 class SimpleMailer {
     private $from; private $fromName; private $lastError = '';
     public function __construct() {
-        $this->from = MAIL_FROM;
-        $this->fromName = MAIL_FROM_NAME;
+        $this->from = defined('MAIL_FROM') ? MAIL_FROM : 'no-reply@localhost';
+        $this->fromName = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'Conectica-IT';
     }
     public function getLastError() { return $this->lastError; }
     public function send($toEmail, $toName, $subject, $html, $text = '') {

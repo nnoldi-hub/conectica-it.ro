@@ -158,10 +158,21 @@ previewBtn.addEventListener('click', ()=>{
     items: gatherItems()
   };
   fetch('/admin/api/newsletter-send.php?preview=1', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
-    .then(r=>r.json()).then(res=>{
+    .then(async (r)=>{
+      const ct = r.headers.get('content-type')||'';
+      if(!r.ok){
+        const t = await r.text().catch(()=> '');
+        throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,200):''}`);
+      }
+      if(ct.includes('application/json')) return r.json();
+      const t = await r.text();
+      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,200)); }
+    })
+    .then(res=>{
       if(res.success && res.html){ previewHtml.style.display='block'; previewHtml.innerHTML = res.html; }
       else { previewHtml.style.display='block'; previewHtml.innerHTML = '<div class="card-description">Nu s-a putut genera previzualizarea.</div>'; }
-    });
+    })
+    .catch(err=>{ console.error(err); previewHtml.style.display='block'; previewHtml.innerHTML = '<div class="card-description">Eroare: '+String(err.message||err)+'</div>'; });
 });
 
 sendBtn.addEventListener('click', ()=>{
@@ -172,7 +183,17 @@ sendBtn.addEventListener('click', ()=>{
   };
   sendBtn.disabled = true; sendMsg.textContent='Se trimite…';
   fetch('/admin/api/newsletter-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
-    .then(r=>r.json()).then(res=>{
+    .then(async (r)=>{
+      const ct = r.headers.get('content-type')||'';
+      if(!r.ok){
+        const t = await r.text().catch(()=> '');
+        throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,200):''}`);
+      }
+      if(ct.includes('application/json')) return r.json();
+      const t = await r.text();
+      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,200)); }
+    })
+    .then(res=>{
       if(res.success){
         let extra = '';
         if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
@@ -181,7 +202,7 @@ sendBtn.addEventListener('click', ()=>{
         sendMsg.textContent = 'Eșec: ' + (res.error||'');
       }
     })
-    .catch(()=> sendMsg.textContent='Eroare de rețea')
+    .catch(err=>{ console.error(err); sendMsg.textContent='Eroare: ' + String(err.message||err); })
     .finally(()=> sendBtn.disabled=false);
 });
 
