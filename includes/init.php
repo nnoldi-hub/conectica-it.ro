@@ -46,4 +46,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// SEO helper (structured meta, sitemap, etc.)
+if (file_exists(__DIR__ . '/seo.php')) {
+    require_once __DIR__ . '/seo.php';
+    try {
+        // Expose as global $seo
+        $seo = new SEOHelper($pdo);
+    } catch (Throwable $e) {
+        // Non-fatal; fallback meta will be used in head.php
+    }
+}
+
 ?>

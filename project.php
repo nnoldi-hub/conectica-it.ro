@@ -58,7 +58,12 @@ if ($slug && $pdo instanceof PDO) {
                 <?php else: ?>
                 <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" style="cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>">
                 <?php endif; ?>
-                <h1 class="h3 mb-3"><?= htmlspecialchars($project['title']) ?></h1>
+                <h1 class="h3 mb-3">
+                    <?= htmlspecialchars($project['title']) ?>
+                    <?php if (!empty($project['project_url'])): ?>
+                        <span class="badge bg-success align-middle ms-2">LIVE</span>
+                    <?php endif; ?>
+                </h1>
                 <p class="lead text-muted"><?= htmlspecialchars($project['short_description'] ?? '') ?></p>
                 <div class="content">
                     <?= nl2br(htmlspecialchars($project['description'] ?? 'Descriere indisponibilă.')) ?>

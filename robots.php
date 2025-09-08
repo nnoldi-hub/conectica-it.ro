@@ -9,6 +9,7 @@ header('Content-Type: text/plain; charset=utf-8');
 
 // Include database and get robots settings
 require_once(__DIR__ . '/config/database.php');
+require_once(__DIR__ . '/config/config.php');
 
 try {
     $stmt = $database->prepare("SELECT robots_txt FROM seo_settings WHERE setting_type = 'global' LIMIT 1");
@@ -30,6 +31,7 @@ try {
     echo "Disallow: /uploads/\n";
     echo "Allow: /uploads/avatars/\n";
     echo "\n";
-    echo "Sitemap: https://yourdomain.com/sitemap.php\n";
+    $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') : 'https://yourdomain.com';
+    echo "Sitemap: {$base}/sitemap.php\n";
 }
 ?>

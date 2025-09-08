@@ -51,14 +51,17 @@ try {
                             <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="stretched-link text-decoration-none">
                                 <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">
                             </a>
+                            <?php if (!empty($p['url'])): ?>
+                                <span class="position-absolute top-0 end-0 m-2 badge bg-success">LIVE</span>
+                            <?php endif; ?>
                             <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
                                     <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="btn btn-light me-2" title="Detalii proiect">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                     <?php if (!empty($p['url'])): ?>
-                                        <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-primary me-2" title="Vezi Demo">
-                                            <i class="fas fa-eye"></i>
+                                        <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-primary me-2" title="Vezi Live">
+                                            <i class="fas fa-external-link-alt me-1"></i> Live
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -90,13 +93,13 @@ try {
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
-                            <div class="mt-3">
+                            <div class="mt-3 d-flex flex-wrap gap-2">
                                 <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="btn btn-primary">
                                     <i class="fas fa-book-open me-1"></i> Detalii proiect
                                 </a>
                                 <?php if (!empty($p['url'])): ?>
-                                    <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-outline-secondary ms-2">
-                                        <i class="fas fa-external-link-alt me-1"></i> Demo
+                                    <a href="<?= htmlspecialchars($p['url']) ?>" target="_blank" rel="noopener" class="btn btn-outline-secondary">
+                                        <i class="fas fa-external-link-alt me-1"></i> Vezi Live
                                     </a>
                                 <?php endif; ?>
                             </div>

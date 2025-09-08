@@ -13,23 +13,33 @@ $base_path = $is_admin ? '../' : '';
     <meta charset='utf-8'>
     
     <?php 
-    // Generate meta tags
-    $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
-    $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
-    $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
-    
-    echo "<title>{$title}</title>\n";
-    echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
-    echo "    <meta name=\"description\" content=\"{$description}\">\n";
-    echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
-    echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
-    echo "    <meta name=\"robots\" content=\"index, follow\">\n";
+    // Prefer SEO helper meta if available, else fallback
+    if (isset($seo) && $seo instanceof SEOHelper) {
+        echo $seo->generateMetaTags();
+        echo "\n" . $seo->generateStructuredData();
+    } else {
+        // Generate meta tags (fallback)
+        $title = isset($page_title) ? htmlspecialchars($page_title) . ' - ' . SITE_NAME : SITE_NAME;
+        $description = isset($page_description) ? htmlspecialchars($page_description) : 'Freelancer IT - Nyikora Noldi. Servicii profesionale de dezvoltare web, aplicații PHP, MySQL, și soluții IT personalizate.';
+        $keywords = 'freelancer IT, dezvoltare web, PHP, MySQL, Bootstrap, JavaScript, aplicații web';
+        
+        echo "<title>{$title}</title>\n";
+        echo "    <meta name='viewport' content='width=device-width,initial-scale=1'>\n";
+        echo "    <meta name=\"description\" content=\"{$description}\">\n";
+        echo "    <meta name=\"keywords\" content=\"{$keywords}\">\n";
+        echo "    <meta name=\"author\" content=\"Nyikora Noldi\">\n";
+        echo "    <meta name=\"robots\" content=\"index, follow\">\n";
+    }
     ?>
     
     <!-- Bootstrap CSS -->
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'>
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?php echo $base_path; ?>favicon.svg">
     <link rel="alternate icon" href="<?php echo $base_path; ?>favicon.ico">
