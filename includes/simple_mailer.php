@@ -3,8 +3,16 @@
 // Uses only PHPMailer (already installed via Composer)
 
 // Load Composer autoloader if available
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require_once __DIR__ . '/../vendor/autoload.php';
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../vendor/autoload.php', 
+    __DIR__ . '/../../../vendor/autoload.php'
+];
+foreach ($autoloadPaths as $path) {
+    if (file_exists($path)) {
+        require_once $path;
+        break;
+    }
 }
 
 use PHPMailer\PHPMailer\PHPMailer;

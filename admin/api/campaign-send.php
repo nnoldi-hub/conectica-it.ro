@@ -17,10 +17,11 @@ if (!$auth->isAuthenticated()) {
 }
 
 $isPreview = isset($_GET['preview']);
+$isTest = isset($_GET['test']);
 $raw = file_get_contents('php://input');
 $data = json_decode($raw, true) ?: [];
 
-if (!$isPreview) {
+if (!$isPreview && !$isTest) {
     $csrf = $data['csrf_token'] ?? '';
     if (!$auth->validateCSRFToken($csrf)) { 
         ob_end_clean(); 
@@ -32,7 +33,7 @@ if (!$isPreview) {
 $mode = $data['mode'] ?? 'builder';
 $subject = trim($data['subject'] ?? '');
 
-if ($subject === '' && !$isPreview) { 
+if ($subject === '' && !$isPreview && !$isTest) { 
     ob_end_clean(); 
     echo json_encode(['success'=>false,'error'=>'SUBJECT_REQUIRED']); 
     exit; 
@@ -117,6 +118,8 @@ try {
                 'smtp_user' => defined('SMTP_USER') ? SMTP_USER : 'MISSING',
                 'smtp_pass' => defined('SMTP_PASS') && trim(SMTP_PASS) ? 'SET' : 'MISSING',
                 'mail_from' => defined('MAIL_FROM') ? MAIL_FROM : 'MISSING',
+                'phpmailer_available' => class_exists('PHPMailer\\PHPMailer\\PHPMailer') ? 'YES' : 'NO',
+                'composer_autoload' => file_exists(__DIR__ . '/../../vendor/autoload.php') ? 'YES' : 'NO'
             ]
         ]);
         exit;
