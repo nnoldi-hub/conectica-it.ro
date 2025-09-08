@@ -241,7 +241,7 @@ require_once __DIR__ . '/includes/head.php';
                     <i class='fas fa-calculator me-2'></i>Cere Ofertă Gratuită
                 </a>
                 <a href='contact.php' class='btn btn-outline-primary btn-lg'>
-                    <i class='fas fa-calendar-alt me-2'></i>Programează un Call
+                    <i class='fas fa-calendar-alt me-2'></i>Programează un apel
                 </a>
             </div>
             <p class='text-muted mt-3'>

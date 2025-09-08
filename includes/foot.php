@@ -14,7 +14,7 @@
                         <label for="newsletterEmail" class="visually-hidden">Email</label>
                         <input type="email" id="newsletterEmail" name="email" class="form-control form-control-lg" placeholder="adresa@exemplu.ro" required>
                         <button class="btn btn-dark btn-lg flex-shrink-0" type="submit">
-                            <i class="fas fa-envelope-open me-1"></i> Abonează-mă
+                            <i class="fas fa-envelope-open me-1"></i> Mă abonez
                         </button>
                     </form>
                     <div id="newsletterMsg" class="mt-2 small" role="status" aria-live="polite"></div>
