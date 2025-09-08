@@ -48,7 +48,7 @@ $csrf_token = $auth->generateCSRFToken();
       </div>
       <div>
         <label>CTA URL</label>
-        <input type="text" name="cta_url" placeholder="/blog.php" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;">
+        <input type="text" name="cta_url" placeholder="<?php echo defined('BASE_URL') ? BASE_URL . '/blog.php' : '/blog.php'; ?>" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;">
       </div>
       <div style="grid-column:1/-1;">
         <label>Introducere</label>
@@ -140,14 +140,15 @@ function addItem(p){
 }
 
 function gatherItems(){
+  const baseUrl = '<?php echo defined("BASE_URL") ? rtrim(BASE_URL, "/") : ""; ?>';
   const arr=[]; [...chosenList.querySelectorAll('[data-id]')].forEach(el=>{
     const title=el.querySelector('div').textContent; // from inner structure
     const id=el.getAttribute('data-id');
     const found = window._postsCache?.find(p=>String(p.id)===String(id));
     if(found){
-      arr.push({ tag: found.category||'', title: found.title, desc: found.excerpt||'', url: '/article.php?slug='+found.slug });
+      arr.push({ tag: found.category||'', title: found.title, desc: found.excerpt||'', url: baseUrl + '/article.php?slug='+found.slug });
     } else {
-      arr.push({ tag:'', title, desc:'', url:'/blog.php' });
+      arr.push({ tag:'', title, desc:'', url: baseUrl + '/blog.php' });
     }
   });
   return arr;

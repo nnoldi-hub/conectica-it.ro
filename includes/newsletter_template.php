@@ -53,7 +53,7 @@ function newsletter_template_html(array $opt): string {
           <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">{$blocks}</table>
         </td></tr>
         <tr><td style=\"height:12px\"></td></tr>
-        <tr><td style=\"text-align:center;color:#6b7280;font-size:12px\">© ".date('Y')." {$h($brand)} · <a href=\"{$site}/politica-cookies.php\" style=\"color:#6b7280\">Politica Cookie</a> · <a href=\"{$site}/contact.php\" style=\"color:#6b7280\">Contact</a></td></tr>
+        <tr><td style=\"text-align:center;color:#6b7280;font-size:12px\">© ".date('Y')." {$h($brand)} · <a href=\"{$site}/politica-cookies.php\" style=\"color:#6b7280\">Politica Cookie</a> · <a href=\"{$site}/contact.php\" style=\"color:#6b7280\">Contact</a><br>Nu mai dorești aceste emailuri? <a href=\"{$site}/contact.php?unsubscribe=1\" style=\"color:#6b7280\">Dezabonează-te</a></td></tr>
       </table>
     </td></tr></table>
     </body></html>";
