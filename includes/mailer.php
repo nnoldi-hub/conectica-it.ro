@@ -14,6 +14,7 @@ class SimpleMailer {
     }
     public function getLastError() { return $this->lastError; }
     public function send($toEmail, $toName, $subject, $html, $text = '') {
+        $mailAvailable = function_exists('mail');
         // Prefer PHPMailer if available; gracefully fall back to mail()
         if (class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
             try {
@@ -34,6 +35,10 @@ class SimpleMailer {
                     $mail->Username = SMTP_USER;
                     $mail->Password = SMTP_PASS;
                 } else {
+                    if (!$mailAvailable) {
+                        $this->lastError = 'Funcția mail() nu este disponibilă în acest PHP. Configurează SMTP în config/mail.local.php (SMTP_PASS) sau instalează PHPMailer + SMTP.';
+                        return false;
+                    }
                     $mail->isMail();
                 }
 
@@ -71,6 +76,10 @@ class SimpleMailer {
         $message .= "--$boundary--";
 
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+        if (!$mailAvailable) {
+            $this->lastError = 'Funcția mail() nu este disponibilă în acest PHP. Configurează SMTP în config/mail.local.php (SMTP_PASS) sau instalează PHPMailer.';
+            return false;
+        }
         $ok = @mail($toEmail, $encodedSubject, $message, implode("\r\n", $headers));
         if (!$ok && (!defined('SMTP_PASS') || trim((string)SMTP_PASS) === '')) {
             $this->lastError = 'mail() a eșuat. Configurează SMTP în config/mail.local.php (SMTP_PASS).';
