@@ -90,6 +90,168 @@ require_once __DIR__ . '/includes/head.php';
     </div>
 </section>
 
+<!-- De ce să lucrezi cu mine - Benefits Section -->
+<section class='py-5 bg-light'>
+    <div class='container'>
+        <div class='text-center mb-5'>
+            <h2 class='mb-3'>De ce să alegi Conectica IT?</h2>
+            <p class='lead text-muted'>Beneficiile de a lucra cu un dezvoltator web dedicat și experimentat</p>
+        </div>
+        
+        <div class='row g-4'>
+            <div class='col-lg-4'>
+                <div class='card border-0 shadow-sm h-100 text-center'>
+                    <div class='card-body p-4'>
+                        <div class='bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center' style='width: 80px; height: 80px;'>
+                            <i class='fas fa-rocket text-white fa-2x'></i>
+                        </div>
+                        <h5 class='card-title'>Livrare Rapidă</h5>
+                        <p class='card-text text-muted'>Proiectele se finalizează la timp, fără compromisuri asupra calității. Proces de dezvoltare eficient și predictibil.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='col-lg-4'>
+                <div class='card border-0 shadow-sm h-100 text-center'>
+                    <div class='card-body p-4'>
+                        <div class='bg-success rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center' style='width: 80px; height: 80px;'>
+                            <i class='fas fa-shield-alt text-white fa-2x'></i>
+                        </div>
+                        <h5 class='card-title'>Cod Sigur & Curat</h5>
+                        <p class='card-text text-muted'>Securitate implementată din start. Cod documentat și organizat pentru ușurința în mentenanță viitoare.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='col-lg-4'>
+                <div class='card border-0 shadow-sm h-100 text-center'>
+                    <div class='card-body p-4'>
+                        <div class='bg-info rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center' style='width: 80px; height: 80px;'>
+                            <i class='fas fa-comments text-white fa-2x'></i>
+                        </div>
+                        <h5 class='card-title'>Comunicare Clară</h5>
+                        <p class='card-text text-muted'>Răspund în maxim 24h. Te țin la curent cu progresul și explic totul în termeni clari, fără jargon tehnic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class='row g-4 mt-4'>
+            <div class='col-lg-6'>
+                <div class='card border-0 shadow-sm h-100'>
+                    <div class='card-body p-4'>
+                        <div class='d-flex align-items-center mb-3'>
+                            <div class='bg-warning rounded-circle me-3 d-flex align-items-center justify-content-center' style='width: 60px; height: 60px;'>
+                                <i class='fas fa-cogs text-white fa-lg'></i>
+                            </div>
+                            <div>
+                                <h5 class='card-title mb-1'>Tehnologii Moderne</h5>
+                                <p class='card-text text-muted mb-0'>Frameworks și tool-uri la zi</p>
+                            </div>
+                        </div>
+                        <p class='card-text'>Folosesc PHP 8+, MySQL optimizat, Bootstrap 5, și cele mai bune practici din industrie pentru rezultate superioare.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='col-lg-6'>
+                <div class='card border-0 shadow-sm h-100'>
+                    <div class='card-body p-4'>
+                        <div class='d-flex align-items-center mb-3'>
+                            <div class='bg-danger rounded-circle me-3 d-flex align-items-center justify-content-center' style='width: 60px; height: 60px;'>
+                                <i class='fas fa-headset text-white fa-lg'></i>
+                            </div>
+                            <div>
+                                <h5 class='card-title mb-1'>Suport Continuu</h5>
+                                <p class='card-text text-muted mb-0'>Relația nu se termină la launch</p>
+                            </div>
+                        </div>
+                        <p class='card-text'>Oferă documentație completă și suport pentru mentenanță. Sunt aici pentru actualizări și îmbunătățiri viitoare.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Procesul în 3 pași -->
+<section class='py-5'>
+    <div class='container'>
+        <div class='text-center mb-5'>
+            <h2 class='mb-3'>Cum lucrăm împreună</h2>
+            <p class='lead text-muted'>Proces simplu și transparent, de la idee la lansare</p>
+        </div>
+        
+        <div class='row g-4'>
+            <div class='col-lg-4'>
+                <div class='text-center'>
+                    <div class='position-relative mb-4'>
+                        <div class='bg-primary rounded-circle mx-auto d-flex align-items-center justify-content-center' style='width: 100px; height: 100px;'>
+                            <span class='text-white fw-bold' style='font-size: 2rem;'>1</span>
+                        </div>
+                        <div class='position-absolute top-50 start-100 translate-middle d-none d-lg-block' style='width: 80px; height: 2px; background: #e9ecef;'></div>
+                    </div>
+                    <h5 class='mb-3'>Discutăm & Planificăm</h5>
+                    <p class='text-muted'>Analizez cerințele tale, propun soluții și stabilim bugetul. Îți explic totul pas cu pas.</p>
+                    <div class='mt-3'>
+                        <span class='badge bg-light text-dark me-1'>Consultanță gratuită</span>
+                        <span class='badge bg-light text-dark'>Ofertă detaliată</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='col-lg-4'>
+                <div class='text-center'>
+                    <div class='position-relative mb-4'>
+                        <div class='bg-success rounded-circle mx-auto d-flex align-items-center justify-content-center' style='width: 100px; height: 100px;'>
+                            <span class='text-white fw-bold' style='font-size: 2rem;'>2</span>
+                        </div>
+                        <div class='position-absolute top-50 start-100 translate-middle d-none d-lg-block' style='width: 80px; height: 2px; background: #e9ecef;'></div>
+                    </div>
+                    <h5 class='mb-3'>Dezvoltăm & Testăm</h5>
+                    <p class='text-muted'>Creez aplicația pas cu pas. Primești actualizări regulate și poți testa funcționalitățile.</p>
+                    <div class='mt-3'>
+                        <span class='badge bg-light text-dark me-1'>Update-uri săptămânale</span>
+                        <span class='badge bg-light text-dark'>Preview live</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class='col-lg-4'>
+                <div class='text-center'>
+                    <div class='mb-4'>
+                        <div class='bg-info rounded-circle mx-auto d-flex align-items-center justify-content-center' style='width: 100px; height: 100px;'>
+                            <span class='text-white fw-bold' style='font-size: 2rem;'>3</span>
+                        </div>
+                    </div>
+                    <h5 class='mb-3'>Lansăm & Susținem</h5>
+                    <p class='text-muted'>Deploy pe server, training pentru utilizare și documentație completă. Rămân disponibil pentru suport.</p>
+                    <div class='mt-3'>
+                        <span class='badge bg-light text-dark me-1'>Go-live assistance</span>
+                        <span class='badge bg-light text-dark'>Documentație</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class='text-center mt-5'>
+            <h4 class='mb-3'>Pregătit să îți transformi ideea în realitate?</h4>
+            <div class='d-grid gap-2 d-md-flex justify-content-md-center'>
+                <a href='request-quote.php' class='btn btn-primary btn-lg me-2'>
+                    <i class='fas fa-calculator me-2'></i>Cere Ofertă Gratuită
+                </a>
+                <a href='contact.php' class='btn btn-outline-primary btn-lg'>
+                    <i class='fas fa-calendar-alt me-2'></i>Programează un Call
+                </a>
+            </div>
+            <p class='text-muted mt-3'>
+                <i class='fas fa-clock me-1'></i>Răspund în maxim 24h • 
+                <i class='fas fa-phone me-1'></i>Consultanță inițială gratuită
+            </p>
+        </div>
+    </div>
+</section>
+
 <section class='py-5 bg-light'>
     <div class='container'>
         <h2 class='text-center mb-5'>Testimoniale</h2>
