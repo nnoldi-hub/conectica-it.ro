@@ -1,0 +1,9 @@
+# Ignore local/secret config files
+*.local.php
+mail.local.php
+database.local.php
+*.secrets.php
+.env
+.env.*
+!config.php
+!config.prod.php
