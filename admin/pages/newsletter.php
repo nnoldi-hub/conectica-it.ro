@@ -91,7 +91,7 @@ const form = document.getElementById('campaignForm');
 function h(s){ return String(s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
 function loadSubs(){
-  fetch('/admin/api/newsletter-subscribers.php')
+  fetch('/admin/api/audience-list.php')
    .then(r=>r.json())
    .then(res=>{
       if(!res.success){ subsWrap.innerHTML = '<em>Nu am putut încărca abonații.</em>'; return; }
@@ -157,7 +157,7 @@ previewBtn.addEventListener('click', ()=>{
     subject: fd.get('subject'), preheader: fd.get('preheader'), title: fd.get('title'), intro: fd.get('intro'), cta_url: fd.get('cta_url'),
     items: gatherItems()
   };
-  fetch('/admin/api/newsletter-send.php?preview=1', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+  fetch('/admin/api/campaign-send.php?preview=1', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(async (r)=>{
       const ct = r.headers.get('content-type')||'';
       if(!r.ok){
@@ -182,7 +182,7 @@ sendBtn.addEventListener('click', ()=>{
     items: gatherItems()
   };
   sendBtn.disabled = true; sendMsg.textContent='Se trimite…';
-  fetch('/admin/api/newsletter-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+  fetch('/admin/api/campaign-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(async (r)=>{
       const ct = r.headers.get('content-type')||'';
       if(!r.ok){
