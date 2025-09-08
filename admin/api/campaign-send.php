@@ -1,5 +1,8 @@
 <?php
 // Alias for newsletter-send.php with a neutral name to avoid ad blockers
+// Ensure clean JSON (suppress HTML warnings/notices)
+ini_set('display_errors', 0);
+ob_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../../includes/init.php';
 require_once __DIR__ . '/../../includes/mailer.php';
@@ -7,19 +10,19 @@ require_once __DIR__ . '/../../includes/newsletter_template.php';
 require_once __DIR__ . '/../AuthSystem.php';
 
 $auth = new AuthSystem(isset($pdo) ? $pdo : null);
-if (!$auth->isAuthenticated()) { echo json_encode(['success'=>false,'error'=>'NEAUTH']); exit; }
+if (!$auth->isAuthenticated()) { ob_end_clean(); echo json_encode(['success'=>false,'error'=>'NEAUTH']); exit; }
 
 $isPreview = isset($_GET['preview']);
 $raw = file_get_contents('php://input');
 $data = json_decode($raw, true) ?: [];
 if (!$isPreview) {
     $csrf = $data['csrf_token'] ?? '';
-    if (!$auth->validateCSRFToken($csrf)) { echo json_encode(['success'=>false,'error'=>'CSRF_INVALID']); exit; }
+    if (!$auth->validateCSRFToken($csrf)) { ob_end_clean(); echo json_encode(['success'=>false,'error'=>'CSRF_INVALID']); exit; }
 }
 
 $mode = $data['mode'] ?? 'builder';
 $subject = trim($data['subject'] ?? '');
-if ($subject === '' && !$isPreview) { echo json_encode(['success'=>false,'error'=>'SUBJECT_REQUIRED']); exit; }
+if ($subject === '' && !$isPreview) { ob_end_clean(); echo json_encode(['success'=>false,'error'=>'SUBJECT_REQUIRED']); exit; }
 
 try {
     if ($mode === 'builder') {
@@ -36,9 +39,9 @@ try {
         $html = trim($data['body'] ?? '');
     }
 
-    if ($isPreview) { echo json_encode(['success'=>true,'html'=>$html]); exit; }
+    if ($isPreview) { ob_end_clean(); echo json_encode(['success'=>true,'html'=>$html]); exit; }
 
-    if (!($pdo instanceof PDO)) { echo json_encode(['success'=>false,'error'=>'DB_OFFLINE']); exit; }
+    if (!($pdo instanceof PDO)) { ob_end_clean(); echo json_encode(['success'=>false,'error'=>'DB_OFFLINE']); exit; }
     $pdo->exec("CREATE TABLE IF NOT EXISTS newsletter_subscribers (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(190) NOT NULL UNIQUE,
@@ -54,8 +57,8 @@ try {
 
     $targets = [];
     if ($testEmail) {
-        if (filter_var($testEmail, FILTER_VALIDATE_EMAIL)) { $targets = [$testEmail]; }
-        else { echo json_encode(['success'=>false,'error'=>'TEST_EMAIL_INVALID']); exit; }
+    if (filter_var($testEmail, FILTER_VALIDATE_EMAIL)) { $targets = [$testEmail]; }
+    else { ob_end_clean(); echo json_encode(['success'=>false,'error'=>'TEST_EMAIL_INVALID']); exit; }
     } else {
         $stmt = $pdo->query('SELECT email FROM newsletter_subscribers ORDER BY id ASC');
         $targets = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
@@ -73,7 +76,8 @@ try {
         }
     }
 
-    echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors]);
+    ob_end_clean(); echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors]);
 } catch (Throwable $e) {
-    echo json_encode(['success'=>false,'error'=>'SERVER_ERROR']);
+    $out = ob_get_clean();
+    echo json_encode(['success'=>false,'error'=>'SERVER_ERROR','details'=>$e->getMessage(),'out'=>substr((string)$out,0,500)]);
 }

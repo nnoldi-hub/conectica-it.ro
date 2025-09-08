@@ -159,14 +159,9 @@ previewBtn.addEventListener('click', ()=>{
   };
   fetch('/admin/api/campaign-send.php?preview=1', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(async (r)=>{
-      const ct = r.headers.get('content-type')||'';
-      if(!r.ok){
-        const t = await r.text().catch(()=> '');
-        throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,200):''}`);
-      }
-      if(ct.includes('application/json')) return r.json();
-      const t = await r.text();
-      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,200)); }
+      const t = await r.text().catch(()=> '');
+      if(!r.ok){ throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,300):''}`); }
+      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,300)); }
     })
     .then(res=>{
       if(res.success && res.html){ previewHtml.style.display='block'; previewHtml.innerHTML = res.html; }
@@ -184,14 +179,9 @@ sendBtn.addEventListener('click', ()=>{
   sendBtn.disabled = true; sendMsg.textContent='Se trimite…';
   fetch('/admin/api/campaign-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(async (r)=>{
-      const ct = r.headers.get('content-type')||'';
-      if(!r.ok){
-        const t = await r.text().catch(()=> '');
-        throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,200):''}`);
-      }
-      if(ct.includes('application/json')) return r.json();
-      const t = await r.text();
-      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,200)); }
+      const t = await r.text().catch(()=> '');
+      if(!r.ok){ throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,300):''}`); }
+      try { return JSON.parse(t); } catch(e){ throw new Error('Răspuns nevalid (nu e JSON): '+t.slice(0,300)); }
     })
     .then(res=>{
       if(res.success){
