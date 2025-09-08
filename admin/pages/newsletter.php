@@ -177,7 +177,8 @@ sendBtn.addEventListener('click', ()=>{
     items: gatherItems()
   };
   sendBtn.disabled = true; sendMsg.textContent='Se trimite…';
-  fetch('/admin/api/campaign-send.php', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+  const dbg = (payload.test_email && !payload.dry_run) ? '?debugsmtp=1' : '';
+  fetch('/admin/api/campaign-send.php'+dbg, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
     .then(async (r)=>{
       const t = await r.text().catch(()=> '');
       if(!r.ok){ throw new Error(`HTTP ${r.status} ${r.statusText}${t? ' • '+t.slice(0,300):''}`); }
@@ -187,8 +188,10 @@ sendBtn.addEventListener('click', ()=>{
       if(res.success){
         let extra = '';
         if (res.errors && res.errors.length) { extra = ' • detalii: ' + (res.errors[0] || ''); }
-        const diag = res.diag? ` • smtp:${res.diag.hasSmtp? 'da':'nu'} • mail():${res.diag.mailAvailable? 'da':'nu'}` : '';
-        sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}`;
+  const diag = res.diag? ` • smtp:${res.diag.hasSmtp? 'da':'nu'} • mail():${res.diag.mailAvailable? 'da':'nu'}` : '';
+  const logHint = (res.smtp_log && res.smtp_log.length) ? ' • log: '+String(res.smtp_log[res.smtp_log.length-1]).slice(0,80) : '';
+  sendMsg.textContent = `OK • subs: ${res.total} • trimise: ${res.sent} • erori: ${res.fail}${res.dry? ' • dry-run':''}${diag}${extra}${logHint}`;
+  if (res.smtp_log) { try { console.table(res.smtp_log); } catch(_) { console.log(res.smtp_log); } }
       } else {
         sendMsg.textContent = 'Eșec: ' + (res.error||'');
       }

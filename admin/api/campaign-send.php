@@ -65,6 +65,7 @@ try {
     }
 
     $mailer = new SimpleMailer();
+        if (isset($_GET['debugsmtp'])) { $mailer->setDebug(true); }
     $diag = [
         'hasSmtp' => (defined('SMTP_PASS') && trim((string)SMTP_PASS) !== ''),
         'host' => defined('SMTP_HOST') ? SMTP_HOST : null,
@@ -84,7 +85,9 @@ try {
         }
     }
 
-    ob_end_clean(); echo json_encode(['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors,'diag'=>$diag]);
+    $resp = ['success'=>true,'total'=>count($targets),'sent'=>$sent,'fail'=>$fail,'skipped'=>$skipped,'dry'=>$dry,'errors'=>$errors,'diag'=>$diag];
+    if ((isset($_GET['debugsmtp']) || !empty($errors)) && method_exists($mailer,'getDebugLog')) { $resp['smtp_log'] = $mailer->getDebugLog(); }
+    ob_end_clean(); echo json_encode($resp); exit;
 } catch (Throwable $e) {
     $out = ob_get_clean();
     echo json_encode(['success'=>false,'error'=>'SERVER_ERROR','details'=>$e->getMessage(),'out'=>substr((string)$out,0,500)]);

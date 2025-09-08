@@ -23,11 +23,14 @@ if (!defined('SMTP_PASS')) { define('SMTP_PASS', ''); }
  */
 class SimpleMailer {
     private $from; private $fromName; private $lastError = '';
+    private $debug = false; private $smtpLog = [];
     public function __construct() {
         $this->from = defined('MAIL_FROM') ? MAIL_FROM : 'no-reply@localhost';
         $this->fromName = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'Conectica-IT';
     }
     public function getLastError() { return $this->lastError; }
+    public function setDebug($on = true) { $this->debug = (bool)$on; }
+    public function getDebugLog() { return $this->smtpLog; }
     private function smtpSendRaw($toEmail, $data) {
         $host = SMTP_HOST; $port = (int)SMTP_PORT; $secure = strtolower((string)SMTP_SECURE);
         $user = (string)SMTP_USER; $pass = (string)SMTP_PASS;
@@ -35,27 +38,29 @@ class SimpleMailer {
         $remote = ($secure === 'ssl' ? "ssl://$host" : $host) . ':' . $port;
         $ctx = stream_context_create([ 'ssl' => [ 'verify_peer' => false, 'verify_peer_name' => false ] ]);
         $fp = @stream_socket_client($remote, $errno, $errstr, 15, STREAM_CLIENT_CONNECT, $ctx);
-        if (!$fp) { $this->lastError = 'Conexiune SMTP eșuată: ' . $errstr; return false; }
+        if (!$fp) { $this->lastError = 'Conexiune SMTP eșuată: ' . $errstr; $this->smtpLog[] = 'ERR connect: '.$errstr; return false; }
         stream_set_timeout($fp, 15);
-        $read = function() use ($fp) { $line = ''; while (!feof($fp)) { $l = fgets($fp, 512); if ($l===false) break; $line .= $l; if (strlen($l) < 4) break; if (preg_match('~^\d{3}\s~', $l)) break; if (!preg_match('~^\d{3}-~', $l)) break; } return $line; };
+        $read = function() use ($fp) { $line = ''; while (!feof($fp)) { $l = fgets($fp, 2048); if ($l===false) break; $line .= $l; if (preg_match('~^\d{3} (.*)\r?\n$~', $l)) break; if (!preg_match('~^\d{3}-~', $l)) break; } return $line; };
         $write = function($cmd) use ($fp) { fwrite($fp, $cmd."\r\n"); };
         $expect = function($code) use ($read) { $resp = $read(); if (!preg_match('~^'.preg_quote((string)$code,'~').'~', $resp)) { return [false,$resp]; } return [true,$resp]; };
-        $resp = $read();
-        $write('EHLO conectica-it.ro'); list($ok,$resp) = $expect(250); if(!$ok && stripos($resp,'502')!==false){ $write('HELO conectica-it.ro'); list($ok,$resp) = $expect(250);} if(!$ok){ fclose($fp); $this->lastError = 'EHLO/HELO eșuat: '.trim($resp); return false; }
+        $resp = $read(); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp);
+        $write('EHLO conectica-it.ro'); if ($this->debug) $this->smtpLog[] = 'C: EHLO conectica-it.ro'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp);
+        if(!$ok && stripos($resp,'502')!==false){ $write('HELO conectica-it.ro'); if ($this->debug) $this->smtpLog[] = 'C: HELO conectica-it.ro'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); }
+        if(!$ok){ fclose($fp); $this->lastError = 'EHLO/HELO eșuat: '.trim($resp); return false; }
         if ($secure === 'tls') {
-            $write('STARTTLS'); list($ok,$resp) = $expect(220); if(!$ok){ fclose($fp); $this->lastError = 'STARTTLS eșuat: '.trim($resp); return false; }
+            $write('STARTTLS'); if ($this->debug) $this->smtpLog[] = 'C: STARTTLS'; list($ok,$resp) = $expect(220); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'STARTTLS eșuat: '.trim($resp); return false; }
             if (!stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) { fclose($fp); $this->lastError = 'Handshake TLS eșuat'; return false; }
-            $write('EHLO conectica-it.ro'); list($ok,$resp) = $expect(250); if(!$ok){ fclose($fp); $this->lastError = 'EHLO post-TLS eșuat: '.trim($resp); return false; }
+            $write('EHLO conectica-it.ro'); if ($this->debug) $this->smtpLog[] = 'C: EHLO conectica-it.ro'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'EHLO post-TLS eșuat: '.trim($resp); return false; }
         }
         if ($user !== '' || $pass !== '') {
-            $write('AUTH LOGIN'); list($ok,$resp) = $expect(334); if(!$ok){ fclose($fp); $this->lastError = 'AUTH LOGIN resp invalid: '.trim($resp); return false; }
-            $write(base64_encode($user)); list($ok,$resp) = $expect(334); if(!$ok){ fclose($fp); $this->lastError = 'AUTH user resp invalid: '.trim($resp); return false; }
-            $write(base64_encode($pass)); list($ok,$resp) = $expect(235); if(!$ok){ fclose($fp); $this->lastError = 'AUTH parolă resp invalid: '.trim($resp); return false; }
+            $write('AUTH LOGIN'); if ($this->debug) $this->smtpLog[] = 'C: AUTH LOGIN'; list($ok,$resp) = $expect(334); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'AUTH LOGIN resp invalid: '.trim($resp); return false; }
+            $write(base64_encode($user)); if ($this->debug) $this->smtpLog[] = 'C: USER <hidden>'; list($ok,$resp) = $expect(334); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'AUTH user resp invalid: '.trim($resp); return false; }
+            $write(base64_encode($pass)); if ($this->debug) $this->smtpLog[] = 'C: PASS <hidden>'; list($ok,$resp) = $expect(235); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'AUTH parolă resp invalid: '.trim($resp); return false; }
         }
         $fromAddr = preg_match('/<([^>]+)>/', $data['From']??'', $m) ? $m[1] : $this->from;
-        $write('MAIL FROM:<'.$fromAddr.'>'); list($ok,$resp) = $expect(250); if(!$ok){ fclose($fp); $this->lastError = 'MAIL FROM eșuat: '.trim($resp); return false; }
-        $write('RCPT TO:<'.$toEmail.'>'); list($ok,$resp) = $expect(250); if(!$ok){ fclose($fp); $this->lastError = 'RCPT TO eșuat: '.trim($resp); return false; }
-        $write('DATA'); list($ok,$resp) = $expect(354); if(!$ok){ fclose($fp); $this->lastError = 'DATA eșuat: '.trim($resp); return false; }
+        $write('MAIL FROM:<'.$fromAddr.'>'); if ($this->debug) $this->smtpLog[] = 'C: MAIL FROM:<'.$fromAddr.'>'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'MAIL FROM eșuat: '.trim($resp); return false; }
+        $write('RCPT TO:<'.$toEmail.'>'); if ($this->debug) $this->smtpLog[] = 'C: RCPT TO:<'.$toEmail.'>'; list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'RCPT TO eșuat: '.trim($resp); return false; }
+        $write('DATA'); if ($this->debug) $this->smtpLog[] = 'C: DATA'; list($ok,$resp) = $expect(354); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'DATA eșuat: '.trim($resp); return false; }
         // Build DATA payload
         $lines = [];
         foreach ($data as $k=>$v) { if ($k==='Body') continue; $lines[] = $k.': '.$v; }
@@ -64,9 +69,9 @@ class SimpleMailer {
         $body = preg_replace('~\n\.~', "\n..", $body); // dot-stuffing
         $lines[] = $body;
         $payload = implode("\r\n", $lines) . "\r\n.";
-        fwrite($fp, $payload."\r\n");
-        list($ok,$resp) = $expect(250); if(!$ok){ fclose($fp); $this->lastError = 'Trimitere DATA eșuată: '.trim($resp); return false; }
-        $write('QUIT');
+    fwrite($fp, $payload."\r\n");
+    list($ok,$resp) = $expect(250); if ($this->debug) $this->smtpLog[] = 'S: '.trim($resp); if(!$ok){ fclose($fp); $this->lastError = 'Trimitere DATA eșuată: '.trim($resp); return false; }
+    $write('QUIT'); if ($this->debug) $this->smtpLog[] = 'C: QUIT';
         fclose($fp);
         return true;
     }
@@ -118,10 +123,16 @@ class SimpleMailer {
         }
     $boundary = uniqid('np');
         $headers = [];
-        $headers[] = 'From: ' . $this->fromName . ' <' . $this->from . '>';
+        $fromName = $this->fromName;
+        if (preg_match('/[^\x20-\x7E]/', $fromName)) { // non-ASCII
+            if (function_exists('mb_encode_mimeheader')) { $fromName = mb_encode_mimeheader($fromName, 'UTF-8', 'B', '\r\n'); }
+        }
+        $headers[] = 'From: ' . $fromName . ' <' . $this->from . '>';
         $headers[] = 'Reply-To: ' . $this->from;
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-Type: multipart/alternative;boundary=' . $boundary;
+        $headers[] = 'Date: ' . gmdate('D, d M Y H:i:s') . ' +0000';
+        $headers[] = 'Message-ID: <' . uniqid('cid'). '@' . preg_replace('~^.*@~', '', $this->from) . '>';
 
         $altText = $text ?: strip_tags(str_replace(['<br>','<br/>','<br />'], "\n", $html));
         $message = "--$boundary\r\n";
@@ -135,15 +146,16 @@ class SimpleMailer {
         $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
         // If SMTP creds exist but PHPMailer isn't present, use native SMTP
         $hasSmtpCreds = (defined('SMTP_PASS') && trim((string)SMTP_PASS) !== '');
-        if ($hasSmtpCreds && !class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+    if ($hasSmtpCreds && !class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
             $smtpHeaders = [
-                'Date' => gmdate('D, d M Y H:i:s').' +0000',
-                'From' => $this->fromName . ' <' . $this->from . '>',
+        'Date' => gmdate('D, d M Y H:i:s').' +0000',
+        'From' => $fromName . ' <' . $this->from . '>',
                 'To' => ($toName? $toName.' ' : '') . '<'.$toEmail.'>',
                 'Subject' => $encodedSubject,
                 'MIME-Version' => '1.0',
                 'Reply-To' => $this->from,
-                'Content-Type' => 'multipart/alternative; boundary='.$boundary,
+        'Content-Type' => 'multipart/alternative; boundary='.$boundary,
+        'Message-ID' => '<' . uniqid('cid'). '@' . preg_replace('~^.*@~', '', $this->from) . '>',
             ];
             $bodyData = [
                 'From' => $smtpHeaders['From'],
@@ -152,6 +164,8 @@ class SimpleMailer {
                 'MIME-Version' => '1.0',
                 'Reply-To' => $smtpHeaders['Reply-To'],
                 'Content-Type' => $smtpHeaders['Content-Type'],
+        'Date' => $smtpHeaders['Date'],
+        'Message-ID' => $smtpHeaders['Message-ID'],
                 'Body' => $message,
             ];
             $ok = $this->smtpSendRaw($toEmail, $bodyData);
