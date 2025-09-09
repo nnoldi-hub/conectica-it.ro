@@ -24,6 +24,12 @@ if ($_POST) {
             $address = trim($_POST['address'] ?? '');
             $description = trim($_POST['description'] ?? '');
             
+            // Social media settings
+            $facebook_url = trim($_POST['facebook_url'] ?? '');
+            $instagram_url = trim($_POST['instagram_url'] ?? '');
+            $linkedin_url = trim($_POST['linkedin_url'] ?? '');
+            $youtube_url = trim($_POST['youtube_url'] ?? '');
+            
             // Validation
             if (empty($email)) {
                 $error_message = 'Emailul este obligatoriu!';
@@ -51,7 +57,11 @@ if ($_POST) {
                         'website_url' => $website_url,
                         'company_name' => $company_name,
                         'company_address' => $address,
-                        'company_description' => $description
+                        'company_description' => $description,
+                        'social_facebook' => $facebook_url,
+                        'social_instagram' => $instagram_url,
+                        'social_linkedin' => $linkedin_url,
+                        'social_youtube' => $youtube_url
                     ];
                     
                     foreach ($settings as $key => $value) {
@@ -87,7 +97,11 @@ $settings = array_merge([
     'website_url' => 'conectica-it.ro',
     'company_name' => 'Conectica IT',
     'company_address' => '',
-    'company_description' => ''
+    'company_description' => '',
+    'social_facebook' => 'https://www.facebook.com/oferte.conectica.it.ro',
+    'social_instagram' => '',
+    'social_linkedin' => '',
+    'social_youtube' => ''
 ], $current_settings);
 
 $csrf_token = $auth->generateCSRFToken();
@@ -179,6 +193,52 @@ $csrf_token = $auth->generateCSRFToken();
                         </label>
                         <textarea id="description" name="description" rows="4" 
                                   placeholder="O scurtă descriere a companiei..."><?php echo htmlspecialchars($settings['company_description']); ?></textarea>
+                    </div>
+                    
+                    <!-- Social Media Section -->
+                    <div class="form-section">
+                        <h4><i class="fab fa-facebook"></i> Social Media</h4>
+                        <p class="section-description">Configurează linkurile către conturile de social media ale companiei</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="facebook_url">
+                            <i class="fab fa-facebook"></i>
+                            Facebook
+                        </label>
+                        <input type="url" id="facebook_url" name="facebook_url" 
+                               value="<?php echo htmlspecialchars($settings['social_facebook']); ?>" 
+                               placeholder="https://www.facebook.com/pagina-ta">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instagram_url">
+                            <i class="fab fa-instagram"></i>
+                            Instagram
+                        </label>
+                        <input type="url" id="instagram_url" name="instagram_url" 
+                               value="<?php echo htmlspecialchars($settings['social_instagram']); ?>" 
+                               placeholder="https://www.instagram.com/contul-tau">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="linkedin_url">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn
+                        </label>
+                        <input type="url" id="linkedin_url" name="linkedin_url" 
+                               value="<?php echo htmlspecialchars($settings['social_linkedin']); ?>" 
+                               placeholder="https://www.linkedin.com/company/compania-ta">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="youtube_url">
+                            <i class="fab fa-youtube"></i>
+                            YouTube
+                        </label>
+                        <input type="url" id="youtube_url" name="youtube_url" 
+                               value="<?php echo htmlspecialchars($settings['social_youtube']); ?>" 
+                               placeholder="https://www.youtube.com/canalul-tau">
                     </div>
                 </div>
                 

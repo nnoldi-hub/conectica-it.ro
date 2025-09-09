@@ -34,7 +34,21 @@
                         <i class="fas fa-code me-2"></i>Conectica‑IT
                     </h5>
                     <p class='mb-3'>Freelancer IT specializat în dezvoltarea de aplicații web moderne și soluții personalizate pentru afaceri.</p>
-                    <div class='social-links'>
+                    
+                    <?php
+                    // Load and display social media icons
+                    if (isset($pdo) && function_exists('getSocialMediaSettings')) {
+                        $socialSettings = getSocialMediaSettings($pdo);
+                        echo "<div class='footer-social'>";
+                        echo generateSocialMediaIcons($socialSettings, 'social-icons');
+                        echo "</div>";
+                        
+                        // Add CSS for social media icons
+                        echo getSocialMediaCSS();
+                    }
+                    ?>
+                    
+                    <div class='contact-links mt-3'>
                         <a href='mailto:<?php echo defined('CONTACT_EMAIL') ? CONTACT_EMAIL : 'conectica.it.ro@gmail.com'; ?>' class='text-light me-3' title='Email'>
                             <i class='fas fa-envelope fa-lg'></i>
                         </a>

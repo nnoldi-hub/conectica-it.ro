@@ -62,4 +62,9 @@ if (file_exists(__DIR__ . '/seo.php')) {
     }
 }
 
+// Social Media helper
+if (file_exists(__DIR__ . '/social-media.php')) {
+    require_once __DIR__ . '/social-media.php';
+}
+
 ?>

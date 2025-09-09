@@ -151,6 +151,14 @@ $base_path = $is_admin ? '../' : '';
     <link rel="alternate icon" href="<?php echo $base_path; ?>favicon.ico">
     <!-- Custom CSS -->
     <link href='<?php echo $base_path; ?>assets/css/style.css' rel='stylesheet'>
+    
+    <?php
+    // Add social media structured data
+    if (isset($pdo) && function_exists('getSocialMediaSettings') && function_exists('generateSocialMediaStructuredData')) {
+        $socialSettings = getSocialMediaSettings($pdo);
+        echo generateSocialMediaStructuredData($socialSettings, 'Conectica IT');
+    }
+    ?>
 </head>
 <body>
     <nav class='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>

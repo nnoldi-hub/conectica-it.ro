@@ -42,6 +42,34 @@ require_once __DIR__ . '/includes/head.php';
                                 <strong>Website:</strong><br>
                                 <a href="https://<?php echo WEBSITE_URL; ?>" class="text-decoration-none" target="_blank"><?php echo WEBSITE_URL; ?></a>
                             </div>
+                            
+                            <?php
+                            // Display social media links
+                            if (isset($pdo) && function_exists('getSocialMediaSettings')) {
+                                $socialSettings = getSocialMediaSettings($pdo);
+                                $hasAnyLink = array_filter($socialSettings);
+                                
+                                if (!empty($hasAnyLink)): ?>
+                                    <div class="contact-item mt-4">
+                                        <i class="fas fa-share-alt text-primary me-2"></i>
+                                        <strong>Urmărește-mă:</strong><br>
+                                        <div class="mt-2">
+                                            <?php echo generateSocialMediaIcons($socialSettings, 'social-icons contact-social'); ?>
+                                        </div>
+                                    </div>
+                                    
+                                    <style>
+                                    .contact-social .social-icon {
+                                        width: 35px;
+                                        height: 35px;
+                                        font-size: 14px;
+                                        margin-right: 8px;
+                                        margin-bottom: 8px;
+                                    }
+                                    </style>
+                                <?php endif;
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
