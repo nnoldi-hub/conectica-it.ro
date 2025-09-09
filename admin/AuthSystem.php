@@ -306,7 +306,7 @@ class AuthSystem {
         }
         
         try {
-            $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE username = ?");
+            $stmt = $this->db->prepare("SELECT * FROM admins WHERE username = ?");
             $stmt->execute([$username]);
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
             
