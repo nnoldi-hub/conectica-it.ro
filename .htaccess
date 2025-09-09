@@ -78,9 +78,9 @@ RewriteEngine On
     Require all denied
 </FilesMatch>
 
-# Protect sensitive directories
+# Protect sensitive directories 
 <IfModule mod_rewrite.c>
-    RewriteRule ^(config|logs|includes)/ - [F,L]
+    RewriteRule ^(config|logs)/ - [F,L]
 </IfModule>
 
 # Prevent access to hidden files

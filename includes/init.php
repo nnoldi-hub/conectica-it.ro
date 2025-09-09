@@ -23,6 +23,9 @@ if (file_exists(CONFIG_PATH . '/config.php')) {
     require_once CONFIG_PATH . '/config.php';
 }
 
+// Mark config as loaded for security checks
+define('CONFIG_LOADED', true);
+
 // Composer autoload (if installed)
 if (file_exists(PUBLIC_PATH . '/vendor/autoload.php')) {
     require_once PUBLIC_PATH . '/vendor/autoload.php';
