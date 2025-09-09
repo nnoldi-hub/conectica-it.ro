@@ -32,7 +32,7 @@ if ($_POST) {
             } else {
                 try {
                     $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ?, phone = ?, bio = ?, updated_at = NOW() WHERE username = ?");
-                    if ($stmt->execute([$name, $email, $phone, $bio, $user['username']])) {
+                    if ($stmt->execute([$name, $email, $phone, $bio, $username])) {
                         $success_message = 'Profilul a fost actualizat cu succes!';
                         
                         // Update session data
@@ -66,7 +66,7 @@ if ($_POST) {
                 try {
                     $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
                     $stmt = $pdo->prepare("UPDATE admins SET password_hash = ?, updated_at = NOW() WHERE username = ?");
-                    if ($stmt->execute([$password_hash, $user['username']])) {
+                    if ($stmt->execute([$password_hash, $username])) {
                         $success_message = 'Parola a fost schimbată cu succes!';
                     } else {
                         $error_message = 'Eroare la schimbarea parolei!';
@@ -99,14 +99,14 @@ if ($_POST) {
                     
                     // Generate unique filename
                     $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $filename = 'avatar_' . $user['username'] . '_' . time() . '.' . $file_extension;
+                    $filename = 'avatar_' . $username . '_' . time() . '.' . $file_extension;
                     $file_path = $upload_dir . $filename;
                     
                     if (move_uploaded_file($file_tmp, $file_path)) {
                         // Remove old avatar if exists
                         try {
                             $stmt = $pdo->prepare("SELECT avatar FROM admins WHERE username = ?");
-                            $stmt->execute([$user['username']]);
+                            $stmt->execute([$username]);
                             $old_avatar = $stmt->fetchColumn();
                             
                             if ($old_avatar && file_exists('../../' . $old_avatar)) {
@@ -120,7 +120,7 @@ if ($_POST) {
                         $avatar_path = 'uploads/avatars/' . $filename;
                         try {
                             $stmt = $pdo->prepare("UPDATE admins SET avatar = ?, updated_at = NOW() WHERE username = ?");
-                            if ($stmt->execute([$avatar_path, $user['username']])) {
+                            if ($stmt->execute([$avatar_path, $username])) {
                                 $success_message = 'Poza de profil a fost actualizată cu succes!';
                                 $_SESSION['admin_data']['avatar'] = $avatar_path;
                             } else {
@@ -141,13 +141,37 @@ if ($_POST) {
 }
 
 // Get current admin data from database
+$username = $user['username'] ?? $_SESSION['admin_username'] ?? 'admin';
 try {
     $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
-    $stmt->execute([$user['username']]);
+    $stmt->execute([$username]);
     $admin_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // If no data in database, use session data as fallback
+    if (!$admin_data) {
+        $admin_data = [
+            'username' => $username,
+            'name' => $user['name'] ?? '',
+            'email' => $user['email'] ?? '',
+            'phone' => $user['phone'] ?? '',
+            'bio' => $user['bio'] ?? '',
+            'avatar' => $user['avatar'] ?? '',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+    }
 } catch (PDOException $e) {
     $error_message = 'Eroare la încărcarea datelor: ' . $e->getMessage();
-    $admin_data = [];
+    $admin_data = [
+        'username' => $username,
+        'name' => $user['name'] ?? '',
+        'email' => $user['email'] ?? '',
+        'phone' => $user['phone'] ?? '',
+        'bio' => $user['bio'] ?? '',
+        'avatar' => $user['avatar'] ?? '',
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
 }
 
 $csrf_token = $auth->generateCSRFToken();
