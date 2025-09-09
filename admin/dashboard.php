@@ -362,8 +362,13 @@ $current_page = $_GET['page'] ?? 'dashboard';
             </div>
             <div class="user-menu">
                 <div class="user-info">
-                    <?php if (!empty($user['avatar']) && file_exists('../' . $user['avatar'])): ?>
-                        <img src="../<?php echo htmlspecialchars($user['avatar']); ?>" 
+                    <?php 
+                    // Debug avatar path
+                    $avatar_path = $user['avatar'] ?? '';
+                    $full_path = '../' . $avatar_path;
+                    ?>
+                    <?php if (!empty($avatar_path) && file_exists($full_path)): ?>
+                        <img src="../<?php echo htmlspecialchars($avatar_path); ?>" 
                              alt="Avatar" class="user-avatar">
                     <?php else: ?>
                         <i class="fas fa-user"></i>

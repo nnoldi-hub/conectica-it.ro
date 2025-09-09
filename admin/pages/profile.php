@@ -34,13 +34,9 @@ if ($_POST) {
                 try {
                     $stmt = $pdo->prepare("UPDATE admins SET name = ?, email = ?, phone = ?, bio = ?, updated_at = NOW() WHERE username = ?");
                     if ($stmt->execute([$name, $email, $phone, $bio, $username])) {
+                        // Refresh user data in session
+                        $auth->refreshUserData();
                         $success_message = 'Profilul a fost actualizat cu succes!';
-                        
-                        // Update session data
-                        $_SESSION['admin_data']['name'] = $name;
-                        $_SESSION['admin_data']['email'] = $email;
-                        $_SESSION['admin_data']['phone'] = $phone;
-                        $_SESSION['admin_data']['bio'] = $bio;
                     } else {
                         $error_message = 'Eroare la actualizarea profilului!';
                     }
@@ -61,16 +57,24 @@ if ($_POST) {
                 $error_message = 'Parola nouă și confirmarea nu coincid!';
             } elseif (strlen($new_password) < 6) {
                 $error_message = 'Parola nouă trebuie să aibă cel puțin 6 caractere!';
-            } elseif ($current_password !== 'demo123') { // Simple check for demo
-                $error_message = 'Parola actuală nu este corectă!';
             } else {
+                // Verify current password against database
                 try {
-                    $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("UPDATE admins SET password_hash = ?, updated_at = NOW() WHERE username = ?");
-                    if ($stmt->execute([$password_hash, $username])) {
-                        $success_message = 'Parola a fost schimbată cu succes!';
+                    $stmt = $pdo->prepare("SELECT password_hash FROM admins WHERE username = ?");
+                    $stmt->execute([$username]);
+                    $user_data = $stmt->fetch();
+                    
+                    if (!$user_data || !password_verify($current_password, $user_data['password_hash'])) {
+                        $error_message = 'Parola actuală nu este corectă!';
                     } else {
-                        $error_message = 'Eroare la schimbarea parolei!';
+                        // Update password
+                        $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+                        $stmt = $pdo->prepare("UPDATE admins SET password_hash = ?, updated_at = NOW() WHERE username = ?");
+                        if ($stmt->execute([$password_hash, $username])) {
+                            $success_message = 'Parola a fost schimbată cu succes!';
+                        } else {
+                            $error_message = 'Eroare la schimbarea parolei!';
+                        }
                     }
                 } catch (PDOException $e) {
                     $error_message = 'Eroare la baza de date: ' . $e->getMessage();
@@ -122,8 +126,9 @@ if ($_POST) {
                         try {
                             $stmt = $pdo->prepare("UPDATE admins SET avatar = ?, updated_at = NOW() WHERE username = ?");
                             if ($stmt->execute([$avatar_path, $username])) {
+                                // Refresh user data in session
+                                $auth->refreshUserData();
                                 $success_message = 'Poza de profil a fost actualizată cu succes!';
-                                $_SESSION['admin_data']['avatar'] = $avatar_path;
                             } else {
                                 $error_message = 'Eroare la actualizarea pozei de profil!';
                             }

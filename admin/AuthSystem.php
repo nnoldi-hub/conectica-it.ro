@@ -293,6 +293,36 @@ class AuthSystem {
     }
     
     /**
+     * Refresh current user data from database
+     */
+    public function refreshUserData() {
+        if (!$this->isAuthenticated()) {
+            return false;
+        }
+        
+        $username = $_SESSION['admin_username'] ?? '';
+        if (empty($username)) {
+            return false;
+        }
+        
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM admins WHERE username = ?");
+            $stmt->execute([$username]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($userData) {
+                unset($userData['password_hash']); // Don't store password in session
+                $_SESSION['admin_data'] = $userData;
+                return true;
+            }
+        } catch (PDOException $e) {
+            error_log("Error refreshing user data: " . $e->getMessage());
+        }
+        
+        return false;
+    }
+    
+    /**
      * Logout user
      */
     public function logout() {
