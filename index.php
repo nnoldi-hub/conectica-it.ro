@@ -255,6 +255,101 @@ require_once __DIR__ . '/includes/head.php';
 <section class='py-5 bg-light'>
     <div class='container'>
         <h2 class='text-center mb-5'>Testimoniale</h2>
+        
+        <?php
+        // Get approved testimonials, prioritizing featured ones
+        try {
+            $testimonials_query = "SELECT * FROM testimonials 
+                                 WHERE status = 'approved' 
+                                 ORDER BY featured DESC, rating DESC, created_at DESC 
+                                 LIMIT 6";
+            $testimonials = $pdo->query($testimonials_query)->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $testimonials = [];
+        }
+        ?>
+        
+        <?php if (!empty($testimonials)): ?>
+        <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <?php foreach ($testimonials as $index => $testimonial): ?>
+                <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                    <div class='row justify-content-center'>
+                        <div class='col-md-8 col-lg-6'>
+                            <div class='card border-0 shadow-sm h-100'>
+                                <div class='card-body d-flex flex-column'>
+                                    <?php if ($testimonial['featured']): ?>
+                                        <div class="featured-badge mb-3">
+                                            <i class="fas fa-star text-warning"></i>
+                                            <span class="badge bg-warning text-dark">Recomandat</span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <div class="rating mb-2">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <i class="fas fa-star <?php echo $i <= $testimonial['rating'] ? 'text-warning' : 'text-muted'; ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                    
+                                    <p class="flex-grow-1">"<?php echo htmlspecialchars($testimonial['testimonial']); ?>"</p>
+                                    
+                                    <?php if ($testimonial['project_details']): ?>
+                                        <div class="project-info mb-3">
+                                            <small class="text-muted">
+                                                <i class="fas fa-project-diagram"></i>
+                                                Proiect: <?php echo htmlspecialchars($testimonial['project_details']); ?>
+                                            </small>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <div class='d-flex align-items-center mt-auto'>
+                                        <div class='bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center' 
+                                             style='width:40px;height:40px; min-width:40px;'>
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
+                                        <div>
+                                            <strong><?php echo htmlspecialchars($testimonial['client_name']); ?></strong>
+                                            <?php if ($testimonial['client_position'] || $testimonial['client_company']): ?>
+                                                <div class='text-muted small'>
+                                                    <?php if ($testimonial['client_position']): ?>
+                                                        <?php echo htmlspecialchars($testimonial['client_position']); ?>
+                                                    <?php endif; ?>
+                                                    <?php if ($testimonial['client_company']): ?>
+                                                        <?php echo $testimonial['client_position'] ? ', ' : ''; ?>
+                                                        <?php echo htmlspecialchars($testimonial['client_company']); ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <?php if (count($testimonials) > 1): ?>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Următor</span>
+            </button>
+            <?php endif; ?>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="add-testimonial.php" class="btn btn-outline-primary">
+                <i class="fas fa-plus"></i> Adaugă testimonialul tău
+            </a>
+        </div>
+        
+        <?php else: ?>
+        <!-- Fallback testimonials if none in database -->
         <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
@@ -321,6 +416,13 @@ require_once __DIR__ . '/includes/head.php';
                 <span class="visually-hidden">Următor</span>
             </button>
         </div>
+        
+        <div class="text-center mt-4">
+            <a href="add-testimonial.php" class="btn btn-outline-primary">
+                <i class="fas fa-plus"></i> Fii primul care adaugă un testimonial
+            </a>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
