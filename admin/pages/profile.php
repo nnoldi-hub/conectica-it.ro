@@ -81,9 +81,14 @@ if ($_POST) {
                 }
             }
         } elseif ($action === 'upload_avatar') {
+            // Debug upload information
+            error_log("Avatar upload attempt - Username: " . $username);
+            error_log("FILES data: " . print_r($_FILES, true));
+            
             // Handle avatar upload
             if (isset($_FILES['avatar'])) {
                 $upload_error = $_FILES['avatar']['error'];
+                error_log("Upload error code: " . $upload_error);
                 
                 if ($upload_error !== UPLOAD_ERR_OK) {
                     switch ($upload_error) {
@@ -100,6 +105,7 @@ if ($_POST) {
                         default:
                             $error_message = 'Eroare la încărcarea fișierului! Cod: ' . $upload_error;
                     }
+                    error_log("Upload error: " . $error_message);
                 } else {
                     $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                     $max_size = 5 * 1024 * 1024; // 5MB
@@ -116,9 +122,15 @@ if ($_POST) {
                     } else {
                         // Create uploads directory if it doesn't exist
                         $upload_dir = '../../uploads/avatars/';
+                        error_log("Upload directory: " . $upload_dir);
+                        error_log("Directory exists: " . (is_dir($upload_dir) ? 'yes' : 'no'));
+                        
                         if (!is_dir($upload_dir)) {
                             if (!mkdir($upload_dir, 0755, true)) {
                                 $error_message = 'Nu s-a putut crea directorul pentru upload!';
+                                error_log("Failed to create upload directory");
+                            } else {
+                                error_log("Upload directory created successfully");
                             }
                         }
                         
@@ -128,7 +140,11 @@ if ($_POST) {
                             $filename = 'avatar_' . $username . '_' . time() . '.' . $file_extension;
                             $file_path = $upload_dir . $filename;
                             
+                            error_log("Attempting to move file to: " . $file_path);
+                            error_log("Source temp file: " . $file_tmp);
+                            
                             if (move_uploaded_file($file_tmp, $file_path)) {
+                                error_log("File uploaded successfully to: " . $file_path);
                         // Remove old avatar if exists
                         try {
                             $stmt = $pdo->prepare("SELECT avatar FROM admins WHERE username = ?");
@@ -144,14 +160,21 @@ if ($_POST) {
                         
                         // Update database
                         $avatar_path = 'uploads/avatars/' . $filename;
+                        error_log("Updating database with avatar path: " . $avatar_path);
+                        
                         try {
                             $stmt = $pdo->prepare("UPDATE admins SET avatar = ?, updated_at = NOW() WHERE username = ?");
                             if ($stmt->execute([$avatar_path, $username])) {
+                                error_log("Database updated successfully");
+                                
                                 // Refresh user data in session
-                                $auth->refreshUserData();
+                                $refresh_result = $auth->refreshUserData();
+                                error_log("Session refresh result: " . ($refresh_result ? 'success' : 'failed'));
+                                
                                 $success_message = 'Poza de profil a fost actualizată cu succes!';
                             } else {
                                 $error_message = 'Eroare la actualizarea pozei de profil în baza de date!';
+                                error_log("Database update failed");
                                 // Delete uploaded file if database update failed
                                 if (file_exists($file_path)) {
                                     unlink($file_path);

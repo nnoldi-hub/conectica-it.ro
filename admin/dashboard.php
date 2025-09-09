@@ -366,12 +366,23 @@ $current_page = $_GET['page'] ?? 'dashboard';
                     // Debug avatar path
                     $avatar_path = $user['avatar'] ?? '';
                     $full_path = '../' . $avatar_path;
+                    
+                    // Add debugging
+                    error_log("Dashboard avatar debug:");
+                    error_log("User data: " . print_r($user, true));
+                    error_log("Avatar path: " . $avatar_path);
+                    error_log("Full path: " . $full_path);
+                    error_log("File exists: " . (file_exists($full_path) ? 'yes' : 'no'));
                     ?>
                     <?php if (!empty($avatar_path) && file_exists($full_path)): ?>
                         <img src="../<?php echo htmlspecialchars($avatar_path); ?>" 
                              alt="Avatar" class="user-avatar">
                     <?php else: ?>
                         <i class="fas fa-user"></i>
+                        <!-- Debug info for troubleshooting -->
+                        <?php if (!empty($avatar_path)): ?>
+                            <!-- Avatar path exists but file not found: <?= htmlspecialchars($avatar_path); ?> -->
+                        <?php endif; ?>
                     <?php endif; ?>
                     <span>Bună ziua, <strong><?php echo htmlspecialchars($user['name'] ?? $admin_username); ?></strong></span>
                     <?php if ($security_info): ?>
