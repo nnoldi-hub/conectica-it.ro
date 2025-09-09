@@ -7,6 +7,7 @@ $auth = new AuthSystem(isset($pdo) ? $pdo : null);
 $auth->requireAuth();
 
 $user = $auth->getCurrentUser();
+$username = $user['username'] ?? $_SESSION['admin_username'] ?? 'admin';
 $success_message = '';
 $error_message = '';
 
@@ -141,7 +142,6 @@ if ($_POST) {
 }
 
 // Get current admin data from database
-$username = $user['username'] ?? $_SESSION['admin_username'] ?? 'admin';
 try {
     $stmt = $pdo->prepare("SELECT * FROM admins WHERE username = ?");
     $stmt->execute([$username]);
