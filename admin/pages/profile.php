@@ -82,32 +82,53 @@ if ($_POST) {
             }
         } elseif ($action === 'upload_avatar') {
             // Handle avatar upload
-            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                $max_size = 5 * 1024 * 1024; // 5MB
+            if (isset($_FILES['avatar'])) {
+                $upload_error = $_FILES['avatar']['error'];
                 
-                $file = $_FILES['avatar'];
-                $file_type = $file['type'];
-                $file_size = $file['size'];
-                $file_tmp = $file['tmp_name'];
-                
-                if (!in_array($file_type, $allowed_types)) {
-                    $error_message = 'Tipul de fișier nu este permis! Folosește JPG, PNG, GIF sau WebP.';
-                } elseif ($file_size > $max_size) {
-                    $error_message = 'Fișierul este prea mare! Dimensiunea maximă este 5MB.';
-                } else {
-                    // Create uploads directory if it doesn't exist
-                    $upload_dir = '../../uploads/avatars/';
-                    if (!is_dir($upload_dir)) {
-                        mkdir($upload_dir, 0755, true);
+                if ($upload_error !== UPLOAD_ERR_OK) {
+                    switch ($upload_error) {
+                        case UPLOAD_ERR_INI_SIZE:
+                        case UPLOAD_ERR_FORM_SIZE:
+                            $error_message = 'Fișierul este prea mare!';
+                            break;
+                        case UPLOAD_ERR_PARTIAL:
+                            $error_message = 'Fișierul a fost încărcat doar parțial!';
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            $error_message = 'Nu a fost selectat niciun fișier!';
+                            break;
+                        default:
+                            $error_message = 'Eroare la încărcarea fișierului! Cod: ' . $upload_error;
                     }
+                } else {
+                    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    $max_size = 5 * 1024 * 1024; // 5MB
                     
-                    // Generate unique filename
-                    $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $filename = 'avatar_' . $username . '_' . time() . '.' . $file_extension;
-                    $file_path = $upload_dir . $filename;
+                    $file = $_FILES['avatar'];
+                    $file_type = $file['type'];
+                    $file_size = $file['size'];
+                    $file_tmp = $file['tmp_name'];
                     
-                    if (move_uploaded_file($file_tmp, $file_path)) {
+                    if (!in_array($file_type, $allowed_types)) {
+                        $error_message = 'Tipul de fișier nu este permis! Folosește JPG, PNG, GIF sau WebP.';
+                    } elseif ($file_size > $max_size) {
+                        $error_message = 'Fișierul este prea mare! Dimensiunea maximă este 5MB.';
+                    } else {
+                        // Create uploads directory if it doesn't exist
+                        $upload_dir = '../../uploads/avatars/';
+                        if (!is_dir($upload_dir)) {
+                            if (!mkdir($upload_dir, 0755, true)) {
+                                $error_message = 'Nu s-a putut crea directorul pentru upload!';
+                            }
+                        }
+                        
+                        if (!isset($error_message)) {
+                            // Generate unique filename
+                            $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                            $filename = 'avatar_' . $username . '_' . time() . '.' . $file_extension;
+                            $file_path = $upload_dir . $filename;
+                            
+                            if (move_uploaded_file($file_tmp, $file_path)) {
                         // Remove old avatar if exists
                         try {
                             $stmt = $pdo->prepare("SELECT avatar FROM admins WHERE username = ?");
@@ -130,17 +151,27 @@ if ($_POST) {
                                 $auth->refreshUserData();
                                 $success_message = 'Poza de profil a fost actualizată cu succes!';
                             } else {
-                                $error_message = 'Eroare la actualizarea pozei de profil!';
+                                $error_message = 'Eroare la actualizarea pozei de profil în baza de date!';
+                                // Delete uploaded file if database update failed
+                                if (file_exists($file_path)) {
+                                    unlink($file_path);
+                                }
                             }
                         } catch (PDOException $e) {
                             $error_message = 'Eroare la baza de date: ' . $e->getMessage();
+                            // Delete uploaded file if database update failed
+                            if (file_exists($file_path)) {
+                                unlink($file_path);
+                            }
                         }
                     } else {
-                        $error_message = 'Eroare la încărcarea fișierului!';
+                        $error_message = 'Eroare la încărcarea fișierului! Nu s-a putut muta în directorul de destinație.';
+                    }
+                        }
                     }
                 }
             } else {
-                $error_message = 'Selectează o imagine pentru încărcare!';
+                $error_message = 'Nu a fost selectat niciun fișier pentru upload!';
             }
         }
     }

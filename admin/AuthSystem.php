@@ -161,12 +161,44 @@ class AuthSystem {
             ];
         }
         
-        // Simple authentication for demo (replace with database lookup)
-        if ($username === 'admin' && $password === 'demo123') {
-            // Clear failed attempts
-            $this->clearFailedAttempts($username);
-            
-            // Get user data from database if available
+        // Authenticate against database
+        $isValidUser = false;
+        $userData = null;
+        
+        if ($this->db) {
+            try {
+                $stmt = $this->db->prepare("SELECT username, password_hash, name, email, phone, bio, avatar, role FROM admins WHERE username = ?");
+                $stmt->execute([$username]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($user && password_verify($password, $user['password_hash'])) {
+                    $isValidUser = true;
+                    $userData = [
+                        'username' => $user['username'],
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'phone' => $user['phone'],
+                        'bio' => $user['bio'],
+                        'avatar' => $user['avatar'],
+                        'role' => $user['role'] ?? 'admin',
+                        'login_time' => time(),
+                        'ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+                        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+                    ];
+                }
+            } catch (PDOException $e) {
+                error_log("Authentication database error: " . $e->getMessage());
+                return [
+                    'success' => false,
+                    'error' => 'Database error occurred.',
+                    'error_code' => 'DB_ERROR'
+                ];
+            }
+        }
+        
+        // Fallback to hardcoded demo credentials if database is not available
+        if (!$isValidUser && !$this->db && $username === 'admin' && $password === 'demo123') {
+            $isValidUser = true;
             $userData = [
                 'username' => $username,
                 'role' => 'admin',
@@ -174,20 +206,11 @@ class AuthSystem {
                 'ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
                 'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
             ];
-            
-            // Try to get additional user data from database
-            if ($this->db) {
-                try {
-                    $stmt = $this->db->prepare("SELECT name, email, phone, bio, avatar FROM admins WHERE username = ?");
-                    $stmt->execute([$username]);
-                    $dbUser = $stmt->fetch(PDO::FETCH_ASSOC);
-                    if ($dbUser) {
-                        $userData = array_merge($userData, $dbUser);
-                    }
-                } catch (PDOException $e) {
-                    // Continue with basic user data if database query fails
-                }
-            }
+        }
+        
+        if ($isValidUser) {
+            // Clear failed attempts
+            $this->clearFailedAttempts($username);
             
             // Create secure session
             $this->createUserSession($username, $userData);
