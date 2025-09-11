@@ -1,14 +1,14 @@
 <?php 
-$page_title = "Blog IT & Dezvoltare Web | Tutoriale PHP, JavaScript, MySQL | Conectica IT";
-$page_description = "Blog cu articole despre dezvoltare web, PHP, MySQL, JavaScript. Tutoriale practice, tips & tricks pentru programatori și insights din lumea IT modernă.";
+$page_title = "Blog Dezvoltare Web & Tutoriale PHP, MySQL, JavaScript | Articole SEO | Conectica IT";
+$page_description = "Articole și tutoriale despre dezvoltare web, PHP, MySQL, JavaScript, SEO și securitate. Ghiduri practice, studii de caz și sfaturi pentru programatori, antreprenori și pasionați de tehnologie.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>
 
 <div class="py-4">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold mb-3">Blog IT & Dezvoltare Web</h1>
-        <p class="lead text-muted">Articole, tutoriale și insights din lumea dezvoltării web</p>
+        <h1 class="display-5 fw-bold mb-3">Blog Dezvoltare Web, Tutoriale PHP & Articole SEO</h1>
+        <p class="lead text-muted">Descoperă cele mai noi articole, tutoriale și studii de caz despre programare, optimizare SEO și securitate web</p>
     </div>
     
     <!-- Featured Article -->

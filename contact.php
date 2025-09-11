@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Contact & Colaborare | Cere Ofertă Dezvoltare Web | Conectica IT";
-$page_description = "Contactează-mă pentru proiecte web, aplicații PHP, consultanță IT. Răspund rapid la cereri. Telefon: +40740173581, Email: conectica.it.ro@gmail.com";
+$page_title = "Contact Freelancer Dezvoltare Web | Cere Ofertă & Consultanță SEO";
+$page_description = "Contact rapid pentru dezvoltare web, aplicații PHP, mentenanță site și optimizare SEO. Cere ofertă, consultanță sau audit gratuit pentru afacerea ta din România.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>
@@ -8,7 +8,7 @@ require_once __DIR__ . '/includes/head.php';
 <div class="py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1 class="mb-4">Contact</h1>
+            <h1 class="mb-4">Contact dezvoltator web & consultanță SEO</h1>
             
             <div class="row g-4">
                 <div class="col-md-6">

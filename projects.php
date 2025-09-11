@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Proiecte Web & Portofoliu | Aplicații PHP, JavaScript | Conectica IT";
-$page_description = "Descoperă proiectele web realizate: aplicații PHP personalizate, platforme e-commerce, sisteme de management. Tehnologii moderne: MySQL, Bootstrap, JavaScript, API-uri.";
+$page_title = "Portofoliu Dezvoltare Web | Proiecte Aplicații PHP & Mentenanță Site";
+$page_description = "Portofoliu de proiecte dezvoltare web, aplicații PHP, mentenanță site și optimizare SEO. Vezi exemple de site-uri, platforme e-commerce și soluții personalizate pentru afaceri din România.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>
@@ -22,8 +22,8 @@ try {
 
 <div class="py-4">
     <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold mb-3">Portofoliul Meu</h1>
-        <p class="lead text-muted">Iată câteva dintre proiectele pe care le-am realizat</p>
+        <h1 class="display-5 fw-bold mb-3">Portofoliu dezvoltare web, aplicații PHP și mentenanță site</h1>
+        <p class="lead text-muted">Exemple de proiecte web, aplicații personalizate și soluții pentru clienți din România. Expertiză în PHP, MySQL, optimizare SEO și mentenanță rapidă.</p>
     </div>
     
     <!-- Project Categories Filter -->

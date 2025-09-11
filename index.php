@@ -1,6 +1,6 @@
 <?php 
-$page_title = "Conectica IT - Dezvoltare Web & Soluții IT Profesionale | Nyikora Noldi";
-$page_description = "Dezvoltator web freelancer cu experiență în PHP, MySQL, JavaScript. Creez aplicații web moderne, rapide și sigure pentru afaceri. Consultanță IT profesională în România.";
+$page_title = "Dezvoltare Web București | Freelancer Aplicații Web & Mentenanță Site";
+$page_description = "Servicii profesionale de dezvoltare web, aplicații PHP, mentenanță site și optimizare SEO. Freelancer cu portofoliu solid, rapid și orientat pe rezultate. Ofer consultanță, audit gratuit și soluții personalizate pentru afaceri din România.";
 require_once __DIR__ . '/includes/init.php';
 require_once __DIR__ . '/includes/head.php'; 
 ?>
@@ -9,9 +9,9 @@ require_once __DIR__ . '/includes/head.php';
     <div class='container'>
         <div class='row justify-content-center'>
             <div class='col-lg-8'>
-                <h1 class='display-4 fw-bold text-white mb-3'>Nyikora Noldi</h1>
-                <h2 class='h4 text-white mb-4' style='opacity: 0.9;'>Freelancer & Developer IT</h2>
-                <p class='lead text-white mb-4' style='opacity: 0.8;'>Specializat în dezvoltarea de aplicații web moderne și soluții IT personalizate</p>
+                <h1 class='display-4 fw-bold text-white mb-3'>Dezvoltare Web București & Mentenanță Site</h1>
+                <h2 class='h4 text-white mb-4' style='opacity: 0.9;'>Freelancer aplicații web, optimizare SEO și consultanță IT</h2>
+                <p class='lead text-white mb-4' style='opacity: 0.8;'>Creez site-uri rapide, sigure și optimizate pentru afaceri din România. Ofer audit gratuit, mentenanță și soluții personalizate.</p>
                 <div class='tech-stack mb-4'>
                     <span class='badge bg-light text-dark me-2 mb-2'>PHP</span>
                     <span class='badge bg-light text-dark me-2 mb-2'>MySQL</span>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/head.php';
 
 <section class='services py-5'>
     <div class='container'>
-        <h2 class='text-center mb-5'>Servicii Oferite</h2>
+    <h2 class='text-center mb-5'>Servicii dezvoltare web, mentenanță și optimizare SEO</h2>
         <div class='row g-4'>
             <div class='col-md-4'>
                 <div class='card h-100 border-0 shadow-sm'>
