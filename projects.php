@@ -49,7 +49,7 @@ try {
                             $img = !empty($p['image']) ? $p['image'] : 'assets/images/placeholders/wide-purple.svg';
                             ?>
                             <a href="project.php?slug=<?= urlencode($p['slug'] ?? '') ?>" class="stretched-link text-decoration-none">
-                                <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>">
+                                <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['title']) ?>" width="400" height="200" loading="lazy" decoding="async">
                             </a>
                             <?php if (!empty($p['url'])): ?>
                                 <span class="position-absolute top-0 end-0 m-2 badge bg-success">LIVE</span>

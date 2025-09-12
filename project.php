@@ -42,7 +42,7 @@ if ($slug && $pdo instanceof PDO) {
                     <div class="carousel-inner rounded shadow-sm">
                         <?php foreach ($slides as $i => $url): ?>
                         <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
-                            <img src="<?= htmlspecialchars($url) ?>" class="d-block w-100" style="max-height:460px;object-fit:cover;cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>">
+                            <img src="<?= htmlspecialchars($url) ?>" class="d-block w-100" style="max-height:460px;object-fit:cover;cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>" width="800" height="460" loading="lazy" decoding="async">
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -56,7 +56,7 @@ if ($slug && $pdo instanceof PDO) {
                     </button>
                 </div>
                 <?php else: ?>
-                <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" style="cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>">
+                <img src="<?= htmlspecialchars($primary) ?>" class="img-fluid rounded shadow-sm mb-3" style="cursor: zoom-in;" alt="<?= htmlspecialchars($project['title']) ?>" width="800" height="460" loading="lazy" decoding="async">
                 <?php endif; ?>
                 <h1 class="h3 mb-3">
                     <?= htmlspecialchars($project['title']) ?>
@@ -91,12 +91,12 @@ if ($slug && $pdo instanceof PDO) {
                         <?php endif; ?>
 
                         <?php if (!empty($project['project_url'])): ?>
-                        <a class="btn btn-primary w-100 mb-2" target="_blank" rel="noopener" href="<?= htmlspecialchars($project['project_url']) ?>">
+                            <a class="btn btn-primary w-100 mb-2" target="_blank" rel="noopener" href="<?= htmlspecialchars($project['project_url']) ?>">
                             <i class="fas fa-external-link-alt me-1"></i> Vezi Live
                         </a>
                         <?php endif; ?>
                         <?php if (!empty($project['github_url'])): ?>
-                        <a class="btn btn-outline-dark w-100" target="_blank" rel="noopener" href="<?= htmlspecialchars($project['github_url']) ?>">
+                            <a class="btn btn-outline-dark w-100" target="_blank" rel="noopener" href="<?= htmlspecialchars($project['github_url']) ?>">
                             <i class="fab fa-github me-1"></i> Cod sursă
                         </a>
                         <?php endif; ?>
@@ -119,7 +119,7 @@ if ($slug && $pdo instanceof PDO) {
 </style>
 <div id="lightbox" class="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Galerie proiect">
     <button class="lightbox-btn lightbox-prev" aria-label="Imagine anterioară">&#10094;</button>
-    <img id="lightboxImg" class="lightbox-img" alt="Imagine proiect">
+    <img id="lightboxImg" class="lightbox-img" alt="Imagine proiect" width="800" height="460" loading="lazy" decoding="async">
     <button class="lightbox-btn lightbox-next" aria-label="Imagine următoare">&#10095;</button>
     <button class="lightbox-btn lightbox-close" aria-label="Închide">&#10006;</button>
 </div>

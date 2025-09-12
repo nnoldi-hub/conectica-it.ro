@@ -73,7 +73,7 @@ require_once __DIR__ . '/includes/head.php';
     <div class='container'>
         <div class='row align-items-center g-4'>
             <div class='col-lg-5'>
-                <img src='assets/images/placeholders/nnoldi.png' loading='lazy' class='img-fluid rounded shadow-sm' alt='Nyikora Noldi'>
+                <img src='assets/images/placeholders/nnoldi.png' loading='lazy' class='img-fluid rounded shadow-sm' alt='Nyikora Noldi' width='120' height='120' decoding='async'>
             </div>
             <div class='col-lg-7'>
                 <h2 class='mb-3'>Despre mine</h2>
@@ -471,7 +471,7 @@ require_once __DIR__ . '/includes/head.php';
                 <?php foreach ($blog_items as $item): ?>
                 <div class='col-md-4'>
                     <div class='card h-100 border-0 shadow-sm'>
-                        <img src='<?= htmlspecialchars($item['cover_image'] ?: 'assets/images/placeholders/wide-purple.svg') ?>' class='card-img-top' alt='<?= htmlspecialchars($item['title']) ?>' loading='lazy'>
+                        <img src='<?= htmlspecialchars($item['cover_image'] ?: 'assets/images/placeholders/wide-purple.svg') ?>' class='card-img-top' alt='<?= htmlspecialchars($item['title']) ?>' loading='lazy' width='400' height='200' decoding='async'>
                         <div class='card-body'>
                             <span class='badge bg-primary mb-2'><?= htmlspecialchars($item['category'] ?: 'Tech') ?></span>
                             <h5 class='card-title'><?= htmlspecialchars($item['title']) ?></h5>
@@ -485,7 +485,7 @@ require_once __DIR__ . '/includes/head.php';
                 <!-- Fallback static content when no DB articles -->
                 <div class='col-md-4'>
                     <div class='card h-100 border-0 shadow-sm'>
-                        <img src='assets/images/placeholders/wide-green.svg' class='card-img-top' alt='AI' loading='lazy'>
+                        <img src='assets/images/placeholders/wide-green.svg' class='card-img-top' alt='AI' loading='lazy' width='400' height='200' decoding='async'>
                         <div class='card-body'>
                             <span class='badge bg-primary mb-2'>AI</span>
                             <h5 class='card-title'>AI practic pentru proiecte mici</h5>
@@ -496,7 +496,7 @@ require_once __DIR__ . '/includes/head.php';
                 </div>
                 <div class='col-md-4'>
                     <div class='card h-100 border-0 shadow-sm'>
-                        <img src='assets/images/placeholders/wide-purple.svg' class='card-img-top' alt='DevOps' loading='lazy'>
+                        <img src='assets/images/placeholders/wide-purple.svg' class='card-img-top' alt='DevOps' loading='lazy' width='400' height='200' decoding='async'>
                         <div class='card-body'>
                             <span class='badge bg-dark mb-2'>DevOps</span>
                             <h5 class='card-title'>Automatizări simple cu GitHub + cPanel</h5>
@@ -507,7 +507,7 @@ require_once __DIR__ . '/includes/head.php';
                 </div>
                 <div class='col-md-4'>
                     <div class='card h-100 border-0 shadow-sm'>
-                        <img src='assets/images/placeholders/wide-orange.svg' class='card-img-top' alt='Security' loading='lazy'>
+                        <img src='assets/images/placeholders/wide-orange.svg' class='card-img-top' alt='Security' loading='lazy' width='400' height='200' decoding='async'>
                         <div class='card-body'>
                             <span class='badge bg-danger mb-2'>Security</span>
                             <h5 class='card-title'>Securitate esențială pentru formulare</h5>

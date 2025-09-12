@@ -123,6 +123,17 @@ body {
     transition: all 0.3s ease;
 }
 
+    /* Contrast crescut pentru .lead.text-muted */
+    .lead.text-muted {
+        color: #495057 !important; /* Gri mult mai închis pentru contrast pe fundal deschis/gradient */
+    }
+
+    /* Contrast crescut pentru .btn-light pe fundal deschis/gradient */
+    .btn-light {
+        color: #0052a3 !important; /* Albastru închis pentru contrast */
+        background-color: #f8f9fa !important;
+        border-color: #f8f9fa !important;
+    }
 .btn-primary:hover {
     background-color: #0052a3 !important;
     border-color: #0052a3 !important;

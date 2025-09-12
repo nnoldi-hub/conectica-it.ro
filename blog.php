@@ -22,7 +22,7 @@ require_once __DIR__ . '/includes/head.php';
                             <h2 class="card-title mb-3">Cum să construiești o aplicație web modernă cu PHP și MySQL</h2>
                             <p class="card-text mb-4">Un ghid complet pentru dezvoltarea unei aplicații web robuste, de la planificare până la deployment. Învață cele mai bune practici și tehnici moderne...</p>
                             <div class="d-flex align-items-center mb-3">
-                                <img src="https://placehold.co/40x40/28a745/ffffff?text=N" class="rounded-circle me-2" alt="Author">
+                                <img src="https://placehold.co/40x40/28a745/ffffff?text=N" class="rounded-circle me-2" alt="Author" width="40" height="40" loading="lazy" decoding="async">
                                 <div>
                                     <small class="text-white-50">Nyikora Noldi • 15 Dec 2024 • 8 min citire</small>
                                 </div>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/head.php';
                             <a href="article.php?slug=php-mysql-modern-app" class="btn btn-light">Citește articolul</a>
                         </div>
                         <div class="col-lg-4">
-                            <img src="https://placehold.co/400x250/1a237e/ffffff?text=PHP+MySQL+Guide" class="img-fluid rounded" alt="Featured Article">
+                            <img src="https://placehold.co/400x250/1a237e/ffffff?text=PHP+MySQL+Guide" class="img-fluid rounded" alt="Featured Article" width="400" height="250" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ require_once __DIR__ . '/includes/head.php';
             <?php foreach ($items as $it): ?>
                 <div class="col-lg-4 col-md-6 article-item" data-category="<?= htmlspecialchars(strtolower($it['category'] ?: 'other')) ?>">
                     <article class="card h-100 border-0 shadow-sm position-relative">
-                        <img src="<?= htmlspecialchars($it['cover_image'] ?: '/assets/images/placeholders/wide-purple.svg') ?>" class="card-img-top" alt="<?= htmlspecialchars($it['title']) ?>">
+                        <img src="<?= htmlspecialchars($it['cover_image'] ?: '/assets/images/placeholders/wide-purple.svg') ?>" class="card-img-top" alt="<?= htmlspecialchars($it['title']) ?>" width="400" height="200" loading="lazy" decoding="async">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="badge bg-primary"><?= htmlspecialchars($it['category'] ?: 'Tech') ?></span>
@@ -111,7 +111,7 @@ require_once __DIR__ . '/includes/head.php';
             <!-- Article 1 -->
             <div class="col-lg-4 col-md-6 article-item" data-category="php tutorials">
                 <article class="card h-100 border-0 shadow-sm position-relative">
-                    <img src="https://placehold.co/400x200/0d47a1/ffffff?text=PHP+Security" class="card-img-top" alt="PHP Security">
+                    <img src="https://placehold.co/400x200/0d47a1/ffffff?text=PHP+Security" class="card-img-top" alt="PHP Security" width="400" height="200" loading="lazy" decoding="async">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span class="badge bg-primary">PHP</span>

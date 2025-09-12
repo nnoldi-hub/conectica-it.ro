@@ -138,19 +138,31 @@ $base_path = $is_admin ? '../' : '';
     }
     ?>
     
+
+    <!-- Preload LCP Hero Image (ajustat pentru homepage) -->
+    <?php if ($current_page === 'index'): ?>
+        <link rel="preload" as="image" href="/assets/images/placeholders/nnoldi.png" imagesrcset="/assets/images/placeholders/nnoldi.png 120w" imagesizes="120px">
+    <?php endif; ?>
+
+    <!-- Preload CSS critic -->
+    <link rel="preload" as="style" href="<?php echo $base_path; ?>assets/css/style.css">
     <!-- Bootstrap CSS -->
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'>
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
+    <!-- Google Fonts: preconnect & preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?php echo $base_path; ?>favicon.svg">
     <link rel="alternate icon" href="<?php echo $base_path; ?>favicon.ico">
     <!-- Custom CSS -->
     <link href='<?php echo $base_path; ?>assets/css/style.css' rel='stylesheet'>
+
+    <!-- Preload JS critic (Bootstrap) -->
+    <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     
     <?php
     // Add social media structured data
@@ -164,7 +176,7 @@ $base_path = $is_admin ? '../' : '';
     <nav class='navbar navbar-expand-lg navbar-dark bg-dark fixed-top'>
         <div class='container'>
             <a class='navbar-brand d-flex align-items-center' href='<?php echo $base_path; ?>index.php'>
-                <img src='<?php echo $base_path; ?>assets/images/logo.png' alt='Conectica‑IT' height='60' class='me-2' onerror="this.style.display='none'">
+                <img src='<?php echo $base_path; ?>assets/images/logo.png' alt='Conectica‑IT' width='60' height='60' class='me-2' onerror="this.style.display='none'">
                 <span class='fw-bold d-none d-sm-inline'>Conectica‑IT</span>
             </a>
             

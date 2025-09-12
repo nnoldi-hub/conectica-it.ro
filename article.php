@@ -175,7 +175,7 @@ if (!$article) {
         <a href="blog.php" class="btn btn-primary"><i class="fas fa-arrow-left me-2"></i>Înapoi la blog</a>
     <?php else: ?>
         <article class="mx-auto" style="max-width: 900px;">
-            <img class="img-fluid rounded shadow-sm mb-4" src="<?= htmlspecialchars($article['cover']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+            <img class="img-fluid rounded shadow-sm mb-4" src="<?= htmlspecialchars($article['cover']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" width="800" height="400" loading="lazy" decoding="async">
             <h1 class="h2 mb-3"><?= htmlspecialchars($article['title']) ?></h1>
             <div class="text-muted mb-4">
                 <span class="me-2"><i class="fas fa-user me-1"></i><?= htmlspecialchars($article['author']) ?></span>
